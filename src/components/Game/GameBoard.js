@@ -1,12 +1,36 @@
-import { GameBox } from "./GameBox";
+import { useContext } from 'react';
+import { PlayerCoxtext } from '../../hocs/PlayerContext';
+import { GameBox } from './GameBox';
 
 export const GameBoard = () => {
-    const board = [0,1,2,3,4,5,6,7,8];
+    const { player, setPlayer } = useContext(PlayerCoxtext);
+
+    const board = [
+        [null, null, null],
+        [null, null, null],
+        [null, null, null],
+    ];
+
+    const updateBoard = (row, col) => {
+        board[row][col] = player;
+        setPlayer(player === 'X' ? 'O' : 'X');
+    };
 
     return (
         <main>
             {
-                board.map(box => <GameBox key={box} />)
+                board.map(
+                    (row, rowIndex) => row.map(
+                        (cell, colIndex) => 
+                            <GameBox 
+                                player={ player }
+                                row={ rowIndex }
+                                col={ colIndex }
+                                updateBoard={ updateBoard }
+                                key={`${rowIndex}${colIndex}`} 
+                            />
+                    )
+                )
             }
         </main>
     );
