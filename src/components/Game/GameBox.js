@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-export const GameBox = ({ player }) => {
+export const GameBox = ({ player, row, col, updateBoard }) => {
     const [isEmpty, setIsEmpty] = useState(true);
     const [mark, setMark] = useState({
         icon: '',
@@ -22,6 +22,8 @@ export const GameBox = ({ player }) => {
             icon,
             player
         });
+
+        updateBoard(row, col);
     };
 
     return (

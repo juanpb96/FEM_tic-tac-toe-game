@@ -1,7 +1,13 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { GameBox } from '../GameBox';
 
+const mockUpdateBoard = jest.fn();
+
 describe('Test <GameBox />', () => {
+    beforeEach(() => {
+        jest.clearAllMocks();
+    });
+
     test('should render an empty box', () => { 
         render(<GameBox />);
 
@@ -12,11 +18,20 @@ describe('Test <GameBox />', () => {
     });
 
     test('should render an "X" if player "X" has clicked the box', () => {
-        render(<GameBox player={'X'} />);
+        render(
+            <GameBox 
+                player={'X'} 
+                row={ 0 }
+                col={ 1 }
+                updateBoard={ mockUpdateBoard }
+            />
+        );
 
         const box = screen.getByRole('button');
 
         fireEvent.click(box);
+
+        expect(mockUpdateBoard).toHaveBeenCalledWith(0, 1);
 
         const image = box.children[0];
 
@@ -26,9 +41,18 @@ describe('Test <GameBox />', () => {
     });
 
     test('should not replace the current mark if the other player ("O") has clicked the box', () => {
-        const { rerender } = render(<GameBox player={'X'} />);
+        const { rerender } = render(
+            <GameBox 
+                player={'X'} 
+                row={ 1 }
+                col={ 0 }
+                updateBoard={ mockUpdateBoard }
+            />
+        );
 
         fireEvent.click(screen.getByRole('button'));
+
+        expect(mockUpdateBoard).toHaveBeenCalledWith(1, 0);
 
         rerender(<GameBox player={'O'} />);
 
