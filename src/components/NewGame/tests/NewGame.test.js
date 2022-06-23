@@ -1,5 +1,12 @@
-import { fireEvent, render, screen } from "@testing-library/react";
-import { NewGame } from "../NewGame";
+import { fireEvent, render, screen } from '@testing-library/react';
+import { NewGame } from '../NewGame';
+
+const mockNavigate = jest.fn();
+
+jest.mock('react-router-dom', () => ({
+    ...jest.requireActual('react-router-dom'),
+    useNavigate: () => mockNavigate
+}));
 
 describe('Test <NewGame />', () => { 
     beforeEach(() => {
@@ -58,6 +65,30 @@ describe('Test <NewGame />', () => {
             
             expect(markX.getAttribute(ariaAttribute)).toBe('false');
             expect(markO.getAttribute(ariaAttribute)).toBe('true');
+        });
+    });
+
+    describe('should navigate to Game and save data in localStorage', () => { 
+        Storage.prototype.clear = jest.fn();
+        Storage.prototype.setItem = jest.fn();
+
+        test('when user clicks on New Game VS CPU', () => { 
+
+            fireEvent.click(screen.getByRole('button', { name: 'New Game (VS CPU)' }));
+
+            expect(mockNavigate).toHaveBeenCalledWith('/', { replace: true });
+            expect(localStorage.clear).toHaveBeenCalledTimes(1);
+            expect(localStorage.setItem).toHaveBeenCalledWith('playerMark', 'O');
+            expect(localStorage.setItem).toHaveBeenCalledWith('CPUMark', 'X');
+        });
+        
+        test('when user clicks on New Game VS Player', () => {           
+            fireEvent.click(screen.getByRole('button', { name: 'New Game (VS Player)' }));
+            
+            expect(mockNavigate).toHaveBeenCalledWith('/', { replace: true });
+            expect(localStorage.clear).toHaveBeenCalledTimes(1);
+            expect(localStorage.setItem).toHaveBeenCalledWith('p1Mark', 'O');
+            expect(localStorage.setItem).toHaveBeenCalledWith('p2Mark', 'X');
         });
     });
 });
