@@ -1,20 +1,48 @@
-import { useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { PlayerCoxtext } from '../../hocs/PlayerContext';
 import { GameBox } from './GameBox';
 
 export const GameBoard = () => {
     const { player, setPlayer } = useContext(PlayerCoxtext);
+    const [board, setBoard] = useState([
+        [null, null, null],
+        [null, null, null],
+        [null, null, null],
+    ]);
 
-    const board = [
-        [null, null, null],
-        [null, null, null],
-        [null, null, null],
-    ];
+    const cpuMark = localStorage.getItem('CPUMark');
+    let p1;
+
+    if (cpuMark) {
+        p1 = localStorage.getItem('playerMark');
+    }
 
     const updateBoard = (row, col) => {
-        board[row][col] = player;
+        setBoard(() => {
+            board[row][col] = player;
+            return board;
+        });
         setPlayer(player === 'X' ? 'O' : 'X');
     };
+
+    const doCpuMove = () => {
+        const buttons = document.getElementsByTagName('button');
+
+        let pos = Math.floor(Math.random() * 9);
+        
+        while (buttons[pos].hasChildNodes()) {
+            pos = Math.floor(Math.random() * 9);
+        }
+
+        buttons[pos].click();
+    };
+
+    useEffect(() => {
+        if (cpuMark === player) {
+            doCpuMove();    
+        }
+    }, [cpuMark, player])
+    
 
     return (
         <main>
