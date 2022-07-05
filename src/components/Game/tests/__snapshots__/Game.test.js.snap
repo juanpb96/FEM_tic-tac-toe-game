@@ -1,0 +1,77 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Test <GameStart /> modal should open when user clicks on "restart" button and close if "No, cancel" is pressed 1`] = `
+<div>
+  <header>
+    <h1>
+      Tic tac toe
+    </h1>
+    <img
+      alt=""
+      src="/assets/logo.svg"
+    />
+    <section>
+      <img
+        alt="X"
+        src="/assets/icon-turn-X.svg"
+      />
+      <h2>
+        TURN
+      </h2>
+    </section>
+    <button
+      aria-label="restart"
+    >
+      <img
+        alt=""
+        src="/assets/icon-restart.svg"
+      />
+    </button>
+  </header>
+  <main
+    style="display: grid; grid-template: repeat(3, 1fr) / repeat(3, 1fr);"
+  >
+    <button />
+    <button />
+    <button />
+    <button />
+    <button />
+    <button />
+    <button />
+    <button />
+    <button />
+  </main>
+  <footer>
+    <section
+      aria-label="score"
+    >
+      <h2>
+        X
+      </h2>
+      <p>
+        0
+      </p>
+    </section>
+    <section
+      aria-label="score"
+    >
+      <h2>
+        TIES
+      </h2>
+      <p>
+        0
+      </p>
+    </section>
+    <section
+      aria-label="score"
+    >
+      <h2>
+        O
+      </h2>
+      <p>
+        0
+      </p>
+    </section>
+  </footer>
+</div>
+`;
