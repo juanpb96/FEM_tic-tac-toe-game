@@ -1,6 +1,6 @@
 import { ASSETS_PATH } from '../../helpers/constants';
 
-export const GameModal = ({ type, winnerMark }) => {
+export const GameModal = ({ type, winnerMark, setShowModal }) => {
     const message = {
         title: 'TAKES THE ROUND',
         imgSrc: !winnerMark ? '' : `${ASSETS_PATH}/icon-${winnerMark}.svg`,
@@ -36,6 +36,10 @@ export const GameModal = ({ type, winnerMark }) => {
 
     const { title, imgSrc, result, button1, button2 } = message;
 
+    const handleClick = () => {
+        setShowModal(false);
+    };
+
     return (
         <>
             { result && <p>{ result }</p> }
@@ -43,8 +47,8 @@ export const GameModal = ({ type, winnerMark }) => {
                 { imgSrc && <img src={imgSrc} alt={winnerMark} /> }
                 { title }
             </h2>
-            <button>{ button1 }</button>
-            <button>{ button2 }</button>
+            <button onClick={ handleClick }>{ button1 }</button>
+            <button onClick={ handleClick }>{ button2 }</button>
         </>
     );
 };
