@@ -39,8 +39,8 @@ describe('Test <GameBoard />', () => {
         let component;
 
         beforeEach(() => {
-            localStorageMock.setItem('playerMark', 'O');
             localStorageMock.setItem('CPUMark', 'X');
+            localStorageMock.setItem('playerMark', 'O');
 
             const [player, setPlayer] = ['X', jest.fn()];
 
@@ -91,5 +91,151 @@ describe('Test <GameBoard />', () => {
 
             expect(screen.getAllByAltText('X')).toHaveLength(2);
         });
+
+        test('player make two horizontal moves and needs one to win. CPU should block player win', () => { 
+            localStorageMock.clear();
+            localStorageMock.setItem('playerMark', 'X');
+            localStorageMock.setItem('CPUMark', 'O');
+
+            const [playerX1, setPlayerX1] = ['X', jest.fn()];
+
+            const { container, rerender } = render(
+                <PlayerCoxtext.Provider value={{ player: playerX1, setPlayer: setPlayerX1 }}>
+                    <GameBoard />
+                </PlayerCoxtext.Provider>
+            );
+
+            const buttons = container.getElementsByTagName('button');
+            fireEvent.click(buttons[0]);
+
+            const [playerO1, setPlayerO1] = ['O', jest.fn()];
+
+            rerender(
+                <PlayerCoxtext.Provider value={{ player: playerO1, setPlayer: setPlayerO1 }}>
+                    <GameBoard />
+                </PlayerCoxtext.Provider>
+            );
+
+            const [playerX2, setPlayerX2] = ['X', jest.fn()];
+
+            rerender(
+                <PlayerCoxtext.Provider value={{ player: playerX2, setPlayer: setPlayerX2 }}>
+                    <GameBoard />
+                </PlayerCoxtext.Provider>
+            );
+
+            fireEvent.click(buttons[2]);
+
+            const [playerO2, setPlayerO2] = ['O', jest.fn()];
+
+            rerender(
+                <PlayerCoxtext.Provider value={{ player: playerO2, setPlayer: setPlayerO2 }}>
+                    <GameBoard />
+                </PlayerCoxtext.Provider>
+            );
+
+            const buttonToBlockWin = buttons[1].children;
+
+            expect(buttonToBlockWin).toHaveLength(1);
+            expect(buttonToBlockWin.item(0).alt).toBe('O');
+        });
+
+        test('player make two vertical moves and needs one to win. CPU should block player win', () => { 
+            localStorageMock.clear();
+            localStorageMock.setItem('playerMark', 'X');
+            localStorageMock.setItem('CPUMark', 'O');
+
+            const [playerX1, setPlayerX1] = ['X', jest.fn()];
+
+            const { container, rerender } = render(
+                <PlayerCoxtext.Provider value={{ player: playerX1, setPlayer: setPlayerX1 }}>
+                    <GameBoard />
+                </PlayerCoxtext.Provider>
+            );
+
+            const buttons = container.getElementsByTagName('button');
+            fireEvent.click(buttons[1]);
+
+            const [playerO1, setPlayerO1] = ['O', jest.fn()];
+
+            rerender(
+                <PlayerCoxtext.Provider value={{ player: playerO1, setPlayer: setPlayerO1 }}>
+                    <GameBoard />
+                </PlayerCoxtext.Provider>
+            );
+
+            const [playerX2, setPlayerX2] = ['X', jest.fn()];
+
+            rerender(
+                <PlayerCoxtext.Provider value={{ player: playerX2, setPlayer: setPlayerX2 }}>
+                    <GameBoard />
+                </PlayerCoxtext.Provider>
+            );
+
+            fireEvent.click(buttons[4]);
+
+            const [playerO2, setPlayerO2] = ['O', jest.fn()];
+
+            rerender(
+                <PlayerCoxtext.Provider value={{ player: playerO2, setPlayer: setPlayerO2 }}>
+                    <GameBoard />
+                </PlayerCoxtext.Provider>
+            );
+
+            const buttonToBlockWin = buttons[7].children;
+
+            expect(buttonToBlockWin).toHaveLength(1);
+            expect(buttonToBlockWin.item(0).alt).toBe('O');
+        });
+
+        test('player make two diagonal moves and needs one to win. CPU should block player win', () => { 
+            // TODO: Update test to take game state from localStorage
+            localStorageMock.clear();
+            localStorageMock.setItem('playerMark', 'X');
+            localStorageMock.setItem('CPUMark', 'O');
+
+            const [playerX1, setPlayerX1] = ['X', jest.fn()];
+
+            const { container, rerender } = render(
+                <PlayerCoxtext.Provider value={{ player: playerX1, setPlayer: setPlayerX1 }}>
+                    <GameBoard />
+                </PlayerCoxtext.Provider>
+            );
+
+            const buttons = container.getElementsByTagName('button');
+            fireEvent.click(buttons[4]);
+
+            const [playerO1, setPlayerO1] = ['O', jest.fn()];
+
+            rerender(
+                <PlayerCoxtext.Provider value={{ player: playerO1, setPlayer: setPlayerO1 }}>
+                    <GameBoard />
+                </PlayerCoxtext.Provider>
+            );
+
+            const [playerX2, setPlayerX2] = ['X', jest.fn()];
+
+            rerender(
+                <PlayerCoxtext.Provider value={{ player: playerX2, setPlayer: setPlayerX2 }}>
+                    <GameBoard />
+                </PlayerCoxtext.Provider>
+            );
+
+            fireEvent.click(buttons[6]);
+
+            const [playerO2, setPlayerO2] = ['O', jest.fn()];
+
+            rerender(
+                <PlayerCoxtext.Provider value={{ player: playerO2, setPlayer: setPlayerO2 }}>
+                    <GameBoard />
+                </PlayerCoxtext.Provider>
+            );
+
+            const buttonToBlockWin = buttons[2].children;
+
+            expect(buttonToBlockWin).toHaveLength(1);
+            expect(buttonToBlockWin.item(0).alt).toBe('O');
+        });
+
     });
 });
