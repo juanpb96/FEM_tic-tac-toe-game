@@ -1,10 +1,19 @@
 import { useState } from 'react';
+import { ASSETS_PATH } from '../../helpers/constants';
 
-export const GameBox = ({ player, row, col, updateBoard }) => {
-    const [isEmpty, setIsEmpty] = useState(true);
+export const GameBox = ({ 
+    hasMark,
+    mark: cellMark,
+    currentPlayer,
+    row,
+    col,
+    updateBoard
+}) => {
+    const [isEmpty, setIsEmpty] = useState(!hasMark);
+
     const [mark, setMark] = useState({
-        icon: '',
-        player: ''
+        icon: hasMark ? `${ASSETS_PATH}/icon-${cellMark.toLowerCase()}.svg` : '',
+        player: hasMark ? cellMark : ''
     });
     
     const handlePlayerClick = () => {
@@ -14,13 +23,11 @@ export const GameBox = ({ player, row, col, updateBoard }) => {
 
         setIsEmpty(false);
 
-        const icon = player === 'X'
-            ? `${process.env.PUBLIC_URL}/assets/icon-x.svg`
-            : `${process.env.PUBLIC_URL}/assets/icon-o.svg`;
+        const icon = `${ASSETS_PATH}/icon-${currentPlayer.toLowerCase()}.svg`;
 
         setMark({ 
             icon,
-            player
+            player: currentPlayer
         });
 
         updateBoard(row, col);
