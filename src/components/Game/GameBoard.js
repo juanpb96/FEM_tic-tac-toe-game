@@ -2,14 +2,15 @@ import { useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { PlayerCoxtext } from '../../hocs/PlayerContext';
 import { GameBox } from './GameBox';
 
-const emptyBoard = [
-    [null, null, null],
-    [null, null, null],
-    [null, null, null],
-];
 
 export const GameBoard = () => {
     const { player, setPlayer } = useContext(PlayerCoxtext);
+
+    const emptyBoard = [
+        [null, null, null],
+        [null, null, null],
+        [null, null, null],
+    ];
 
     let initialBoard = localStorage.getItem('boardState');
     initialBoard = initialBoard && JSON.parse(initialBoard);
@@ -17,9 +18,11 @@ export const GameBoard = () => {
     const [board, setBoard] = useState(initialBoard || emptyBoard);
 
     const boardRef = useRef(null);
-    const isCpuFirstMove = useRef(true);
 
     const cpuMark = localStorage.getItem('CPUMark');
+    const searchFirstMove = board.some(row => row.some(cell => cell === cpuMark));
+    const isCpuFirstMove = useRef(!searchFirstMove);
+
     let p1Mark;
 
     if (cpuMark) {
@@ -132,7 +135,6 @@ export const GameBoard = () => {
     
             for (let row = 2, col = 0; row >= 0; row--, col++) {
                 const cell = board[row][col];
-                console.log({cell, row, col});
     
                 if (cell === p1Mark) {
                     bottomTopOcurrencies++;
@@ -181,7 +183,6 @@ export const GameBoard = () => {
 
     useEffect(() => {
         localStorage.setItem('boardState', JSON.stringify(board));
-        
     }, [board, player]);
     
 
