@@ -183,6 +183,7 @@ export const GameBoard = () => {
 
     useEffect(() => {
         localStorage.setItem('boardState', JSON.stringify(board));
+        localStorage.setItem('currentTurnMark', player);
     }, [board, player]);
     
 

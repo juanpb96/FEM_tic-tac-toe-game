@@ -4,7 +4,8 @@ import { PlayerCoxtext } from './hocs/PlayerContext';
 import { AppRouter } from './routers/AppRouter';
 
 export const TicTacToe = () => {
-    const [player, setPlayer] = useState('X');
+    const currentPlayer = localStorage.getItem('currentTurnMark');
+    const [player, setPlayer] = useState(currentPlayer || 'X');
 
     return (
         <PlayerCoxtext.Provider value={{
