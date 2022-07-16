@@ -241,8 +241,73 @@ describe('Test <GameBoard />', () => {
             });
         });
 
+        describe('CPU win by having three marks in a row', () => {
+            test('CPU select a winner move if it needs one horizontal mark', () => {
+                localStorageMock.setItem('boardState', JSON.stringify([
+                    [null, 'O',  'O' ],
+                    ['X',  null,  'X'],
+                    [null, null, null],
+                ]));
+    
+                const [player, setPlayer] = ['X', jest.fn()];
+    
+                const { container } = render(
+                    <PlayerCoxtext.Provider value={{ player, setPlayer }}>
+                        <GameBoard />
+                    </PlayerCoxtext.Provider>
+                );
 
+                const buttons = container.getElementsByTagName('button');
+                const winnerButton = buttons[5].children;
+
+                expect(winnerButton).toHaveLength(1);
+                expect(winnerButton.item(0).alt).toBe('X');
+            });
+
+            test('CPU select a winner move if it needs one vertical mark', () => {
+                localStorageMock.setItem('boardState', JSON.stringify([
+                    ['O',  'X',  null],
+                    ['O',  null, null],
+                    [null, 'X',  null],
+                ]));
+    
+                const [player, setPlayer] = ['X', jest.fn()];
+    
+                const { container } = render(
+                    <PlayerCoxtext.Provider value={{ player, setPlayer }}>
+                        <GameBoard />
+                    </PlayerCoxtext.Provider>
+                );
+
+                const buttons = container.getElementsByTagName('button');
+                const winnerButton = buttons[4].children;
+
+                expect(winnerButton).toHaveLength(1);
+                expect(winnerButton.item(0).alt).toBe('X');
+            });
+
+            test('CPU select a winner move if it needs one diagonal mark', () => {
+                localStorageMock.setItem('boardState', JSON.stringify([
+                    [null, 'O', null],
+                    [null, 'X', null],
+                    [null, 'O',  'X'],
+                ]));
+    
+                const [player, setPlayer] = ['X', jest.fn()];
+    
+                const { container } = render(
+                    <PlayerCoxtext.Provider value={{ player, setPlayer }}>
+                        <GameBoard />
+                    </PlayerCoxtext.Provider>
+                );
+
+                const buttons = container.getElementsByTagName('button');
+                const winnerButton = buttons[0].children;
+
+                expect(winnerButton).toHaveLength(1);
+                expect(winnerButton.item(0).alt).toBe('X');
+            });
+        });
     });
 
-    test.todo('CPU can win if it needs one move');
 });

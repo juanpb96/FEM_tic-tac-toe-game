@@ -63,90 +63,132 @@ export const GameBoard = () => {
 
     const makeCpuMove = useCallback(
         () => {
+            const blockMove = {
+                x: 0,
+                y: 0,
+                shouldBlock: false,
+            };
             let x = 0;
             let y = 0;
+            let playerOcurrences = 0;
+            let cpuOcurrences = 0;
     
             // Check rows
             for (const [indexX, row] of board.entries()) {
-                let ocurrences = 0;
+                playerOcurrences = 0;
+                cpuOcurrences = 0;
     
                 for (const [indexY, cell] of row.entries()) {
                     if (cell === p1Mark) {
-                        ocurrences++;
+                        playerOcurrences++;
+                        cpuOcurrences--;
                     } else if (cell === cpuMark) {
-                        ocurrences--;
+                        playerOcurrences--;
+                        cpuOcurrences++;
                     } else {
                         x = indexX;
                         y = indexY;
                     }
                 }
     
-                if (ocurrences === 2) {
+                if (playerOcurrences === 2) {
+                    blockMove.x = x;
+                    blockMove.y = y;
+                    blockMove.shouldBlock = true;
+                }
+
+                if (cpuOcurrences === 2) {
                     clickBox(x, y);
                     return;
                 }
             }
-    
+
+            if (blockMove.shouldBlock) {
+                clickBox(blockMove.x, blockMove.y);
+                return;
+            }
+            
             // Check columns
             for (let col = 0; col < board.length; col++) {
-                let ocurrences = 0;
+                playerOcurrences = 0;
+                cpuOcurrences = 0;
     
                 for (let row = 0; row < board.length; row++) {
                     const cell = board[row][col];
+
                     if (cell === p1Mark) {
-                        ocurrences++;
+                        playerOcurrences++;
+                        cpuOcurrences--;
                     } else if (cell === cpuMark) {
-                        ocurrences--;
+                        playerOcurrences--;
+                        cpuOcurrences++;
                     } else {
                         x = row;
                         y = col;
                     }
                 }
     
-                if (ocurrences === 2) {
+                if (playerOcurrences === 2) {
+                    blockMove.x = x;
+                    blockMove.y = y;
+                    blockMove.shouldBlock = true;
+                }
+
+                if (cpuOcurrences === 2) {
                     clickBox(x, y);
                     return;
                 }
             }
+
+            if (blockMove.shouldBlock) {
+                clickBox(blockMove.x, blockMove.y);
+                return;
+            }
     
             // Check diagonals
             // Top to bottom
-            let topBottomOcurrencies = 0;
-    
+            playerOcurrences = 0;
+            cpuOcurrences = 0;
+
             for (let i = 0; i < board.length; i++) {
                 const cell = board[i][i];
                 if (cell === p1Mark) {
-                    topBottomOcurrencies++;
+                    playerOcurrences++;
+                    cpuOcurrences--;
                 } else if (cell === cpuMark) {
-                    topBottomOcurrencies--;
+                    playerOcurrences--;
+                    cpuOcurrences++;
                 } else {
                     x = i;
                     y = i;
                 }
             }
-    
-            if (topBottomOcurrencies === 2) {
+
+            if (cpuOcurrences === 2 || playerOcurrences === 2) {
                 clickBox(x, y);
                 return;
             }
     
             // Bottom to top
-            let bottomTopOcurrencies = 0;
+            playerOcurrences = 0;
+            cpuOcurrences = 0;
     
             for (let row = 2, col = 0; row >= 0; row--, col++) {
                 const cell = board[row][col];
     
                 if (cell === p1Mark) {
-                    bottomTopOcurrencies++;
+                    playerOcurrences++;
+                    cpuOcurrences--;
                 } else if (cell === cpuMark) {
-                    bottomTopOcurrencies--;
+                    playerOcurrences--;
+                    cpuOcurrences++;
                 } else {
                     x = row;
                     y = col;
                 }
             }
     
-            if (bottomTopOcurrencies === 2) {
+            if (cpuOcurrences === 2 || playerOcurrences === 2) {
                 clickBox(x, y);
                 return;
             }
