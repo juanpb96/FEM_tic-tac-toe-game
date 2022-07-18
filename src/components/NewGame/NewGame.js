@@ -1,39 +1,59 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ASSETS_PATH } from '../../helpers/constants';
+import { STORAGE } from '../../types/types';
 
+const {
+    playerMark,
+    playerScore,
+    cpuMark,
+    cpuScore,
+    p1Mark,
+    p1Score,
+    p2Mark,
+    p2Score,
+    currentTurnMark
+} = STORAGE;
 
 export const NewGame = () => {
     const [isMarkXChecked, setIsMarkXChecked] = useState(false);
-    const [isMarkOChecked, setIsMarkOChecked] = useState(true);
+
+    const p1MarkRef = useRef('O');
+    const p2MarkRef = useRef('X');
 
     const navigate = useNavigate();
 
     // TODO: Add animation when toggling marks
 
-    const handleMarkChange = ({target}) => {
-        if (target['aria-checked']) {
+    const handleMarkChange = (mark) => {
+        if (isMarkXChecked && mark === 'X') {
             return;
         }
 
-        setIsMarkXChecked(!isMarkXChecked);
-        setIsMarkOChecked(!isMarkOChecked);
+        p1MarkRef.current = mark;
+        p2MarkRef.current = mark === 'X' ? 'O' : 'X';
+
+        setIsMarkXChecked(mark === 'X');
     };
 
     const handleNewGame = (isPlayerVsCPU) => {
         localStorage.clear();
 
-        const p1Mark = isMarkXChecked ? 'X' : 'O';
-        const p2Mark = isMarkXChecked ? 'O' : 'X';
-
         if (isPlayerVsCPU) {
-            localStorage.setItem('playerMark', p1Mark);
-            localStorage.setItem('CPUMark', p2Mark);
+            const cpu = p1MarkRef.current === 'X' ? 'O' : 'X';
+
+            localStorage.setItem(playerMark, p1MarkRef.current);
+            localStorage.setItem(cpuMark, cpu);
+            localStorage.setItem(cpuScore, '0');
+            localStorage.setItem(playerScore, '0');
         } else {
-            localStorage.setItem('p1Mark', p1Mark);
-            localStorage.setItem('p2Mark', p2Mark);
+            localStorage.setItem(p1Mark, p1MarkRef.current);
+            localStorage.setItem(p2Mark, p2MarkRef.current);
+            localStorage.setItem(p1Score, '0');
+            localStorage.setItem(p2Score, '0');
         }
 
+        localStorage.setItem(currentTurnMark, 'X');
         navigate('/', { replace: true });
     };
 
@@ -49,24 +69,24 @@ export const NewGame = () => {
                         role='radio' 
                         aria-checked={isMarkXChecked} 
                         tabIndex='0'
-                        onClick={handleMarkChange}
+                        onClick={() => handleMarkChange('X')}
                     >
                         {
                             isMarkXChecked
-                            ? <img src={`${ASSETS_PATH}/icon-x-outline.svg`} alt='X'/>  
-                            : <img src={`${ASSETS_PATH}/icon-x.svg`} alt='X'/>
+                            ? <img src={`${ASSETS_PATH}/icon-x.svg`} alt='X'/>  
+                            : <img src={`${ASSETS_PATH}/icon-x-outline.svg`} alt='X'/>
                         }
                     </div>
                     <div 
                         role='radio' 
-                        aria-checked={isMarkOChecked} 
+                        aria-checked={!isMarkXChecked} 
                         tabIndex='-1'
-                        onClick={handleMarkChange}
+                        onClick={() => handleMarkChange('O')}
                     >
                         {
-                            isMarkOChecked
-                            ? <img src={`${ASSETS_PATH}/icon-o-outline.svg`} alt='O'/>
-                            : <img src={`${ASSETS_PATH}/icon-o.svg`} alt='O'/>
+                            !isMarkXChecked
+                            ? <img src={`${ASSETS_PATH}/icon-o.svg`} alt='O'/>
+                            : <img src={`${ASSETS_PATH}/icon-o-outline.svg`} alt='O'/>
                         }
                     </div>
                 </div>

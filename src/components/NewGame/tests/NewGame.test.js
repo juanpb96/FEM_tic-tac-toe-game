@@ -1,4 +1,5 @@
 import { fireEvent, render, screen } from '@testing-library/react';
+import { STORAGE } from '../../../types/types';
 import { NewGame } from '../NewGame';
 
 const mockNavigate = jest.fn();
@@ -7,6 +8,18 @@ jest.mock('react-router-dom', () => ({
     ...jest.requireActual('react-router-dom'),
     useNavigate: () => mockNavigate
 }));
+
+const {
+    playerMark,
+    playerScore,
+    cpuMark,
+    cpuScore,
+    p1Mark,
+    p1Score,
+    p2Mark,
+    p2Score,
+    currentTurnMark
+} = STORAGE;
 
 describe('Test <NewGame />', () => { 
     beforeEach(() => {
@@ -78,8 +91,11 @@ describe('Test <NewGame />', () => {
 
             expect(mockNavigate).toHaveBeenCalledWith('/', { replace: true });
             expect(localStorage.clear).toHaveBeenCalledTimes(1);
-            expect(localStorage.setItem).toHaveBeenCalledWith('playerMark', 'O');
-            expect(localStorage.setItem).toHaveBeenCalledWith('CPUMark', 'X');
+            expect(localStorage.setItem).toHaveBeenCalledWith(playerMark, 'O');
+            expect(localStorage.setItem).toHaveBeenCalledWith(cpuMark, 'X');
+            expect(localStorage.setItem).toHaveBeenCalledWith(currentTurnMark, 'X');
+            expect(localStorage.setItem).toHaveBeenCalledWith(cpuScore, '0');
+            expect(localStorage.setItem).toHaveBeenCalledWith(playerScore, '0');
         });
         
         test('when user clicks on New Game VS Player', () => {           
@@ -87,8 +103,11 @@ describe('Test <NewGame />', () => {
             
             expect(mockNavigate).toHaveBeenCalledWith('/', { replace: true });
             expect(localStorage.clear).toHaveBeenCalledTimes(1);
-            expect(localStorage.setItem).toHaveBeenCalledWith('p1Mark', 'O');
-            expect(localStorage.setItem).toHaveBeenCalledWith('p2Mark', 'X');
+            expect(localStorage.setItem).toHaveBeenCalledWith(p1Mark, 'O');
+            expect(localStorage.setItem).toHaveBeenCalledWith(p2Mark, 'X');
+            expect(localStorage.setItem).toHaveBeenCalledWith(currentTurnMark, 'X');
+            expect(localStorage.setItem).toHaveBeenCalledWith(p1Score, '0');
+            expect(localStorage.setItem).toHaveBeenCalledWith(p2Score, '0');
         });
     });
 });
