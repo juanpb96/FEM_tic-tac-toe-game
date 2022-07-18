@@ -19,8 +19,10 @@ describe('Test <GameBox />', () => {
 
     test('should render an "X" if player "X" has clicked the box', () => {
         render(
-            <GameBox 
-                player={'X'} 
+            <GameBox
+                hasMark={false}
+                mark={null}
+                currentPlayer={'X'} 
                 row={ 0 }
                 col={ 1 }
                 updateBoard={ mockUpdateBoard }
@@ -40,10 +42,34 @@ describe('Test <GameBox />', () => {
         expect(image.alt).toBe('X');
     });
 
+    test('should render an "X" if player "X" has marked the box from a saved game', () => {
+        render(
+            <GameBox
+                hasMark={true}
+                mark={'X'}
+                currentPlayer={'O'} 
+                row={ 0 }
+                col={ 1 }
+                updateBoard={ mockUpdateBoard }
+            />
+        );
+
+        expect(mockUpdateBoard).not.toHaveBeenCalled();
+
+        const box = screen.getByRole('button');
+        const image = box.children[0];
+
+        expect(image.tagName).toBe('IMG');
+        expect(image.src.includes('icon-x.svg')).toBeTruthy();
+        expect(image.alt).toBe('X');
+    });
+
     test('should not replace the current mark if the other player ("O") has clicked the box', () => {
         const { rerender } = render(
-            <GameBox 
-                player={'X'} 
+            <GameBox
+                hasMark={false}
+                mark={null}
+                currentPlayer={'X'} 
                 row={ 1 }
                 col={ 0 }
                 updateBoard={ mockUpdateBoard }
@@ -54,7 +80,7 @@ describe('Test <GameBox />', () => {
 
         expect(mockUpdateBoard).toHaveBeenCalledWith(1, 0);
 
-        rerender(<GameBox player={'O'} />);
+        rerender(<GameBox currentPlayer={'O'} />);
 
         fireEvent.click(screen.getByRole('button'));
 
