@@ -1,8 +1,21 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { localStorageMock } from '../../../helpers/mocks/localStorage.mock';
 import { PlayerCoxtext } from '../../../hocs/PlayerContext';
+import { STORAGE } from '../../../types/types';
 import { GameBoard } from '../GameBoard';
 
+const {
+    lsBoardState,
+    lsPlayerMark,
+    lsCpuMark,
+    lsP1Mark,
+    lsP2Mark,
+    lsCurrentTurnMark,
+    lsCpuScore,
+    lsPlayerScore,
+    lsP1Score,
+    lsP2Score,
+} = STORAGE;
 
 describe('Test <GameBoard />', () => { 
     describe('layout', () => { 
@@ -54,7 +67,7 @@ describe('Test <GameBoard />', () => {
         });
 
         test('should save board state in localStorage for the first time', () => {
-            const boardState = JSON.parse(localStorageMock.getItem('boardState'));
+            const boardState = JSON.parse(localStorageMock.getItem(lsBoardState));
 
             expect(boardState).toEqual([
                 [null, null, null],
@@ -77,7 +90,7 @@ describe('Test <GameBoard />', () => {
                 </PlayerCoxtext.Provider>
             );
 
-            const boardState = JSON.parse(localStorageMock.getItem('boardState'));
+            const boardState = JSON.parse(localStorageMock.getItem(lsBoardState));
 
             expect(boardState).toEqual([
                 [null, null, null],
@@ -87,7 +100,7 @@ describe('Test <GameBoard />', () => {
         });
 
         test('should get board state from localStorage and display board as expected', () => {
-            localStorageMock.setItem('boardState', JSON.stringify([
+            localStorageMock.setItem(lsBoardState, JSON.stringify([
                 ['X', null, null],
                 [null, 'X', null],
                 ['O', null, 'O'],
@@ -110,8 +123,8 @@ describe('Test <GameBoard />', () => {
         let component;
 
         beforeEach(() => {
-            localStorageMock.setItem('CPUMark', 'X');
-            localStorageMock.setItem('playerMark', 'O');
+            localStorageMock.setItem(lsCpuMark, 'X');
+            localStorageMock.setItem(lsPlayerMark, 'O');
 
             const [player, setPlayer] = ['X', jest.fn()];
 
@@ -166,8 +179,8 @@ describe('Test <GameBoard />', () => {
 
         describe('CPU should block player win when', () => {
             beforeEach(() => {
-                localStorageMock.setItem('CPUMark', 'O');
-                localStorageMock.setItem('playerMark', 'X');
+                localStorageMock.setItem(lsCpuMark, 'O');
+                localStorageMock.setItem(lsPlayerMark, 'X');
             });
     
             afterEach(() => {
@@ -175,7 +188,7 @@ describe('Test <GameBoard />', () => {
             });
 
             test('player makes two horizontal moves and needs one to win', () => { 
-                localStorageMock.setItem('boardState', JSON.stringify([
+                localStorageMock.setItem(lsBoardState, JSON.stringify([
                     ['X', null, 'X'],
                     [null, null, null],
                     ['O', null, null],
@@ -197,7 +210,7 @@ describe('Test <GameBoard />', () => {
             });
     
             test('player makes two vertical moves and needs one to win', () => { 
-                localStorageMock.setItem('boardState', JSON.stringify([
+                localStorageMock.setItem(lsBoardState, JSON.stringify([
                     [null, 'X', null],
                     ['O', 'X', null],
                     [null, null, null],
@@ -219,7 +232,7 @@ describe('Test <GameBoard />', () => {
             });
     
             test('player makes two diagonal moves and needs one to win. CPU should block player win', () => {
-                localStorageMock.setItem('boardState', JSON.stringify([
+                localStorageMock.setItem(lsBoardState, JSON.stringify([
                     [null, null, null],
                     [null, 'X', null],
                     ['X', null, 'O'],
@@ -242,18 +255,27 @@ describe('Test <GameBoard />', () => {
         });
 
         describe('CPU win by having three marks in a row', () => {
+            const [setShowModal, setModalValues] = [jest.fn(), jest.fn()];
+            const [player, setPlayer] = ['X', jest.fn()];
+
+            afterEach(() => {
+                jest.clearAllMocks();
+                localStorageMock.clear();
+            });
+
             test('CPU select a winner move if it needs one horizontal mark', () => {
-                localStorageMock.setItem('boardState', JSON.stringify([
+                localStorageMock.setItem(lsBoardState, JSON.stringify([
                     [null, 'O',  'O' ],
                     ['X',  null,  'X'],
                     [null, null, null],
                 ]));
     
-                const [player, setPlayer] = ['X', jest.fn()];
-    
-                const { container } = render(
+                const { container, debug } = render(
                     <PlayerCoxtext.Provider value={{ player, setPlayer }}>
-                        <GameBoard />
+                        <GameBoard 
+                            setShowModal={setShowModal}
+                            setModalValues={setModalValues}
+                        />
                     </PlayerCoxtext.Provider>
                 );
 
@@ -262,20 +284,24 @@ describe('Test <GameBoard />', () => {
 
                 expect(winnerButton).toHaveLength(1);
                 expect(winnerButton.item(0).alt).toBe('X');
+                expect(setShowModal).toHaveBeenCalledWith(true);
+                expect(setModalValues).toHaveBeenCalled();
+                expect(localStorageMock.getItem(lsCpuScore)).toBe(1);
             });
 
             test('CPU select a winner move if it needs one vertical mark', () => {
-                localStorageMock.setItem('boardState', JSON.stringify([
+                localStorageMock.setItem(lsBoardState, JSON.stringify([
                     ['O',  'X',  null],
                     ['O',  null, null],
                     [null, 'X',  null],
                 ]));
     
-                const [player, setPlayer] = ['X', jest.fn()];
-    
                 const { container } = render(
                     <PlayerCoxtext.Provider value={{ player, setPlayer }}>
-                        <GameBoard />
+                        <GameBoard 
+                            setShowModal={setShowModal}
+                            setModalValues={setModalValues}
+                        />
                     </PlayerCoxtext.Provider>
                 );
 
@@ -284,20 +310,24 @@ describe('Test <GameBoard />', () => {
 
                 expect(winnerButton).toHaveLength(1);
                 expect(winnerButton.item(0).alt).toBe('X');
+                expect(setShowModal).toHaveBeenCalledWith(true);
+                expect(setModalValues).toHaveBeenCalled();
+                expect(localStorageMock.getItem(lsCpuScore)).toBe(1);
             });
 
             test('CPU select a winner move if it needs one diagonal mark', () => {
-                localStorageMock.setItem('boardState', JSON.stringify([
+                localStorageMock.setItem(lsBoardState, JSON.stringify([
                     [null, 'O', null],
                     [null, 'X', null],
                     [null, 'O',  'X'],
                 ]));
     
-                const [player, setPlayer] = ['X', jest.fn()];
-    
                 const { container } = render(
                     <PlayerCoxtext.Provider value={{ player, setPlayer }}>
-                        <GameBoard />
+                        <GameBoard 
+                            setShowModal={setShowModal}
+                            setModalValues={setModalValues}
+                        />
                     </PlayerCoxtext.Provider>
                 );
 
@@ -306,6 +336,9 @@ describe('Test <GameBoard />', () => {
 
                 expect(winnerButton).toHaveLength(1);
                 expect(winnerButton.item(0).alt).toBe('X');
+                expect(setShowModal).toHaveBeenCalledWith(true);
+                expect(setModalValues).toHaveBeenCalled();
+                expect(localStorageMock.getItem(lsCpuScore)).toBe(1);
             });
         });
     });
