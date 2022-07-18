@@ -4,15 +4,15 @@ import { ASSETS_PATH } from '../../helpers/constants';
 import { STORAGE } from '../../types/types';
 
 const {
-    playerMark,
-    playerScore,
-    cpuMark,
-    cpuScore,
-    p1Mark,
-    p1Score,
-    p2Mark,
-    p2Score,
-    currentTurnMark
+    lsPlayerMark,
+    lsCpuMark,
+    lsP1Mark,
+    lsP2Mark,
+    lsCurrentTurnMark,
+    lsCpuScore,
+    lsPlayerScore,
+    lsP1Score,
+    lsP2Score,
 } = STORAGE;
 
 export const NewGame = () => {
@@ -42,18 +42,18 @@ export const NewGame = () => {
         if (isPlayerVsCPU) {
             const cpu = p1MarkRef.current === 'X' ? 'O' : 'X';
 
-            localStorage.setItem(playerMark, p1MarkRef.current);
-            localStorage.setItem(cpuMark, cpu);
-            localStorage.setItem(cpuScore, '0');
-            localStorage.setItem(playerScore, '0');
+            localStorage.setItem(lsPlayerMark, p1MarkRef.current);
+            localStorage.setItem(lsCpuMark, cpu);
+            localStorage.setItem(lsCpuScore, '0');
+            localStorage.setItem(lsPlayerScore, '0');
         } else {
-            localStorage.setItem(p1Mark, p1MarkRef.current);
-            localStorage.setItem(p2Mark, p2MarkRef.current);
-            localStorage.setItem(p1Score, '0');
-            localStorage.setItem(p2Score, '0');
+            localStorage.setItem(lsP1Mark, p1MarkRef.current);
+            localStorage.setItem(lsP2Mark, p2MarkRef.current);
+            localStorage.setItem(lsP1Score, '0');
+            localStorage.setItem(lsP2Score, '0');
         }
 
-        localStorage.setItem(currentTurnMark, 'X');
+        localStorage.setItem(lsCurrentTurnMark, 'X');
         navigate('/', { replace: true });
     };
 

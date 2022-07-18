@@ -10,15 +10,15 @@ jest.mock('react-router-dom', () => ({
 }));
 
 const {
-    playerMark,
-    playerScore,
-    cpuMark,
-    cpuScore,
-    p1Mark,
-    p1Score,
-    p2Mark,
-    p2Score,
-    currentTurnMark
+    lsPlayerMark,
+    lsCpuMark,
+    lsP1Mark,
+    lsP2Mark,
+    lsCurrentTurnMark,
+    lsCpuScore,
+    lsPlayerScore,
+    lsP1Score,
+    lsP2Score,
 } = STORAGE;
 
 describe('Test <NewGame />', () => { 
@@ -91,11 +91,11 @@ describe('Test <NewGame />', () => {
 
             expect(mockNavigate).toHaveBeenCalledWith('/', { replace: true });
             expect(localStorage.clear).toHaveBeenCalledTimes(1);
-            expect(localStorage.setItem).toHaveBeenCalledWith(playerMark, 'O');
-            expect(localStorage.setItem).toHaveBeenCalledWith(cpuMark, 'X');
-            expect(localStorage.setItem).toHaveBeenCalledWith(currentTurnMark, 'X');
-            expect(localStorage.setItem).toHaveBeenCalledWith(cpuScore, '0');
-            expect(localStorage.setItem).toHaveBeenCalledWith(playerScore, '0');
+            expect(localStorage.setItem).toHaveBeenCalledWith(lsPlayerMark, 'O');
+            expect(localStorage.setItem).toHaveBeenCalledWith(lsCpuMark, 'X');
+            expect(localStorage.setItem).toHaveBeenCalledWith(lsCurrentTurnMark, 'X');
+            expect(localStorage.setItem).toHaveBeenCalledWith(lsCpuScore, '0');
+            expect(localStorage.setItem).toHaveBeenCalledWith(lsPlayerScore, '0');
         });
         
         test('when user clicks on New Game VS Player', () => {           
@@ -103,11 +103,11 @@ describe('Test <NewGame />', () => {
             
             expect(mockNavigate).toHaveBeenCalledWith('/', { replace: true });
             expect(localStorage.clear).toHaveBeenCalledTimes(1);
-            expect(localStorage.setItem).toHaveBeenCalledWith(p1Mark, 'O');
-            expect(localStorage.setItem).toHaveBeenCalledWith(p2Mark, 'X');
-            expect(localStorage.setItem).toHaveBeenCalledWith(currentTurnMark, 'X');
-            expect(localStorage.setItem).toHaveBeenCalledWith(p1Score, '0');
-            expect(localStorage.setItem).toHaveBeenCalledWith(p2Score, '0');
+            expect(localStorage.setItem).toHaveBeenCalledWith(lsP1Mark, 'O');
+            expect(localStorage.setItem).toHaveBeenCalledWith(lsP2Mark, 'X');
+            expect(localStorage.setItem).toHaveBeenCalledWith(lsCurrentTurnMark, 'X');
+            expect(localStorage.setItem).toHaveBeenCalledWith(lsP1Score, '0');
+            expect(localStorage.setItem).toHaveBeenCalledWith(lsP2Score, '0');
         });
     });
 });

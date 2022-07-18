@@ -8,14 +8,16 @@ export const MODAL_TYPES = {
 };
 
 export const STORAGE = {
-    playerMark: 'PLAYER_MARK',
-    cpuMark: 'CPU_MARK',
-    p1Mark: 'P1_MARK',
-    p2Mark: 'P2_MARK',
-    currentTurnMark: 'CURRENT_TURN_MARK',
+    lsBoardState: 'BOARD_STATE',
 
-    cpuScore: 'CPU_SCORE',
-    playerScore: 'PLAYER_SCORE',
-    p1Score: 'P1_SCORE',
-    p2Score: 'P2_SCORE',
+    lsPlayerMark: 'PLAYER_MARK',
+    lsCpuMark: 'CPU_MARK',
+    lsP1Mark: 'P1_MARK',
+    lsP2Mark: 'P2_MARK',
+    lsCurrentTurnMark: 'CURRENT_TURN_MARK',
+
+    lsCpuScore: 'CPU_SCORE',
+    lsPlayerScore: 'PLAYER_SCORE',
+    lsP1Score: 'P1_SCORE',
+    lsP2Score: 'P2_SCORE',
 };
