@@ -16,6 +16,13 @@ const {
     lsP2Score,
 } = STORAGE;
 
+const USER = {
+    player: 'player',
+    p1: 'p1',
+    p2: 'p2,',
+    cpu: 'cpu',
+};
+
 export const GameBoard = ({ setModalValues, setShowModal }) => {
     const { player, setPlayer } = useContext(PlayerCoxtext);
 
@@ -49,213 +56,29 @@ export const GameBoard = ({ setModalValues, setShowModal }) => {
             return board;
         });
         setPlayer(player === 'X' ? 'O' : 'X');
+
+        console.log(board);
     };
 
-    const updateCpuScore = () => {
-        const cpuCurrentScore = +localStorage.getItem(lsCpuScore);
+    const updateScore = (winner) => {
+        switch (winner) {
+            case USER.cpu:
+                const cpuCurrentScore = +localStorage.getItem(lsCpuScore);
+                localStorage.setItem(
+                    lsCpuScore,
+                    cpuCurrentScore ? cpuCurrentScore + 1 : 1
+                );
+                return;
+            case USER.player:
+                const playerCurrentScore = +localStorage.getItem(lsPlayerScore);
         
-        localStorage.setItem(
-            lsCpuScore,
-            cpuCurrentScore ? cpuCurrentScore + 1 : 1
-        );
-    };
-
-    /*
-    *   FIXME: Improve logic to avoid too many loops to decide wheter
-    *           user has won or cpu
-    */
-    const checkEndGame = () => {
-        let messageType = '';
-
-        board.forEach(row => {
-            if (row.every(cell => cell === 'X')) {
-                if (cpuMark === 'X') {
-                    messageType = MODAL_TYPES.player_lost;
-                    updateCpuScore();
-                } else if (p1Mark === 'X') {
-                    messageType = MODAL_TYPES.player_won;
-                }
-
-                setModalValues(prev => ({
-                    ...prev,
-                    type: messageType,
-                    winnerMark: 'X',
-                }));
-                setShowModal(true);
-                isGameOver.current = true;
+                localStorage.setItem(
+                    lsPlayerScore,
+                    playerCurrentScore ? playerCurrentScore + 1 : 1
+                );
                 return;
-            }
-
-            if (row.every(cell => cell === 'O')) {
-                if (cpuMark === 'O') {
-                    messageType = MODAL_TYPES.player_lost;
-                    updateCpuScore();
-                } else if (p1Mark === 'O') {
-                    messageType = MODAL_TYPES.player_won;
-                }
-
-                setModalValues(prev => ({
-                    ...prev,
-                    type: messageType,
-                    winnerMark: 'O',
-                }));
-                setShowModal(true);
-                isGameOver.current = true;
-                return;
-            }
-        });
-
-        let ocurrencesX = 0;
-        let ocurrencesO = 0;
-
-        for (let col = 0; col < board.length; col++) {
-            ocurrencesX = 0;
-            ocurrencesO = 0;
-
-            for (let row = 0; row < board.length; row++) {
-                const cell = board[row][col];
-
-                if (cell === 'X') {
-                    ocurrencesX++;
-                } 
-
-                if (cell === 'O') {
-                    ocurrencesO++;
-                }
-            }
-
-            if (ocurrencesX === 3) {
-                if (cpuMark === 'X') {
-                    messageType = MODAL_TYPES.player_lost;
-                    updateCpuScore();
-                } else if (p1Mark === 'X') {
-                    messageType = MODAL_TYPES.player_won;
-                }
-
-                setModalValues(prev => ({
-                    type: messageType,
-                    winnerMark: 'X'
-                }));
-                setShowModal(true);
-                isGameOver.current = true;
-                return;
-            } else if (ocurrencesO === 3) {
-                if (cpuMark === 'O') {
-                    messageType = MODAL_TYPES.player_lost;
-                    updateCpuScore();
-                } else if (p1Mark === 'O') {
-                    messageType = MODAL_TYPES.player_won;
-                }
-
-                setModalValues(prev => ({
-                    type: messageType,
-                    winnerMark: 'O'
-                }));
-                setShowModal(true);
-                isGameOver.current = true;
-                return;
-            }
-        }
-
-        // TODO: Validate diagonal victory and players marks
-        // Top to bottom
-        ocurrencesX = 0;
-        ocurrencesO = 0;
-
-        for (let i = 0; i < board.length; i++) {
-            const cell = board[i][i];
-            
-            if (cell === 'X') {
-                ocurrencesX++;
-            } 
-
-            if (cell === 'O') {
-                ocurrencesO++;
-            }
-        }
-
-        if (ocurrencesX === 3) {
-            if (cpuMark === 'X') {
-                messageType = MODAL_TYPES.player_lost;
-                updateCpuScore();
-            } else if (p1Mark === 'X') {
-                messageType = MODAL_TYPES.player_won;
-            }
-
-            setModalValues(prev => ({
-                ...prev,
-                type: messageType,
-                winnerMark: 'X'
-            }));
-            setShowModal(true);
-            isGameOver.current = true;
-            return;
-        } else if (ocurrencesO === 3) {
-            if (cpuMark === 'O') {
-                messageType = MODAL_TYPES.player_lost;
-                updateCpuScore();
-            } else if (p1Mark === 'O') {
-                messageType = MODAL_TYPES.player_won;
-            }
-
-            setModalValues(prev => ({
-                ...prev,
-                type: messageType,
-                winnerMark: 'O'
-            }));
-            setShowModal(true);
-            isGameOver.current = true;
-            return;
-        }
-
-        // Bottom to top
-        ocurrencesX = 0;
-        ocurrencesO = 0;
-
-        for (let i = 2; i > 0; i--) {
-            const cell = board[i][i];
-            
-            if (cell === 'X') {
-                ocurrencesX++;
-            } 
-
-            if (cell === 'O') {
-                ocurrencesO++;
-            }
-        }
-
-        if (ocurrencesX === 3) {
-            if (cpuMark === 'X') {
-                messageType = MODAL_TYPES.player_lost;
-                updateCpuScore();
-            } else if (p1Mark === 'X') {
-                messageType = MODAL_TYPES.player_won;
-            }
-
-            setModalValues(prev => ({
-                ...prev,
-                type: messageType,
-                winnerMark: 'X'
-            }));
-            setShowModal(true);
-            isGameOver.current = true;
-            return;
-        } else if (ocurrencesO === 3) {
-            if (cpuMark === 'O') {
-                messageType = MODAL_TYPES.player_lost;
-                updateCpuScore();
-            } else if (p1Mark === 'O') {
-                messageType = MODAL_TYPES.player_won;
-            }
-
-            setModalValues(prev => ({
-                ...prev,
-                type: messageType,
-                winnerMark: 'O'
-            }));
-            setShowModal(true);
-            isGameOver.current = true;
-            return;
+            default:
+                break;
         }
     };
 
@@ -279,116 +102,177 @@ export const GameBoard = ({ setModalValues, setShowModal }) => {
                     makeRandomMove();
                     break;
             }
-
-            checkEndGame();
         },
         [],
     );
 
+    const displayModal = (messageType, mark) => {   
+        setModalValues(prev => ({
+            ...prev,
+            type: messageType,
+            winnerMark: mark,
+        }));
+        setShowModal(true);
+    };
+
+    const checkWinCondition = (p1Marks, p2Marks, isCellEmpty = false) => {
+        // FIXME: Modify this when implementing logic for 2 players
+
+        if (p1Marks < 3 && p2Marks < 3 && !(isCellEmpty && p2Marks === 2)) {
+            return false;
+        }
+
+        console.log('GAME OVER', { p1Marks, p2Marks, isCellEmpty });
+
+        isGameOver.current = true;
+
+        if (p1Marks === 3) {
+            displayModal(MODAL_TYPES.player_won, p1Mark);
+            updateScore(USER.player);
+        } 
+        
+        if (p2Marks === 3 || p2Marks === 2) {
+            displayModal(MODAL_TYPES.player_lost, cpuMark);
+            updateScore(USER.cpu);
+        }
+
+        return true;
+    };
+
+    const checkBoard = (type) => {
+        const blockMove = {
+            x: 0,
+            y: 0,
+            shouldBlock: false,
+        };
+        let x = 0;
+        let y = 0;
+        let playerOcurrences = 0;
+        let cpuOcurrences = 0;
+        let isCellEmpty = false;
+
+        for (let row = 0; row < board.length; row++) {
+            playerOcurrences = 0;
+            cpuOcurrences = 0;
+            isCellEmpty = false;
+
+            for (let col = 0; col < board.length; col++) {
+                let cell;
+
+                switch (type) {
+                    case 'rows':
+                        cell = board[row][col];       
+                        break;
+                    case 'cols':
+                        cell = board[col][row];
+                        break;
+                    default:
+                        break;
+                }
+
+                // TODO: Validate if this block could be separated and re used
+                switch (cell) {
+                    case p1Mark:
+                        playerOcurrences++;
+                        break;
+                    case cpuMark:
+                        cpuOcurrences++;
+                        break
+                    case null:
+                        isCellEmpty = true;
+
+                        if (type === 'cols') {
+                            x = col;
+                            y = row;
+                            break;
+                        }
+
+                        x = row;
+                        y = col;
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+            if (checkWinCondition(playerOcurrences, cpuOcurrences, isCellEmpty)) {
+
+                if (isCellEmpty && cpuOcurrences === 2) {
+                    blockMove.x = x;
+                    blockMove.y = y;
+                    blockMove.shouldBlock = true;
+
+                    return { ...blockMove };
+                }
+
+                return;
+            }
+
+            if (isCellEmpty && playerOcurrences === 2) {
+                blockMove.x = x;
+                blockMove.y = y;
+                blockMove.shouldBlock = true;
+            }
+        }
+
+        return { ...blockMove };
+    };
+
     const makeCpuMove = useCallback(
         () => {
-            const blockMove = {
-                x: 0,
-                y: 0,
-                shouldBlock: false,
-            };
+            // Check rows
+            const blockRowCell = checkBoard('rows');
+
+            if (blockRowCell?.shouldBlock) {
+                clickBox(blockRowCell.x, blockRowCell.y);
+                return;
+            }
+
+            // Check columns
+            const blockColCell = checkBoard('cols');
+
+            if (blockColCell?.shouldBlock) {
+                clickBox(blockColCell.x, blockColCell.y);
+                return;
+            }
+
             let x = 0;
             let y = 0;
             let playerOcurrences = 0;
             let cpuOcurrences = 0;
-    
-            // Check rows
-            for (const [indexX, row] of board.entries()) {
-                playerOcurrences = 0;
-                cpuOcurrences = 0;
-    
-                for (const [indexY, cell] of row.entries()) {
-                    if (cell === p1Mark) {
-                        playerOcurrences++;
-                        cpuOcurrences--;
-                    } else if (cell === cpuMark) {
-                        playerOcurrences--;
-                        cpuOcurrences++;
-                    } else {
-                        x = indexX;
-                        y = indexY;
-                    }
-                }
-    
-                if (playerOcurrences === 2) {
-                    blockMove.x = x;
-                    blockMove.y = y;
-                    blockMove.shouldBlock = true;
-                }
+            let isCellEmpty = false;
 
-                if (cpuOcurrences === 2) {
-                    clickBox(x, y);
-                    return;
-                }
-            }
-
-            if (blockMove.shouldBlock) {
-                clickBox(blockMove.x, blockMove.y);
-                return;
-            }
-            
-            // Check columns
-            for (let col = 0; col < board.length; col++) {
-                playerOcurrences = 0;
-                cpuOcurrences = 0;
-    
-                for (let row = 0; row < board.length; row++) {
-                    const cell = board[row][col];
-
-                    if (cell === p1Mark) {
-                        playerOcurrences++;
-                        cpuOcurrences--;
-                    } else if (cell === cpuMark) {
-                        playerOcurrences--;
-                        cpuOcurrences++;
-                    } else {
-                        x = row;
-                        y = col;
-                    }
-                }
-    
-                if (playerOcurrences === 2) {
-                    blockMove.x = x;
-                    blockMove.y = y;
-                    blockMove.shouldBlock = true;
-                }
-
-                if (cpuOcurrences === 2) {
-                    clickBox(x, y);
-                    return;
-                }
-            }
-
-            if (blockMove.shouldBlock) {
-                clickBox(blockMove.x, blockMove.y);
-                return;
-            }
-    
             // Check diagonals
             // Top to bottom
-            playerOcurrences = 0;
-            cpuOcurrences = 0;
-
             for (let i = 0; i < board.length; i++) {
                 const cell = board[i][i];
-                if (cell === p1Mark) {
-                    playerOcurrences++;
-                    cpuOcurrences--;
-                } else if (cell === cpuMark) {
-                    playerOcurrences--;
-                    cpuOcurrences++;
-                } else {
-                    x = i;
-                    y = i;
+
+                switch (cell) {
+                    case p1Mark:
+                        playerOcurrences++;
+                        break;
+                    case cpuMark:
+                        cpuOcurrences++;
+                        break
+                    case null:
+                        isCellEmpty = true;
+                        x = i;
+                        y = i;
+                        break;
+                    default:
+                        break;
                 }
             }
 
-            if (cpuOcurrences === 2 || playerOcurrences === 2) {
+            if (checkWinCondition(playerOcurrences, cpuOcurrences, isCellEmpty)) {
+                if (isCellEmpty && cpuOcurrences === 2) {
+                    clickBox(x, y);
+                }
+
+                return;
+            }
+
+            if (isCellEmpty && playerOcurrences === 2) {
                 clickBox(x, y);
                 return;
             }
@@ -396,23 +280,37 @@ export const GameBoard = ({ setModalValues, setShowModal }) => {
             // Bottom to top
             playerOcurrences = 0;
             cpuOcurrences = 0;
+            isCellEmpty = false;
     
             for (let row = 2, col = 0; row >= 0; row--, col++) {
                 const cell = board[row][col];
     
-                if (cell === p1Mark) {
-                    playerOcurrences++;
-                    cpuOcurrences--;
-                } else if (cell === cpuMark) {
-                    playerOcurrences--;
-                    cpuOcurrences++;
-                } else {
-                    x = row;
-                    y = col;
+                switch (cell) {
+                    case p1Mark:
+                        playerOcurrences++;
+                        break;
+                    case cpuMark:
+                        cpuOcurrences++;
+                        break
+                    case null:
+                        isCellEmpty = true;
+                        x = row;
+                        y = col;
+                        break;
+                    default:
+                        break;
                 }
             }
     
-            if (cpuOcurrences === 2 || playerOcurrences === 2) {
+            if (checkWinCondition(playerOcurrences, cpuOcurrences, isCellEmpty)) {
+                if (isCellEmpty && cpuOcurrences === 2) {
+                    clickBox(x, y);
+                }
+
+                return;
+            }
+
+            if (isCellEmpty && playerOcurrences === 2) {
                 clickBox(x, y);
                 return;
             }
@@ -422,6 +320,7 @@ export const GameBoard = ({ setModalValues, setShowModal }) => {
         [board, p1Mark, cpuMark, clickBox],
     );
 
+    // FIXME: There is a 'infinite' loop that appears once the player click the last box available
     const makeRandomMove = () => {
         const buttons = boardRef.current.getElementsByTagName('button');
 
@@ -433,8 +332,6 @@ export const GameBoard = ({ setModalValues, setShowModal }) => {
 
         console.log('Random Move', pos);
         buttons[pos].click();
-
-        checkEndGame();
     };
 
     useEffect(() => {
@@ -454,6 +351,8 @@ export const GameBoard = ({ setModalValues, setShowModal }) => {
         localStorage.setItem(lsCurrentTurnMark, player);
     }, [board, player]);
     
+
+    // TODO: Block user moves when game is over
 
     return (
         <main

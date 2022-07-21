@@ -223,7 +223,7 @@ describe('Test <GameBoard />', () => {
                         <GameBoard />
                     </PlayerCoxtext.Provider>
                 );
-    
+
                 const buttons = container.getElementsByTagName('button');
                 const buttonToBlockWin = buttons[7].children;
     
@@ -270,7 +270,7 @@ describe('Test <GameBoard />', () => {
                     [null, null, null],
                 ]));
     
-                const { container, debug } = render(
+                const { container } = render(
                     <PlayerCoxtext.Provider value={{ player, setPlayer }}>
                         <GameBoard 
                             setShowModal={setShowModal}
@@ -315,7 +315,7 @@ describe('Test <GameBoard />', () => {
                 expect(localStorageMock.getItem(lsCpuScore)).toBe(1);
             });
 
-            test('CPU select a winner move if it needs one diagonal mark', () => {
+            test('CPU select a winner move if it needs one diagonal mark - Top bottom', () => {
                 localStorageMock.setItem(lsBoardState, JSON.stringify([
                     [null, 'O', null],
                     [null, 'X', null],
@@ -333,6 +333,32 @@ describe('Test <GameBoard />', () => {
 
                 const buttons = container.getElementsByTagName('button');
                 const winnerButton = buttons[0].children;
+
+                expect(winnerButton).toHaveLength(1);
+                expect(winnerButton.item(0).alt).toBe('X');
+                expect(setShowModal).toHaveBeenCalledWith(true);
+                expect(setModalValues).toHaveBeenCalled();
+                expect(localStorageMock.getItem(lsCpuScore)).toBe(1);
+            });
+
+            test('CPU select a winner move if it needs one diagonal mark - Bottom top', () => {
+                localStorageMock.setItem(lsBoardState, JSON.stringify([
+                    ['X', 'O', null],
+                    [null, 'X', null],
+                    [null, 'O',  null],
+                ]));
+    
+                const { container } = render(
+                    <PlayerCoxtext.Provider value={{ player, setPlayer }}>
+                        <GameBoard 
+                            setShowModal={setShowModal}
+                            setModalValues={setModalValues}
+                        />
+                    </PlayerCoxtext.Provider>
+                );
+
+                const buttons = container.getElementsByTagName('button');
+                const winnerButton = buttons[8].children;
 
                 expect(winnerButton).toHaveLength(1);
                 expect(winnerButton.item(0).alt).toBe('X');
