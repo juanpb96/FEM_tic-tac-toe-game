@@ -1,6 +1,7 @@
-import { useRef, useState } from 'react';
+import { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ASSETS_PATH } from '../../helpers/constants';
+import { PlayerCoxtext } from '../../hocs/PlayerContext';
 import { STORAGE } from '../../types/types';
 
 const {
@@ -16,6 +17,7 @@ const {
 } = STORAGE;
 
 export const NewGame = () => {
+    const { setPlayer } = useContext(PlayerCoxtext);
     const [isMarkXChecked, setIsMarkXChecked] = useState(false);
 
     const navigate = useNavigate();
@@ -49,6 +51,8 @@ export const NewGame = () => {
         }
 
         localStorage.setItem(lsCurrentTurnMark, 'X');
+        setPlayer('X');
+
         navigate('/', { replace: true });
     };
 

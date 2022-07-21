@@ -1,4 +1,5 @@
 import { fireEvent, render, screen } from '@testing-library/react';
+import { PlayerCoxtext } from '../../../hocs/PlayerContext';
 import { STORAGE } from '../../../types/types';
 import { NewGame } from '../NewGame';
 
@@ -22,8 +23,14 @@ const {
 } = STORAGE;
 
 describe('Test <NewGame />', () => { 
+    const [player, setPlayer] = ['X', jest.fn()];
+
     beforeEach(() => {
-        render(<NewGame />);
+        render(
+            <PlayerCoxtext.Provider value={{ player, setPlayer }}>
+                <NewGame />
+            </PlayerCoxtext.Provider>
+        );
     });
 
     describe('should contain >', () => {
@@ -96,6 +103,7 @@ describe('Test <NewGame />', () => {
             expect(localStorage.setItem).toHaveBeenCalledWith(lsCurrentTurnMark, 'X');
             expect(localStorage.setItem).toHaveBeenCalledWith(lsCpuScore, '0');
             expect(localStorage.setItem).toHaveBeenCalledWith(lsPlayerScore, '0');
+            expect(setPlayer).toHaveBeenCalledWith('X');
         });
         
         test('when user clicks on New Game VS Player', () => {           
@@ -108,6 +116,7 @@ describe('Test <NewGame />', () => {
             expect(localStorage.setItem).toHaveBeenCalledWith(lsCurrentTurnMark, 'X');
             expect(localStorage.setItem).toHaveBeenCalledWith(lsP1Score, '0');
             expect(localStorage.setItem).toHaveBeenCalledWith(lsP2Score, '0');
+            expect(setPlayer).toHaveBeenCalledWith('X');
         });
     });
 });
