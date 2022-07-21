@@ -18,9 +18,6 @@ const {
 export const NewGame = () => {
     const [isMarkXChecked, setIsMarkXChecked] = useState(false);
 
-    const p1MarkRef = useRef('O');
-    const p2MarkRef = useRef('X');
-
     const navigate = useNavigate();
 
     // TODO: Add animation when toggling marks
@@ -30,25 +27,23 @@ export const NewGame = () => {
             return;
         }
 
-        p1MarkRef.current = mark;
-        p2MarkRef.current = mark === 'X' ? 'O' : 'X';
-
         setIsMarkXChecked(mark === 'X');
     };
 
     const handleNewGame = (isPlayerVsCPU) => {
         localStorage.clear();
 
-        if (isPlayerVsCPU) {
-            const cpu = p1MarkRef.current === 'X' ? 'O' : 'X';
+        const p1 = isMarkXChecked ? 'X' : 'O';
+        const p2 = isMarkXChecked ? 'O' : 'X';
 
-            localStorage.setItem(lsPlayerMark, p1MarkRef.current);
-            localStorage.setItem(lsCpuMark, cpu);
+        if (isPlayerVsCPU) {
+            localStorage.setItem(lsPlayerMark, p1);
+            localStorage.setItem(lsCpuMark, p2);
             localStorage.setItem(lsCpuScore, '0');
             localStorage.setItem(lsPlayerScore, '0');
         } else {
-            localStorage.setItem(lsP1Mark, p1MarkRef.current);
-            localStorage.setItem(lsP2Mark, p2MarkRef.current);
+            localStorage.setItem(lsP1Mark, p1);
+            localStorage.setItem(lsP2Mark, p2);
             localStorage.setItem(lsP1Score, '0');
             localStorage.setItem(lsP2Score, '0');
         }
