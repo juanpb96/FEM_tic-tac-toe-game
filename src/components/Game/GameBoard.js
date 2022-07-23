@@ -139,61 +139,71 @@ export const GameBoard = ({ setModalValues, setShowModal }) => {
         return true;
     };
 
-    const checkBoard = (type) => {
+    const makeCpuDiagonalMove = ({ playerOcurrences, cpuOcurrences, isCellEmpty, x, y }) => {
+        if (checkWinCondition(playerOcurrences, cpuOcurrences, isCellEmpty)) {
+            if (isCellEmpty && cpuOcurrences === 2) {
+                clickBox(x, y);
+            }
+
+            return true;
+        }
+
+        if (isCellEmpty && playerOcurrences === 2) {
+            clickBox(x, y);
+            return true;
+        }
+
+        return false;
+    };
+
+    const updateBoardValues = (cell, boardValues, x, y) => {
+        switch (cell) {
+            case p1Mark:
+                boardValues.playerOcurrences++;
+                break;
+            case cpuMark:
+                boardValues.cpuOcurrences++;
+                break
+            case null:
+                boardValues.isCellEmpty = true;
+                boardValues.x = x;
+                boardValues.y = y;
+                break;
+            default:
+                break;
+        }
+    };
+
+    const checkBoardRowsCols = (type) => {
         const blockMove = {
             x: 0,
             y: 0,
             shouldBlock: false,
         };
-        let x = 0;
-        let y = 0;
-        let playerOcurrences = 0;
-        let cpuOcurrences = 0;
-        let isCellEmpty = false;
+
+        const boardValues = {
+            x: 0,
+            y: 0,
+            playerOcurrences: 0,
+            cpuOcurrences: 0,
+            isCellEmpty: false,
+        };
 
         for (let row = 0; row < board.length; row++) {
-            playerOcurrences = 0;
-            cpuOcurrences = 0;
-            isCellEmpty = false;
+            boardValues.playerOcurrences = 0;
+            boardValues.cpuOcurrences = 0;
+            boardValues.isCellEmpty = false;
 
             for (let col = 0; col < board.length; col++) {
-                let cell;
-
-                switch (type) {
-                    case 'rows':
-                        cell = board[row][col];       
-                        break;
-                    case 'cols':
-                        cell = board[col][row];
-                        break;
-                    default:
-                        break;
-                }
-
-                // TODO: Validate if this block could be separated and re used
-                switch (cell) {
-                    case p1Mark:
-                        playerOcurrences++;
-                        break;
-                    case cpuMark:
-                        cpuOcurrences++;
-                        break
-                    case null:
-                        isCellEmpty = true;
-
-                        if (type === 'cols') {
-                            x = col;
-                            y = row;
-                            break;
-                        }
-
-                        x = row;
-                        y = col;
-                        break;
-                    default:
-                        break;
-                }
+                if (type === 'rows') {
+                    updateBoardValues(board[row][col], boardValues, row, col);
+                    continue;
+                } 
+                    
+                updateBoardValues(board[col][row], boardValues, col, row);
             }
+
+            const { playerOcurrences, cpuOcurrences, isCellEmpty, x, y } = boardValues;
 
             if (checkWinCondition(playerOcurrences, cpuOcurrences, isCellEmpty)) {
 
@@ -221,7 +231,7 @@ export const GameBoard = ({ setModalValues, setShowModal }) => {
     const makeCpuMove = useCallback(
         () => {
             // Check rows
-            const blockRowCell = checkBoard('rows');
+            const blockRowCell = checkBoardRowsCols('rows');
 
             if (blockRowCell?.shouldBlock) {
                 clickBox(blockRowCell.x, blockRowCell.y);
@@ -229,89 +239,41 @@ export const GameBoard = ({ setModalValues, setShowModal }) => {
             }
 
             // Check columns
-            const blockColCell = checkBoard('cols');
+            const blockColCell = checkBoardRowsCols('cols');
 
             if (blockColCell?.shouldBlock) {
                 clickBox(blockColCell.x, blockColCell.y);
                 return;
             }
 
-            let x = 0;
-            let y = 0;
-            let playerOcurrences = 0;
-            let cpuOcurrences = 0;
-            let isCellEmpty = false;
+            const boardValues = {
+                x: 0,
+                y: 0,
+                playerOcurrences: 0,
+                cpuOcurrences: 0,
+                isCellEmpty: false,
+            };
 
             // Check diagonals
             // Top to bottom
             for (let i = 0; i < board.length; i++) {
-                const cell = board[i][i];
-
-                switch (cell) {
-                    case p1Mark:
-                        playerOcurrences++;
-                        break;
-                    case cpuMark:
-                        cpuOcurrences++;
-                        break
-                    case null:
-                        isCellEmpty = true;
-                        x = i;
-                        y = i;
-                        break;
-                    default:
-                        break;
-                }
+                updateBoardValues(board[i][i], boardValues, i, i);
             }
 
-            if (checkWinCondition(playerOcurrences, cpuOcurrences, isCellEmpty)) {
-                if (isCellEmpty && cpuOcurrences === 2) {
-                    clickBox(x, y);
-                }
-
-                return;
-            }
-
-            if (isCellEmpty && playerOcurrences === 2) {
-                clickBox(x, y);
+            if (makeCpuDiagonalMove(boardValues)) {
                 return;
             }
     
             // Bottom to top
-            playerOcurrences = 0;
-            cpuOcurrences = 0;
-            isCellEmpty = false;
+            boardValues.playerOcurrences = 0;
+            boardValues.cpuOcurrences = 0;
+            boardValues.isCellEmpty = false;
     
-            for (let row = 2, col = 0; row >= 0; row--, col++) {
-                const cell = board[row][col];
-    
-                switch (cell) {
-                    case p1Mark:
-                        playerOcurrences++;
-                        break;
-                    case cpuMark:
-                        cpuOcurrences++;
-                        break
-                    case null:
-                        isCellEmpty = true;
-                        x = row;
-                        y = col;
-                        break;
-                    default:
-                        break;
-                }
-            }
-    
-            if (checkWinCondition(playerOcurrences, cpuOcurrences, isCellEmpty)) {
-                if (isCellEmpty && cpuOcurrences === 2) {
-                    clickBox(x, y);
-                }
-
-                return;
+            for (let row = 2, col = 0; row >= 0; row--, col++) {   
+                updateBoardValues(board[row][col], boardValues, row, col);
             }
 
-            if (isCellEmpty && playerOcurrences === 2) {
-                clickBox(x, y);
+            if (makeCpuDiagonalMove(boardValues)) {
                 return;
             }
     
@@ -320,7 +282,7 @@ export const GameBoard = ({ setModalValues, setShowModal }) => {
         [board, p1Mark, cpuMark, clickBox],
     );
 
-    // FIXME: There is a 'infinite' loop that appears once the player click the last box available
+    // FIXME: There is a 'infinite' loop that appears once the player click the last box available as 'X' mark
     const makeRandomMove = () => {
         const buttons = boardRef.current.getElementsByTagName('button');
 
