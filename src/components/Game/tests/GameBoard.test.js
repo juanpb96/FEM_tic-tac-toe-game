@@ -15,6 +15,8 @@ const {
     lsPlayerScore,
     lsP1Score,
     lsP2Score,
+    lsTiedScore,
+    lsTurnCount,
 } = STORAGE;
 
 describe('Test <GameBoard />', () => { 
@@ -368,5 +370,36 @@ describe('Test <GameBoard />', () => {
             });
         });
     });
+    
+    describe('Game is a tie', () => {
+        const [setShowModal, setModalValues] = [jest.fn(), jest.fn()];
+        const [player, setPlayer] = ['X', jest.fn()];
 
+        beforeEach(() => {
+            jest.clearAllMocks();
+            localStorageMock.clear();
+        });
+
+        test('Board is full of marks and nobody won', () => {
+            localStorageMock.setItem(lsTurnCount, 10);
+            localStorageMock.setItem(lsBoardState, JSON.stringify([
+                ['O', 'X', 'X'],
+                ['X', 'X', 'O'],
+                ['O', 'O', 'X'],
+            ]));
+
+            render(
+                <PlayerCoxtext.Provider value={{ player, setPlayer }}>
+                    <GameBoard 
+                        setShowModal={setShowModal}
+                        setModalValues={setModalValues}
+                    />
+                </PlayerCoxtext.Provider>
+            );
+
+            expect(setShowModal).toHaveBeenCalledWith(true);
+            expect(setModalValues).toHaveBeenCalled();
+            expect(localStorageMock.getItem(lsTiedScore)).toBe(1);
+        });
+    })
 });

@@ -5,6 +5,7 @@ import { GameBox } from './GameBox';
 
 const {
     lsBoardState,
+    lsTurnCount,
     lsPlayerMark,
     lsCpuMark,
     lsP1Mark,
@@ -14,6 +15,7 @@ const {
     lsPlayerScore,
     lsP1Score,
     lsP2Score,
+    lsTiedScore,
 } = STORAGE;
 
 const USER = {
@@ -25,6 +27,9 @@ const USER = {
 
 export const GameBoard = ({ setModalValues, setShowModal }) => {
     const { player, setPlayer } = useContext(PlayerCoxtext);
+
+    // TODO: When match ends and player leaves.
+    //       Display an empty board when player returns
 
     const emptyBoard = [
         [null, null, null],
@@ -39,6 +44,7 @@ export const GameBoard = ({ setModalValues, setShowModal }) => {
 
     const boardRef = useRef(null);
     const isGameOver = useRef(false);
+    const turnCounter = useRef(+localStorage.getItem(lsTurnCount) || 0);
 
     const cpuMark = localStorage.getItem(lsCpuMark);
     const searchFirstMove = board.some(row => row.some(cell => cell === cpuMark));
@@ -56,11 +62,12 @@ export const GameBoard = ({ setModalValues, setShowModal }) => {
             return board;
         });
         setPlayer(player === 'X' ? 'O' : 'X');
+        turnCounter.current += 1;
 
         console.log(board);
     };
 
-    const updateScore = (winner) => {
+    const updateScore = (winner = '') => {
         switch (winner) {
             case USER.cpu:
                 const cpuCurrentScore = +localStorage.getItem(lsCpuScore);
@@ -78,6 +85,12 @@ export const GameBoard = ({ setModalValues, setShowModal }) => {
                 );
                 return;
             default:
+                const tieCurrentScore = +localStorage.getItem(lsTiedScore);
+        
+                localStorage.setItem(
+                    lsTiedScore,
+                    tieCurrentScore ? tieCurrentScore + 1 : 1
+                );
                 break;
         }
     };
@@ -282,8 +295,16 @@ export const GameBoard = ({ setModalValues, setShowModal }) => {
         [board, p1Mark, cpuMark, clickBox],
     );
 
-    // FIXME: There is a 'infinite' loop that appears once the player click the last box available as 'X' mark
     const makeRandomMove = () => {
+        const isBoardFull = board.every(row => row.every(cell => cell === 'X' || cell === 'O'));
+
+        if (isBoardFull) {
+            displayModal(MODAL_TYPES.tied, '');
+            updateScore();
+            isGameOver.current = true;
+            return;
+        }
+
         const buttons = boardRef.current.getElementsByTagName('button');
 
         let pos = Math.floor(Math.random() * buttons.length);
@@ -311,6 +332,13 @@ export const GameBoard = ({ setModalValues, setShowModal }) => {
     useEffect(() => {
         localStorage.setItem(lsBoardState, JSON.stringify(board));
         localStorage.setItem(lsCurrentTurnMark, player);
+        localStorage.setItem(lsTurnCount, turnCounter.current);
+
+        if (turnCounter.current === 10 && !isGameOver.current) {
+            displayModal(MODAL_TYPES.tied, '');
+            updateScore();
+            isGameOver.current = true;
+        }
     }, [board, player]);
     
 
