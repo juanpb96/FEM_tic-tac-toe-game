@@ -20,6 +20,8 @@ const {
     lsPlayerScore,
     lsP1Score,
     lsP2Score,
+    lsTiedScore,
+    lsTurnCount,
 } = STORAGE;
 
 describe('Test <NewGame />', () => { 
@@ -103,6 +105,8 @@ describe('Test <NewGame />', () => {
             expect(localStorage.setItem).toHaveBeenCalledWith(lsCurrentTurnMark, 'X');
             expect(localStorage.setItem).toHaveBeenCalledWith(lsCpuScore, '0');
             expect(localStorage.setItem).toHaveBeenCalledWith(lsPlayerScore, '0');
+            expect(localStorage.setItem).toHaveBeenCalledWith(lsTiedScore, '0');
+            expect(localStorage.setItem).toHaveBeenCalledWith(lsTurnCount, '1');
             expect(setPlayer).toHaveBeenCalledWith('X');
         });
         
@@ -116,6 +120,8 @@ describe('Test <NewGame />', () => {
             expect(localStorage.setItem).toHaveBeenCalledWith(lsCurrentTurnMark, 'X');
             expect(localStorage.setItem).toHaveBeenCalledWith(lsP1Score, '0');
             expect(localStorage.setItem).toHaveBeenCalledWith(lsP2Score, '0');
+            expect(localStorage.setItem).toHaveBeenCalledWith(lsTiedScore, '0');
+            expect(localStorage.setItem).toHaveBeenCalledWith(lsTurnCount, '1');
             expect(setPlayer).toHaveBeenCalledWith('X');
         });
     });

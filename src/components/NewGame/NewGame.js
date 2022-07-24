@@ -14,6 +14,8 @@ const {
     lsPlayerScore,
     lsP1Score,
     lsP2Score,
+    lsTiedScore,
+    lsTurnCount,
 } = STORAGE;
 
 export const NewGame = () => {
@@ -50,7 +52,9 @@ export const NewGame = () => {
             localStorage.setItem(lsP2Score, '0');
         }
 
+        localStorage.setItem(lsTiedScore, '0');
         localStorage.setItem(lsCurrentTurnMark, 'X');
+        localStorage.setItem(lsTurnCount, '1');
         setPlayer('X');
 
         navigate('/', { replace: true });
