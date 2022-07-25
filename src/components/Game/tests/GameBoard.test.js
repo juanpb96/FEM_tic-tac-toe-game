@@ -369,37 +369,166 @@ describe('Test <GameBoard />', () => {
                 expect(localStorageMock.getItem(lsCpuScore)).toBe(1);
             });
         });
-    });
+
+        describe('Game is a tie', () => {
+            const [setShowModal, setModalValues] = [jest.fn(), jest.fn()];
+            const [player, setPlayer] = ['X', jest.fn()];
     
-    describe('Game is a tie', () => {
-        const [setShowModal, setModalValues] = [jest.fn(), jest.fn()];
-        const [player, setPlayer] = ['X', jest.fn()];
+            beforeEach(() => {
+                jest.clearAllMocks();
+                localStorageMock.clear();
+            });
+    
+            test('Board is full of marks and nobody won', () => {
+                localStorageMock.setItem(lsTurnCount, 10);
+                localStorageMock.setItem(lsBoardState, JSON.stringify([
+                    ['O', 'X', 'X'],
+                    ['X', 'X', 'O'],
+                    ['O', 'O', 'X'],
+                ]));
+    
+                render(
+                    <PlayerCoxtext.Provider value={{ player, setPlayer }}>
+                        <GameBoard 
+                            setShowModal={setShowModal}
+                            setModalValues={setModalValues}
+                        />
+                    </PlayerCoxtext.Provider>
+                );
+    
+                expect(setShowModal).toHaveBeenCalledWith(true);
+                expect(setModalValues).toHaveBeenCalled();
+                expect(localStorageMock.getItem(lsTiedScore)).toBe(1);
+            });
+        });
+    });
 
-        beforeEach(() => {
-            jest.clearAllMocks();
-            localStorageMock.clear();
+    describe('Game is Player 1 vs Player 2', () => {
+        describe('Players click one box and their mark appears in the board', () => {
+            test('Player 1 make a move and turn changes', () => {
+                localStorageMock.setItem(lsP1Mark, 'X');
+                localStorageMock.setItem(lsTurnCount, '0');
+                localStorageMock.setItem(lsCurrentTurnMark, 'X');
+
+                const [playerX, setPlayerX] = ['X', jest.fn()];
+
+                const { container, rerender } = render(
+                    <PlayerCoxtext.Provider value={{ player: playerX, setPlayer: setPlayerX }}>
+                        <GameBoard />
+                    </PlayerCoxtext.Provider>
+                );
+
+                const buttons = container.getElementsByTagName('button');
+
+                fireEvent.click(buttons[4]);
+
+                expect(screen.getAllByAltText('X')).toHaveLength(1);
+                
+                const [playerO, setPlayerO] = ['O', jest.fn()];
+
+                rerender(
+                    <PlayerCoxtext.Provider value={{ player: playerO, setPlayer: setPlayerO }}>
+                        <GameBoard />
+                    </PlayerCoxtext.Provider>
+                );
+
+                expect(JSON.parse(localStorageMock.getItem(lsBoardState))).toEqual([
+                    [null, null, null],
+                    [null, 'X', null],
+                    [null, null, null],
+                ]);
+                expect(localStorageMock.getItem(lsTurnCount)).toBe(1);
+                expect(localStorageMock.getItem(lsCurrentTurnMark)).toBe('O');
+            });
+
+            test('Player 2 make a move and turn changes', () => {
+                localStorageMock.setItem(lsP1Mark, 'O');
+                localStorageMock.setItem(lsTurnCount, '1');
+                localStorageMock.setItem(lsCurrentTurnMark, 'O');
+                localStorageMock.setItem(lsBoardState, JSON.stringify([
+                    [null, null, null],
+                    [null, 'X', null],
+                    [null, null, null],
+                ]));
+
+                const [playerO, setPlayerO] = ['O', jest.fn()];
+
+                const { container, rerender } = render(
+                    <PlayerCoxtext.Provider value={{ player: playerO, setPlayer: setPlayerO }}>
+                        <GameBoard />
+                    </PlayerCoxtext.Provider>
+                );
+
+                const buttons = container.getElementsByTagName('button');
+
+                fireEvent.click(buttons[8]);
+
+                expect(screen.getAllByAltText('O')).toHaveLength(1);
+                
+                const [playerX, setPlayerX] = ['X', jest.fn()];
+
+                rerender(
+                    <PlayerCoxtext.Provider value={{ player: playerX, setPlayer: setPlayerX }}>
+                        <GameBoard />
+                    </PlayerCoxtext.Provider>
+                );
+
+                expect(JSON.parse(localStorageMock.getItem(lsBoardState))).toEqual([
+                    [null, null, null],
+                    [null, 'X', null],
+                    [null, null, 'O'],
+                ]);
+                expect(localStorageMock.getItem(lsTurnCount)).toBe(2);
+                expect(localStorageMock.getItem(lsCurrentTurnMark)).toBe('X');
+            });
         });
 
-        test('Board is full of marks and nobody won', () => {
-            localStorageMock.setItem(lsTurnCount, 10);
-            localStorageMock.setItem(lsBoardState, JSON.stringify([
-                ['O', 'X', 'X'],
-                ['X', 'X', 'O'],
-                ['O', 'O', 'X'],
-            ]));
-
-            render(
-                <PlayerCoxtext.Provider value={{ player, setPlayer }}>
-                    <GameBoard 
-                        setShowModal={setShowModal}
-                        setModalValues={setModalValues}
-                    />
-                </PlayerCoxtext.Provider>
-            );
-
-            expect(setShowModal).toHaveBeenCalledWith(true);
-            expect(setModalValues).toHaveBeenCalled();
-            expect(localStorageMock.getItem(lsTiedScore)).toBe(1);
+        describe('Player 1 wins by having 3 marks in row', () => {
+            test.todo('Player 1 needs one horizontal mark to win');
+            test.todo('Player 1 needs one vertical mark to win');
+            test.todo('Player 1 needs one diagonal mark to win - Top bottom');
+            test.todo('Player 1 needs one diagonal mark to win - Bottom top');
         });
-    })
+
+        describe('Player 2 wins by having 3 marks in row', () => {
+            test.todo('Player 2 needs one horizontal mark to win');
+            test.todo('Player 2 needs one vertical mark to win');
+            test.todo('Player 2 needs one diagonal mark to win - Top bottom');
+            test.todo('Player 2 needs one diagonal mark to win - Bottom top');
+        });
+
+        describe('Game is a tie', () => {
+            const [setShowModal, setModalValues] = [jest.fn(), jest.fn()];
+            const [player, setPlayer] = ['X', jest.fn()];
+
+            beforeEach(() => {
+                jest.clearAllMocks();
+                localStorageMock.clear();
+            });
+
+            test('Board is full of marks and nobody won', () => {
+                localStorageMock.setItem(lsP1Mark, 'X');
+                localStorageMock.setItem(lsP2Mark, 'O');
+                localStorageMock.setItem(lsTurnCount, 10);
+                localStorageMock.setItem(lsBoardState, JSON.stringify([
+                    ['O', 'X', 'X'],
+                    ['X', 'X', 'O'],
+                    ['O', 'O', 'X'],
+                ]));
+
+                render(
+                    <PlayerCoxtext.Provider value={{ player, setPlayer }}>
+                        <GameBoard 
+                            setShowModal={setShowModal}
+                            setModalValues={setModalValues}
+                        />
+                    </PlayerCoxtext.Provider>
+                );
+
+                expect(setShowModal).toHaveBeenCalledWith(true);
+                expect(setModalValues).toHaveBeenCalled();
+                expect(localStorageMock.getItem(lsTiedScore)).toBe(1);
+            });
+        });
+    });
 });
