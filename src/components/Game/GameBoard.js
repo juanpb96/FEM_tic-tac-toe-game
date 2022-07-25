@@ -50,7 +50,9 @@ export const GameBoard = ({ setModalValues, setShowModal }) => {
     const searchFirstMove = board.some(row => row.some(cell => cell === cpuMark));
     const isCpuFirstMove = useRef(!searchFirstMove);
 
-    let p1Mark;
+    // TODO: Change cpuMark into p2Mark to avoid issues in the board validation
+    let p1Mark = localStorage.getItem(lsP1Mark);
+    let p2Mark = localStorage.getItem(lsP2Mark);
 
     if (cpuMark) {
         p1Mark = localStorage.getItem(lsPlayerMark);
@@ -82,6 +84,22 @@ export const GameBoard = ({ setModalValues, setShowModal }) => {
                 localStorage.setItem(
                     lsPlayerScore,
                     playerCurrentScore ? playerCurrentScore + 1 : 1
+                );
+                return;
+            case USER.p1:
+                const p1CurrentScore = +localStorage.getItem(lsP1Score);
+        
+                localStorage.setItem(
+                    lsP1Score,
+                    p1CurrentScore ? p1CurrentScore + 1 : 1
+                );
+                return;
+            case USER.p2:
+                const p2CurrentScore = +localStorage.getItem(lsP2Score);
+        
+                localStorage.setItem(
+                    lsP2Score,
+                    p2CurrentScore ? p2CurrentScore + 1 : 1
                 );
                 return;
             default:
@@ -131,27 +149,38 @@ export const GameBoard = ({ setModalValues, setShowModal }) => {
     const checkWinCondition = (p1Marks, p2Marks, isCellEmpty = false) => {
         // FIXME: Modify this when implementing logic for 2 players
 
-        if (p1Marks < 3 && p2Marks < 3 && !(isCellEmpty && p2Marks === 2)) {
+        if (p1Marks < 3 && p2Marks < 3 && !(isCellEmpty && p2Marks === 2 && cpuMark)) {
             return false;
         }
 
-        console.log('GAME OVER', { p1Marks, p2Marks, isCellEmpty });
+        console.log('GAME OVER', { p1Marks, p2Marks, isCellEmpty, p1Mark, p2Mark, cpuMark });
 
         isGameOver.current = true;
 
         if (p1Marks === 3) {
-            displayModal(MODAL_TYPES.player_won, p1Mark);
-            updateScore(USER.player);
+            if (p2Mark) {
+                displayModal(MODAL_TYPES.player1_won, p1Mark);
+                updateScore(USER.p1);
+            } else {
+                displayModal(MODAL_TYPES.player_won, p1Mark);
+                updateScore(USER.player);
+            }
         } 
         
         if (p2Marks === 3 || p2Marks === 2) {
-            displayModal(MODAL_TYPES.player_lost, cpuMark);
-            updateScore(USER.cpu);
+            if (p2Mark && p2Marks === 3) {
+                displayModal(MODAL_TYPES.player2_won, p2Mark);
+                updateScore(USER.p2);
+            } else {
+                displayModal(MODAL_TYPES.player_lost, cpuMark);
+                updateScore(USER.cpu);
+            }
         }
 
         return true;
     };
 
+    // FIXME: Change cpuOcurrence and variables to be Player2
     const makeCpuDiagonalMove = ({ playerOcurrences, cpuOcurrences, isCellEmpty, x, y }) => {
         if (checkWinCondition(playerOcurrences, cpuOcurrences, isCellEmpty)) {
             if (isCellEmpty && cpuOcurrences === 2) {
@@ -170,11 +199,14 @@ export const GameBoard = ({ setModalValues, setShowModal }) => {
     };
 
     const updateBoardValues = (cell, boardValues, x, y) => {
+        // FIXME: Temporary solution
+        const player2Mark = cpuMark || p2Mark;
+
         switch (cell) {
             case p1Mark:
                 boardValues.playerOcurrences++;
                 break;
-            case cpuMark:
+            case player2Mark:
                 boardValues.cpuOcurrences++;
                 break
             case null:
@@ -239,6 +271,48 @@ export const GameBoard = ({ setModalValues, setShowModal }) => {
         }
 
         return { ...blockMove };
+    };
+
+    const checkBoardStatePlayerVsPlayer = () => {
+        checkBoardRowsCols('rows');
+
+        if (isGameOver.current) {
+            return;
+        }
+
+        checkBoardRowsCols('cols');
+
+        if (isGameOver.current) {
+            return;
+        }
+
+        // Check diagonals
+        const boardValues = {
+            x: 0,
+            y: 0,
+            playerOcurrences: 0,
+            cpuOcurrences: 0,
+            isCellEmpty: false,
+        };
+
+        // Top to bottom
+        for (let i = 0; i < board.length; i++) {
+            updateBoardValues(board[i][i], boardValues, i, i);
+        }
+
+        if (checkWinCondition(boardValues.playerOcurrences, boardValues.cpuOcurrences)) {
+            return;
+        }
+
+        // Bottom to top
+        boardValues.playerOcurrences = 0;
+        boardValues.cpuOcurrences = 0;
+
+        for (let row = 2, col = 0; row >= 0; row--, col++) {   
+            updateBoardValues(board[row][col], boardValues, row, col);
+        }
+
+        checkWinCondition(boardValues.playerOcurrences, boardValues.cpuOcurrences);
     };
 
     const makeCpuMove = useCallback(
@@ -338,6 +412,10 @@ export const GameBoard = ({ setModalValues, setShowModal }) => {
             displayModal(MODAL_TYPES.tied, '');
             updateScore();
             isGameOver.current = true;
+        }
+
+        if (p2Mark) {
+            checkBoardStatePlayerVsPlayer();
         }
     }, [board, player]);
     
