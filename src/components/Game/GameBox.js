@@ -7,7 +7,8 @@ export const GameBox = ({
     currentPlayer,
     row,
     col,
-    updateBoard
+    updateBoard,
+    isGameOver = false,
 }) => {
     const [isEmpty, setIsEmpty] = useState(!hasMark);
 
@@ -17,7 +18,7 @@ export const GameBox = ({
     });
     
     const handlePlayerClick = () => {
-        if (!isEmpty) {
+        if (!isEmpty || isGameOver) {
             return;
         }
 

@@ -89,4 +89,22 @@ describe('Test <GameBox />', () => {
         expect(image.src.includes('icon-x.svg')).toBeTruthy();
         expect(image.alt).toBe('X');
     });
+
+    test('should not mark the box if game is over', () => { 
+        render(
+            <GameBox
+                hasMark={false}
+                mark={null}
+                currentPlayer={'X'} 
+                row={ 1 }
+                col={ 0 }
+                updateBoard={ mockUpdateBoard }
+                isGameOver={true}
+            />
+        );
+
+        fireEvent.click(screen.getByRole('button'));
+
+        expect(screen.getByRole('button').children).toHaveLength(0);
+    });
 });
