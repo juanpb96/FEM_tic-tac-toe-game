@@ -8,6 +8,9 @@ export const localStorageMock = (function() {
         setItem(key, value) {
             store[key] = value;
         },
+        removeItem(key) {
+            delete store[key];
+        },
         clear() {
             store = {};
         },
