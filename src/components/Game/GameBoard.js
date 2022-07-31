@@ -1,6 +1,7 @@
 import { useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { PlayerCoxtext } from '../../hocs/PlayerContext';
-import { MODAL_TYPES, STORAGE } from '../../types/types';
+import { updateScore } from '../../helpers/updateLocalStorageValues';
+import { MODAL_TYPES, STORAGE, USER } from '../../types/types';
 import { GameBox } from './GameBox';
 
 const {
@@ -11,19 +12,7 @@ const {
     lsP1Mark,
     lsP2Mark,
     lsCurrentTurnMark,
-    lsCpuScore,
-    lsPlayerScore,
-    lsP1Score,
-    lsP2Score,
-    lsTiedScore,
 } = STORAGE;
-
-const USER = {
-    player: 'player',
-    p1: 'p1',
-    p2: 'p2,',
-    cpu: 'cpu',
-};
 
 export const GameBoard = ({ setModalValues, setShowModal }) => {
     const { player, setPlayer } = useContext(PlayerCoxtext);
@@ -40,6 +29,8 @@ export const GameBoard = ({ setModalValues, setShowModal }) => {
     let initialBoard = localStorage.getItem(lsBoardState);
     initialBoard = initialBoard && JSON.parse(initialBoard);
 
+    console.log({ initialBoard });
+
     const [board, setBoard] = useState(initialBoard || emptyBoard);
 
     const boardRef = useRef(null);
@@ -50,18 +41,14 @@ export const GameBoard = ({ setModalValues, setShowModal }) => {
     const searchFirstMove = board.some(row => row.some(cell => cell === cpuMark));
     const isCpuFirstMove = useRef(!searchFirstMove);
 
-    // TODO: Change cpuMark into p2Mark to avoid issues in the board validation
-    let p1Mark = localStorage.getItem(lsP1Mark);
-    let p2Mark = localStorage.getItem(lsP2Mark);
-
-    if (cpuMark) {
-        p1Mark = localStorage.getItem(lsPlayerMark);
-    }
+    const p1Mark = localStorage.getItem(cpuMark ? lsPlayerMark : lsP1Mark);
+    const p2Mark = localStorage.getItem(lsP2Mark);
 
     const updateBoard = (row, col) => {
-        setBoard(() => {
-            board[row][col] = player;
-            return board;
+        setBoard((prevBoard) => {
+            console.log({prevBoard, board});
+            prevBoard[row][col] = player;
+            return prevBoard;
         });
         setPlayer(player === 'X' ? 'O' : 'X');
         turnCounter.current += 1;
@@ -69,137 +56,112 @@ export const GameBoard = ({ setModalValues, setShowModal }) => {
         console.log(board);
     };
 
-    const updateScore = (winner = '') => {
-        switch (winner) {
-            case USER.cpu:
-                const cpuCurrentScore = +localStorage.getItem(lsCpuScore);
-                localStorage.setItem(
-                    lsCpuScore,
-                    cpuCurrentScore ? cpuCurrentScore + 1 : 1
-                );
-                return;
-            case USER.player:
-                const playerCurrentScore = +localStorage.getItem(lsPlayerScore);
-        
-                localStorage.setItem(
-                    lsPlayerScore,
-                    playerCurrentScore ? playerCurrentScore + 1 : 1
-                );
-                return;
-            case USER.p1:
-                const p1CurrentScore = +localStorage.getItem(lsP1Score);
-        
-                localStorage.setItem(
-                    lsP1Score,
-                    p1CurrentScore ? p1CurrentScore + 1 : 1
-                );
-                return;
-            case USER.p2:
-                const p2CurrentScore = +localStorage.getItem(lsP2Score);
-        
-                localStorage.setItem(
-                    lsP2Score,
-                    p2CurrentScore ? p2CurrentScore + 1 : 1
-                );
-                return;
-            default:
-                const tieCurrentScore = +localStorage.getItem(lsTiedScore);
-        
-                localStorage.setItem(
-                    lsTiedScore,
-                    tieCurrentScore ? tieCurrentScore + 1 : 1
-                );
-                break;
-        }
-    };
-
-    const clickBox = useCallback(
-        (x, y) => {
-            const buttons = boardRef.current.getElementsByTagName('button');
-    
-            console.log('Click', {x, y});
-    
-            switch (x) {
-                case 0:
-                    buttons[y].click();
-                    break;
-                case 1:
-                    buttons[x + y + 2].click();
-                    break;
-                case 2:
-                    buttons[x + y + 4].click();
-                    break;
-                default:
-                    makeRandomMove();
-                    break;
-            }
-        },
-        [],
-    );
-
-    const displayModal = (messageType, mark) => {   
+    const displayModal = useCallback((messageType, mark) => {   
         setModalValues(prev => ({
             ...prev,
             type: messageType,
             winnerMark: mark,
         }));
         setShowModal(true);
-    };
+    }, [setModalValues, setShowModal]);
 
-    const checkWinCondition = (p1Marks, p2Marks, isCellEmpty = false) => {
-        // FIXME: Modify this when implementing logic for 2 players
+    const makeRandomMove = useCallback(() => {
+        const isBoardFull = board.every(row => row.every(cell => cell === 'X' || cell === 'O'));
 
-        if (p1Marks < 3 && p2Marks < 3 && !(isCellEmpty && p2Marks === 2 && cpuMark)) {
-            return false;
+        if (isBoardFull) {
+            displayModal(MODAL_TYPES.tied, '');
+            updateScore();
+            isGameOver.current = true;
+            return;
         }
 
-        console.log('GAME OVER', { p1Marks, p2Marks, isCellEmpty, p1Mark, p2Mark, cpuMark });
+        const buttons = boardRef.current.getElementsByTagName('button');
 
-        isGameOver.current = true;
-
-        if (p1Marks === 3) {
-            if (p2Mark) {
-                displayModal(MODAL_TYPES.player1_won, p1Mark);
-                updateScore(USER.p1);
-            } else {
-                displayModal(MODAL_TYPES.player_won, p1Mark);
-                updateScore(USER.player);
-            }
-        } 
+        let pos = Math.floor(Math.random() * buttons.length);
         
-        if (p2Marks === 3 || p2Marks === 2) {
-            if (p2Mark && p2Marks === 3) {
-                displayModal(MODAL_TYPES.player2_won, p2Mark);
-                updateScore(USER.p2);
-            } else {
-                displayModal(MODAL_TYPES.player_lost, cpuMark);
-                updateScore(USER.cpu);
-            }
+        while (buttons[pos].hasChildNodes()) {
+            pos = Math.floor(Math.random() * buttons.length);
         }
 
-        return true;
-    };
+        console.log('Random Move', pos);
+        buttons[pos].click();
+    }, [board, displayModal]);
 
-    // FIXME: Change cpuOcurrence and variables to be Player2
-    const makeCpuDiagonalMove = ({ playerOcurrences, cpuOcurrences, isCellEmpty, x, y }) => {
-        if (checkWinCondition(playerOcurrences, cpuOcurrences, isCellEmpty)) {
-            if (isCellEmpty && cpuOcurrences === 2) {
+    const clickBox = useCallback((x, y) => {
+        const buttons = boardRef.current.getElementsByTagName('button');
+
+        console.log('Click', {x, y});
+
+        switch (x) {
+            case 0:
+                buttons[y].click();
+                break;
+            case 1:
+                buttons[x + y + 2].click();
+                break;
+            case 2:
+                buttons[x + y + 4].click();
+                break;
+            default:
+                makeRandomMove();
+                break;
+        }
+    }, [makeRandomMove]);
+
+    const checkWinCondition = useCallback(
+        (p1Marks, p2Marks, isCellEmpty = false) => {
+            if (p1Marks < 3 && p2Marks < 3 && !(isCellEmpty && p2Marks === 2 && cpuMark)) {
+                return false;
+            }
+
+            console.log('GAME OVER', { p1Marks, p2Marks, isCellEmpty, p1Mark, p2Mark, cpuMark });
+
+            isGameOver.current = true;
+
+            if (p1Marks === 3) {
+                if (p2Mark) {
+                    displayModal(MODAL_TYPES.player1_won, p1Mark);
+                    updateScore(USER.p1);
+                } else {
+                    displayModal(MODAL_TYPES.player_won, p1Mark);
+                    updateScore(USER.player);
+                }
+            } 
+            
+            if (p2Marks === 3 || p2Marks === 2) {
+                if (p2Mark && p2Marks === 3) {
+                    displayModal(MODAL_TYPES.player2_won, p2Mark);
+                    updateScore(USER.p2);
+                } else {
+                    displayModal(MODAL_TYPES.player_lost, cpuMark);
+                    updateScore(USER.cpu);
+                }
+            }
+
+            return true;
+        }, [cpuMark, p1Mark, p2Mark, displayModal]
+    );
+
+    const makeCpuDiagonalMove = useCallback(
+        ({ playerOcurrences, p2Ocurrences, isCellEmpty, x, y }) => {
+            if (checkWinCondition(playerOcurrences, p2Ocurrences, isCellEmpty)) {
+                if (isCellEmpty && p2Ocurrences === 2) {
+                    clickBox(x, y);
+                }
+
+                return true;
+            }
+
+            if (isCellEmpty && playerOcurrences === 2) {
                 clickBox(x, y);
+                return true;
             }
 
-            return true;
-        }
+            return false;
+        }, [checkWinCondition, clickBox]
+    );
 
-        if (isCellEmpty && playerOcurrences === 2) {
-            clickBox(x, y);
-            return true;
-        }
-
-        return false;
-    };
-
-    const updateBoardValues = (cell, boardValues, x, y) => {
-        // FIXME: Temporary solution
+    const updateBoardValues = useCallback((cell, boardValues, x, y) => {
         const player2Mark = cpuMark || p2Mark;
 
         switch (cell) {
@@ -207,7 +169,7 @@ export const GameBoard = ({ setModalValues, setShowModal }) => {
                 boardValues.playerOcurrences++;
                 break;
             case player2Mark:
-                boardValues.cpuOcurrences++;
+                boardValues.p2Ocurrences++;
                 break
             case null:
                 boardValues.isCellEmpty = true;
@@ -217,9 +179,9 @@ export const GameBoard = ({ setModalValues, setShowModal }) => {
             default:
                 break;
         }
-    };
+    }, [cpuMark, p1Mark, p2Mark]);
 
-    const checkBoardRowsCols = (type) => {
+    const checkBoardRowsCols = useCallback((type) => {
         const blockMove = {
             x: 0,
             y: 0,
@@ -230,13 +192,13 @@ export const GameBoard = ({ setModalValues, setShowModal }) => {
             x: 0,
             y: 0,
             playerOcurrences: 0,
-            cpuOcurrences: 0,
+            p2Ocurrences: 0,
             isCellEmpty: false,
         };
 
         for (let row = 0; row < board.length; row++) {
             boardValues.playerOcurrences = 0;
-            boardValues.cpuOcurrences = 0;
+            boardValues.p2Ocurrences = 0;
             boardValues.isCellEmpty = false;
 
             for (let col = 0; col < board.length; col++) {
@@ -248,11 +210,11 @@ export const GameBoard = ({ setModalValues, setShowModal }) => {
                 updateBoardValues(board[col][row], boardValues, col, row);
             }
 
-            const { playerOcurrences, cpuOcurrences, isCellEmpty, x, y } = boardValues;
+            const { playerOcurrences, p2Ocurrences, isCellEmpty, x, y } = boardValues;
 
-            if (checkWinCondition(playerOcurrences, cpuOcurrences, isCellEmpty)) {
+            if (checkWinCondition(playerOcurrences, p2Ocurrences, isCellEmpty)) {
 
-                if (isCellEmpty && cpuOcurrences === 2) {
+                if (isCellEmpty && p2Ocurrences === 2) {
                     blockMove.x = x;
                     blockMove.y = y;
                     blockMove.shouldBlock = true;
@@ -271,9 +233,9 @@ export const GameBoard = ({ setModalValues, setShowModal }) => {
         }
 
         return { ...blockMove };
-    };
+    }, [board, updateBoardValues, checkWinCondition]);
 
-    const checkBoardStatePlayerVsPlayer = () => {
+    const checkBoardStatePlayerVsPlayer = useCallback(() => {
         checkBoardRowsCols('rows');
 
         if (isGameOver.current) {
@@ -291,7 +253,7 @@ export const GameBoard = ({ setModalValues, setShowModal }) => {
             x: 0,
             y: 0,
             playerOcurrences: 0,
-            cpuOcurrences: 0,
+            p2Ocurrences: 0,
             isCellEmpty: false,
         };
 
@@ -300,20 +262,20 @@ export const GameBoard = ({ setModalValues, setShowModal }) => {
             updateBoardValues(board[i][i], boardValues, i, i);
         }
 
-        if (checkWinCondition(boardValues.playerOcurrences, boardValues.cpuOcurrences)) {
+        if (checkWinCondition(boardValues.playerOcurrences, boardValues.p2Ocurrences)) {
             return;
         }
 
         // Bottom to top
         boardValues.playerOcurrences = 0;
-        boardValues.cpuOcurrences = 0;
+        boardValues.p2Ocurrences = 0;
 
         for (let row = 2, col = 0; row >= 0; row--, col++) {   
             updateBoardValues(board[row][col], boardValues, row, col);
         }
 
-        checkWinCondition(boardValues.playerOcurrences, boardValues.cpuOcurrences);
-    };
+        checkWinCondition(boardValues.playerOcurrences, boardValues.p2Ocurrences);
+    }, [board, checkBoardRowsCols, updateBoardValues, checkWinCondition]);
 
     const makeCpuMove = useCallback(
         () => {
@@ -337,7 +299,7 @@ export const GameBoard = ({ setModalValues, setShowModal }) => {
                 x: 0,
                 y: 0,
                 playerOcurrences: 0,
-                cpuOcurrences: 0,
+                p2Ocurrences: 0,
                 isCellEmpty: false,
             };
 
@@ -353,7 +315,7 @@ export const GameBoard = ({ setModalValues, setShowModal }) => {
     
             // Bottom to top
             boardValues.playerOcurrences = 0;
-            boardValues.cpuOcurrences = 0;
+            boardValues.p2Ocurrences = 0;
             boardValues.isCellEmpty = false;
     
             for (let row = 2, col = 0; row >= 0; row--, col++) {   
@@ -366,30 +328,8 @@ export const GameBoard = ({ setModalValues, setShowModal }) => {
     
             makeRandomMove();
         },
-        [board, p1Mark, cpuMark, clickBox],
+        [board, clickBox, checkBoardRowsCols, updateBoardValues, makeCpuDiagonalMove, makeRandomMove],
     );
-
-    const makeRandomMove = () => {
-        const isBoardFull = board.every(row => row.every(cell => cell === 'X' || cell === 'O'));
-
-        if (isBoardFull) {
-            displayModal(MODAL_TYPES.tied, '');
-            updateScore();
-            isGameOver.current = true;
-            return;
-        }
-
-        const buttons = boardRef.current.getElementsByTagName('button');
-
-        let pos = Math.floor(Math.random() * buttons.length);
-        
-        while (buttons[pos].hasChildNodes()) {
-            pos = Math.floor(Math.random() * buttons.length);
-        }
-
-        console.log('Random Move', pos);
-        buttons[pos].click();
-    };
 
     useEffect(() => {
         if (isCpuFirstMove.current && cpuMark === player) {
@@ -401,7 +341,7 @@ export const GameBoard = ({ setModalValues, setShowModal }) => {
         if (cpuMark === player && !isGameOver.current) {
             makeCpuMove();
         }
-    }, [cpuMark, player, makeCpuMove]);
+    }, [cpuMark, player, makeRandomMove, makeCpuMove]);
 
     useEffect(() => {
         localStorage.setItem(lsBoardState, JSON.stringify(board));
@@ -417,10 +357,7 @@ export const GameBoard = ({ setModalValues, setShowModal }) => {
         if (p2Mark) {
             checkBoardStatePlayerVsPlayer();
         }
-    }, [board, player]);
-    
-
-    // TODO: Block user moves when game is over
+    }, [board, player, p2Mark, displayModal, checkBoardStatePlayerVsPlayer]);
 
     return (
         <main
@@ -441,6 +378,7 @@ export const GameBoard = ({ setModalValues, setShowModal }) => {
                                 row={ rowIndex }
                                 col={ colIndex }
                                 updateBoard={ updateBoard }
+                                isGameOver={isGameOver.current}
                                 key={`${rowIndex}${colIndex}`} 
                             />
                     )
