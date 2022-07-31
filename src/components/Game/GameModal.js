@@ -1,4 +1,5 @@
 import { ASSETS_PATH } from '../../helpers/constants';
+import { MODAL_TYPES } from '../../types/types';
 
 export const GameModal = ({ type, winnerMark, setShowModal }) => {
     const message = {
@@ -10,24 +11,24 @@ export const GameModal = ({ type, winnerMark, setShowModal }) => {
     };
 
     switch (type) {
-        case 'restart':
+        case MODAL_TYPES.restart:
             message.title = 'RESTART GAME?';
             message.button1 = 'NO, CANCEL';
             message.button2 = 'YES, RESTART';
             break;
-        case 'tied':
+        case MODAL_TYPES.tied:
             message.title = 'ROUND TIED';
             break;
-        case 'player-won':
+        case MODAL_TYPES.player_won:
             message.result = 'YOU WON!';
             break;
-        case 'player-lost':
+        case MODAL_TYPES.player_lost:
             message.result = 'OH NO, YOU LOST…';
             break;
-        case 'player1-won':
+        case MODAL_TYPES.player1_won:
             message.result = 'PLAYER 1 WINS!';
             break;
-        case 'player2-won':
+        case MODAL_TYPES.player2_won:
             message.result = 'PLAYER 2 WINS!';
             break;
         default:

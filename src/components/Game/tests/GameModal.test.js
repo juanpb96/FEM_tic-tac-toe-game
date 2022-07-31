@@ -1,4 +1,5 @@
 import { render, screen } from '@testing-library/react';
+import { MODAL_TYPES } from '../../../types/types';
 import { GameModal } from '../GameModal';
 
 describe('Test <GameModal />', () => { 
@@ -33,7 +34,12 @@ describe('Test <GameModal />', () => {
         });
     
         test('player wins against CPU', () => { 
-            const { container } = render(<GameModal type='player-won' winnerMark='X' />);
+            const { container } = render(
+                <GameModal
+                    type={MODAL_TYPES.player_won}
+                    winnerMark='X'
+                />
+            );
     
             expect(screen.getByText('YOU WON!')).toBeInTheDocument();
             expect(screen.getByAltText('X')).toBeInTheDocument();
@@ -46,7 +52,12 @@ describe('Test <GameModal />', () => {
         });
     
         test('player loses against CPU', () => { 
-            const { container } = render(<GameModal type='player-lost' winnerMark='O' />);
+            const { container } = render(
+                <GameModal
+                    type={MODAL_TYPES.player_lost}
+                    winnerMark='O'
+                />
+            );
     
             expect(screen.getByText('OH NO, YOU LOST…')).toBeInTheDocument();
             expect(screen.getByAltText('O')).toBeInTheDocument();
@@ -59,7 +70,12 @@ describe('Test <GameModal />', () => {
         });
 
         test('player 1 wins against player 2', () => { 
-            const { container } = render(<GameModal type='player1-won' winnerMark='O' />);
+            const { container } = render(
+                <GameModal
+                    type={MODAL_TYPES.player1_won}
+                    winnerMark='O'
+                />
+            );
     
             expect(screen.getByText('PLAYER 1 WINS!')).toBeInTheDocument();
             expect(screen.getByAltText('O')).toBeInTheDocument();
@@ -72,7 +88,12 @@ describe('Test <GameModal />', () => {
         });
         
         test('player 2 wins against player 1', () => { 
-            const { container } = render(<GameModal type='player2-won' winnerMark='X' />);
+            const { container } = render(
+                <GameModal
+                    type={MODAL_TYPES.player2_won}
+                    winnerMark='X'
+                />
+            );
     
             expect(screen.getByText('PLAYER 2 WINS!')).toBeInTheDocument();
             expect(screen.getByAltText('X')).toBeInTheDocument();
