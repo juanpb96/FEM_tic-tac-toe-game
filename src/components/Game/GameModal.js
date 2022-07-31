@@ -1,7 +1,19 @@
+import { useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { PlayerCoxtext } from '../../hocs/PlayerContext';
 import { ASSETS_PATH } from '../../helpers/constants';
-import { MODAL_TYPES } from '../../types/types';
+import { MODAL_TYPES, STORAGE } from '../../types/types';
+
+const {
+    lsBoardState,
+    lsCurrentTurnMark,
+    lsTurnCount,
+} = STORAGE;
 
 export const GameModal = ({ type, winnerMark, setShowModal }) => {
+    const { setPlayer } = useContext(PlayerCoxtext);
+    const navigate = useNavigate();
+
     const message = {
         title: 'TAKES THE ROUND',
         imgSrc: !winnerMark ? '' : `${ASSETS_PATH}/icon-${winnerMark}.svg`,
@@ -37,7 +49,19 @@ export const GameModal = ({ type, winnerMark, setShowModal }) => {
 
     const { title, imgSrc, result, button1, button2 } = message;
 
-    const handleClick = () => {
+    const handleClick = ({ target }) => {
+        if (target.textContent === 'QUIT') {
+            navigate('/new-game', { replace: true });
+        }
+
+        if (target.textContent === 'NEXT ROUND' || target.textContent === 'YES, RESTART') {
+            localStorage.removeItem(lsBoardState);
+            localStorage.setItem(lsCurrentTurnMark, 'X');
+            localStorage.setItem(lsTurnCount, '1');
+
+            setPlayer('X');
+        }
+        
         setShowModal(false);
     };
 
