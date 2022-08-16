@@ -1,18 +1,27 @@
 import { render, screen } from '@testing-library/react';
-import { AppRouter } from '../AppRouter';
 import { MemoryRouter } from 'react-router-dom';
-import { PlayerCoxtext } from '../../hocs/PlayerContext';
+import { AppRouter } from '../AppRouter';
+import { GameContext } from '../../hocs/GameContext';
+import { getEmptyBoard } from '../../helpers/getEmptyBoard';
 
-const [player, setPlayer] = ['X', jest.fn()];
+describe('Test <AppRouter />', () => {
+    const gameState = {
+        currentPlayer: 'X',
+        board: getEmptyBoard(),
+        turnCounter: 1,
+        isGameOver: false,
+        isCpuFirstMove: true
+    };
 
-describe('Test <AppRouter />', () => { 
+    const dispatch = jest.fn();
+
     test('should render Game route correctly', () => { 
         const { container } = render(
-            <PlayerCoxtext.Provider value={{ player, setPlayer }}>
+            <GameContext.Provider value={{ gameState, dispatch }}>
                 <MemoryRouter initialEntries={['/']}>
                     <AppRouter />
                 </MemoryRouter>
-            </PlayerCoxtext.Provider>
+            </GameContext.Provider>
         );
 
         expect(container).toMatchSnapshot();
@@ -21,11 +30,11 @@ describe('Test <AppRouter />', () => {
 
     test('should render NewGame route correctly', () => { 
         const { container } = render(
-            <PlayerCoxtext.Provider value={{ player, setPlayer }}>
+            <GameContext.Provider value={{ gameState, dispatch }}>
                 <MemoryRouter initialEntries={['/new-game']}>
                     <AppRouter />
                 </MemoryRouter>
-            </PlayerCoxtext.Provider>
+            </GameContext.Provider>
         );
 
         expect(container).toMatchSnapshot();

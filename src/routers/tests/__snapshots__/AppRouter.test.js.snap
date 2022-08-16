@@ -28,7 +28,9 @@ exports[`Test <AppRouter /> should render Game route correctly 1`] = `
       />
     </button>
   </header>
-  <main>
+  <main
+    style="display: grid; grid-template: repeat(3, 1fr) / repeat(3, 1fr);"
+  >
     <button />
     <button />
     <button />
@@ -44,7 +46,8 @@ exports[`Test <AppRouter /> should render Game route correctly 1`] = `
       aria-label="score"
     >
       <h2>
-        X
+        X 
+        ()
       </h2>
       <p>
         0
@@ -56,15 +59,14 @@ exports[`Test <AppRouter /> should render Game route correctly 1`] = `
       <h2>
         TIES
       </h2>
-      <p>
-        0
-      </p>
+      <p />
     </section>
     <section
       aria-label="score"
     >
       <h2>
-        O
+        O 
+        ()
       </h2>
       <p>
         0
@@ -103,7 +105,7 @@ exports[`Test <AppRouter /> should render NewGame route correctly 1`] = `
         >
           <img
             alt="X"
-            src="/assets/icon-x.svg"
+            src="/assets/icon-x-outline.svg"
           />
         </div>
         <div
@@ -113,7 +115,7 @@ exports[`Test <AppRouter /> should render NewGame route correctly 1`] = `
         >
           <img
             alt="O"
-            src="/assets/icon-o-outline.svg"
+            src="/assets/icon-o.svg"
           />
         </div>
       </div>
