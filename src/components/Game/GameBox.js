@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ASSETS_PATH } from '../../helpers/constants';
 
 export const GameBox = ({ 
@@ -16,6 +16,17 @@ export const GameBox = ({
         icon: hasMark ? `${ASSETS_PATH}/icon-${cellMark.toLowerCase()}.svg` : '',
         player: hasMark ? cellMark : ''
     });
+
+    useEffect(() => {
+        if (hasMark === false) {
+            setIsEmpty(true);
+            setMark({
+                icon: '',
+                player: ''
+            });
+        }
+    }, [hasMark]);
+    
     
     const handlePlayerClick = () => {
         if (!isEmpty || isGameOver) {
