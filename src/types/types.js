@@ -30,3 +30,15 @@ export const USER = {
     p2: 'p2,',
     cpu: 'cpu',
 };
+
+export const ACTIONS = {
+    setChangeTurn: 'setChangeTurn',
+    setCurrentPlayer: 'setCurrentPlayer',
+    setGameBoard: 'setGameBoard',
+    resetGameBoard: 'resetGameBoard',
+    setTurnCounter: 'setTurnCounter',
+    resetTurnCounter: 'resetTurnCounter',
+    setGameOver: 'setGameOver',
+    setCpuMoveFirst: 'setCpuMoveFirst',
+    resetGame: 'resetGame',
+};
