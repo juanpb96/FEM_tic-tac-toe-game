@@ -1,8 +1,10 @@
 import { fireEvent, render, screen } from '@testing-library/react';
-import { getEmptyBoard } from '../../../helpers/getEmptyBoard';
+
 import { GameContext } from '../../../hocs/GameContext';
-import { ACTIONS, STORAGE } from '../../../types/types';
 import { NewGame } from '../NewGame';
+
+import { getEmptyBoard } from '../../../helpers/getEmptyBoard';
+import { ACTIONS, STORAGE } from '../../../types/types';
 
 const mockNavigate = jest.fn();
 
