@@ -1,13 +1,25 @@
-import { render, screen } from "@testing-library/react";
-import { PlayerCoxtext } from "../../../hocs/PlayerContext";
+import { fireEvent, render, screen } from "@testing-library/react";
+
+import { GameContext } from "../../../hocs/GameContext";
 import { GameHeader } from "../GameHeader";
 
+import { MODAL_TYPES } from "../../../types/types";
+
 describe('Test <GameHeader />', () => { 
+    const openModal = jest.fn();
+
+    const gameState = { currentPlayer: 'X' };
+
+    afterEach(() => {
+        gameState.currentPlayer = 'X';
+        jest.clearAllMocks();
+    });
+
     test('should render elements correctly', () => { 
         render(
-            <PlayerCoxtext.Provider value={{ player: 'X' }}>
-                <GameHeader />
-            </PlayerCoxtext.Provider>
+            <GameContext.Provider value={{ gameState }}>
+                <GameHeader openModal={openModal} />
+            </GameContext.Provider>
         );
 
         expect(screen.getByRole('heading', { name: 'Tic tac toe' })).toBeInTheDocument();
@@ -19,19 +31,33 @@ describe('Test <GameHeader />', () => {
 
     test('should switch player turn', () => { 
         const { rerender } = render(
-            <PlayerCoxtext.Provider value={{ player: 'X' }}>
-                <GameHeader />
-            </PlayerCoxtext.Provider>
+            <GameContext.Provider value={{ gameState }}>
+                <GameHeader openModal={openModal} />
+            </GameContext.Provider>
         );
 
         expect(screen.getByAltText('X')).toBeInTheDocument();
         
+        gameState.currentPlayer = 'O';
+
         rerender(
-            <PlayerCoxtext.Provider value={{ player: 'O' }}>
-                <GameHeader />
-            </PlayerCoxtext.Provider>
+            <GameContext.Provider value={{ gameState }}>
+                <GameHeader openModal={openModal} />
+            </GameContext.Provider>
         );
         
         expect(screen.getByAltText('O')).toBeInTheDocument();
+    });
+
+    test('should display restart modal', () => {
+        render(
+            <GameContext.Provider value={{ gameState }}>
+                <GameHeader openModal={openModal} />
+            </GameContext.Provider>
+        );
+
+        fireEvent.click(screen.getByRole('button', { name: 'restart' }));
+
+        expect(openModal).toHaveBeenCalledWith(MODAL_TYPES.restart);
     });
 });
