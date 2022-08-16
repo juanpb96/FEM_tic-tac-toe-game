@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Test <GameStart /> modal should open when user clicks on "restart" button and close if "No, cancel" is pressed 1`] = `
+exports[`Test <Game /> modal should open when user clicks on "restart" button and close if "No, cancel" is pressed 1`] = `
 <div>
   <header>
     <h1>
@@ -46,7 +46,8 @@ exports[`Test <GameStart /> modal should open when user clicks on "restart" butt
       aria-label="score"
     >
       <h2>
-        X
+        X 
+        ()
       </h2>
       <p>
         0
@@ -58,15 +59,14 @@ exports[`Test <GameStart /> modal should open when user clicks on "restart" butt
       <h2>
         TIES
       </h2>
-      <p>
-        0
-      </p>
+      <p />
     </section>
     <section
       aria-label="score"
     >
       <h2>
-        O
+        O 
+        ()
       </h2>
       <p>
         0
