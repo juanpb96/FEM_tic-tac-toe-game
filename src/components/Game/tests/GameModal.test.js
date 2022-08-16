@@ -1,8 +1,11 @@
 import { fireEvent, render, screen } from '@testing-library/react';
-import { localStorageMock } from '../../../helpers/mocks/localStorage.mock';
-import { PlayerCoxtext } from '../../../hocs/PlayerContext';
-import { MODAL_TYPES, STORAGE } from '../../../types/types';
+
+import { GameContext } from '../../../hocs/GameContext';
 import { GameModal } from '../GameModal';
+
+import { getEmptyBoard } from '../../../helpers/getEmptyBoard';
+import { localStorageMock } from '../../../helpers/mocks/localStorage.mock';
+import { ACTIONS, MODAL_TYPES, STORAGE } from '../../../types/types';
 
 const mockNavigate = jest.fn();
 
@@ -16,16 +19,28 @@ const {
     lsBoardState,
     lsCurrentTurnMark,
     lsTurnCount,
+    lsCpuMark,
 } = STORAGE;
 
-const [player, setPlayer] = ['X', jest.fn()];
+const gameState = {
+    turnCounter: 1
+};
 
-describe('Test <GameModal />', () => { 
+const dispatch = jest.fn();
+
+describe('Test <GameModal />', () => {
+    afterEach(() => {
+        gameState.board = getEmptyBoard();
+        gameState.currentMark = 'X';
+        gameState.turnCounter = 1;
+        jest.clearAllMocks();
+    });
+
     test('should have a title and buttons', () => { 
         render(
-            <PlayerCoxtext.Provider value={{ player, setPlayer }}>
+            <GameContext.Provider value={{ gameState, dispatch }}>
                 <GameModal />
-            </PlayerCoxtext.Provider>
+            </GameContext.Provider>
         );
 
         expect(screen.getByRole('heading')).toBeInTheDocument();
@@ -35,9 +50,9 @@ describe('Test <GameModal />', () => {
     describe('should display a correct structure in case', () => { 
         test('player wants to restart a game', () => { 
             const { container } = render(
-                <PlayerCoxtext.Provider value={{ player, setPlayer }}>
+                <GameContext.Provider value={{ gameState, dispatch }}>
                     <GameModal type='restart' />
-                </PlayerCoxtext.Provider>
+                </GameContext.Provider>
             );
     
             expect(screen.getByRole('heading', { name: 'RESTART GAME?' })).toBeInTheDocument();
@@ -50,9 +65,9 @@ describe('Test <GameModal />', () => {
     
         test('a round ended as tied', () => { 
             const { container } = render(
-                <PlayerCoxtext.Provider value={{ player, setPlayer }}>
+                <GameContext.Provider value={{ gameState, dispatch }}>
                     <GameModal type='tied' />
-                </PlayerCoxtext.Provider>
+                </GameContext.Provider>
             );
     
             expect(screen.getByRole('heading', { name: 'ROUND TIED' })).toBeInTheDocument();
@@ -65,12 +80,12 @@ describe('Test <GameModal />', () => {
     
         test('player wins against CPU', () => { 
             const { container } = render(
-                <PlayerCoxtext.Provider value={{ player, setPlayer }}>
+                <GameContext.Provider value={{ gameState, dispatch }}>
                     <GameModal
                         type={MODAL_TYPES.player_won}
                         winnerMark='X'
                     />
-                </PlayerCoxtext.Provider>
+                </GameContext.Provider>
             );
     
             expect(screen.getByText('YOU WON!')).toBeInTheDocument();
@@ -85,12 +100,12 @@ describe('Test <GameModal />', () => {
     
         test('player loses against CPU', () => { 
             const { container } = render(
-                <PlayerCoxtext.Provider value={{ player, setPlayer }}>
+                <GameContext.Provider value={{ gameState, dispatch }}>
                     <GameModal
                         type={MODAL_TYPES.player_lost}
                         winnerMark='O'
                     />
-                </PlayerCoxtext.Provider>
+                </GameContext.Provider>
             );
     
             expect(screen.getByText('OH NO, YOU LOST…')).toBeInTheDocument();
@@ -105,12 +120,12 @@ describe('Test <GameModal />', () => {
 
         test('player 1 wins against player 2', () => { 
             const { container } = render(
-                <PlayerCoxtext.Provider value={{ player, setPlayer }}>
+                <GameContext.Provider value={{ gameState, dispatch }}>
                     <GameModal
                         type={MODAL_TYPES.player1_won}
                         winnerMark='O'
                     />
-                </PlayerCoxtext.Provider>
+                </GameContext.Provider>
             );
     
             expect(screen.getByText('PLAYER 1 WINS!')).toBeInTheDocument();
@@ -125,12 +140,12 @@ describe('Test <GameModal />', () => {
         
         test('player 2 wins against player 1', () => { 
             const { container } = render(
-                <PlayerCoxtext.Provider value={{ player, setPlayer }}>
+                <GameContext.Provider value={{ gameState, dispatch }}>
                     <GameModal
                         type={MODAL_TYPES.player2_won}
                         winnerMark='X'
                     />
-                </PlayerCoxtext.Provider>
+                </GameContext.Provider>
             );
     
             expect(screen.getByText('PLAYER 2 WINS!')).toBeInTheDocument();
@@ -154,12 +169,12 @@ describe('Test <GameModal />', () => {
 
         test('should send player to "New Game" screen if player clicks on "Quit"', () => {
             render(
-                <PlayerCoxtext.Provider value={{ player, setPlayer }}>
+                <GameContext.Provider value={{ gameState, dispatch }}>
                     <GameModal
                         type={MODAL_TYPES.tied}
                         setShowModal={setShowModal}
                     />
-                </PlayerCoxtext.Provider>
+                </GameContext.Provider>
             );
 
             fireEvent.click(screen.getByRole('button', { name: 'QUIT' }));
@@ -169,21 +184,21 @@ describe('Test <GameModal />', () => {
         });
 
         test('should reset the board, current mark and turn count when player clicks on "NEXT ROUND"', () => {
-            localStorageMock.setItem(lsBoardState, JSON.stringify([
+            gameState.board = [
                 ['O', 'X', 'X'],
                 ['X', 'X', 'O'],
                 ['O', 'O', 'X'],
-            ]));
-            localStorageMock.setItem(lsCurrentTurnMark, 'O');
-            localStorageMock.setItem(lsTurnCount, '10');
+            ];
+            gameState.currentMark = 'O';
+            gameState.turnCounter = 10;
 
             render(
-                <PlayerCoxtext.Provider value={{ player, setPlayer }}>
+                <GameContext.Provider value={{ gameState, dispatch }}>
                     <GameModal
                         type={MODAL_TYPES.tied}
                         setShowModal={setShowModal}
                     />
-                </PlayerCoxtext.Provider>
+                </GameContext.Provider>
             );
 
             fireEvent.click(screen.getByRole('button', { name: 'NEXT ROUND' }));
@@ -192,18 +207,52 @@ describe('Test <GameModal />', () => {
             expect(localStorageMock.getItem(lsBoardState)).toEqual(undefined);
             expect(localStorageMock.getItem(lsCurrentTurnMark)).toBe('X')
             expect(localStorageMock.getItem(lsTurnCount)).toBe('1');
-            expect(setPlayer).toHaveBeenCalledWith('X');
+            expect(dispatch).toHaveBeenCalledWith({ type: ACTIONS.resetGame });
+            expect(setShowModal).toHaveBeenCalledWith(false);
+        });
+
+        test('should reset the game. If game is Player vs CPU, it should make CPU move first', () => {
+            localStorageMock.setItem(lsCpuMark, 'O');
+            
+            gameState.board = [
+                ['O', 'X', 'X'],
+                ['X', 'X', 'O'],
+                ['O', 'O', 'X'],
+            ];
+            gameState.currentMark = 'O';
+            gameState.turnCounter = 10;
+
+            render(
+                <GameContext.Provider value={{ gameState, dispatch }}>
+                    <GameModal
+                        type={MODAL_TYPES.tied}
+                        setShowModal={setShowModal}
+                    />
+                </GameContext.Provider>
+            );
+
+            fireEvent.click(screen.getByRole('button', { name: 'NEXT ROUND' }));
+
+            expect(mockNavigate).not.toHaveBeenCalled();
+            expect(localStorageMock.getItem(lsBoardState)).toEqual(undefined);
+            expect(localStorageMock.getItem(lsCurrentTurnMark)).toBe('X')
+            expect(localStorageMock.getItem(lsTurnCount)).toBe('1');
+            expect(dispatch).toHaveBeenCalledWith({
+                type: ACTIONS.setCpuMoveFirst,
+                payload: true
+            });
+            expect(dispatch).toHaveBeenCalledWith({ type: ACTIONS.resetGame });
             expect(setShowModal).toHaveBeenCalledWith(false);
         });
 
         test('should close the modal when player clicks on "NO, CANCEL"', () => {
             render(
-                <PlayerCoxtext.Provider value={{ player, setPlayer }}>
+                <GameContext.Provider value={{ gameState, dispatch }}>
                     <GameModal
                         type={MODAL_TYPES.restart}
                         setShowModal={setShowModal}
                     />
-                </PlayerCoxtext.Provider>
+                </GameContext.Provider>
             );
 
             fireEvent.click(screen.getByRole('button', { name: 'NO, CANCEL' }));
@@ -213,21 +262,21 @@ describe('Test <GameModal />', () => {
         });
 
         test('should reset the board, current mark and turn count when player clicks on "YES, RESTART"', () => {
-            localStorageMock.setItem(lsBoardState, JSON.stringify([
+            gameState.board = [
                 ['O', 'X', 'X'],
                 ['X', 'X', 'O'],
                 ['O', 'O', 'X'],
-            ]));
-            localStorageMock.setItem(lsCurrentTurnMark, 'O');
-            localStorageMock.setItem(lsTurnCount, '10');
+            ];
+            gameState.currentMark = 'O';
+            gameState.turnCounter = 10;
 
             render(
-                <PlayerCoxtext.Provider value={{ player, setPlayer }}>
+                <GameContext.Provider value={{ gameState, dispatch }}>
                     <GameModal
                         type={MODAL_TYPES.restart}
                         setShowModal={setShowModal}
                     />
-                </PlayerCoxtext.Provider>
+                </GameContext.Provider>
             );
 
             fireEvent.click(screen.getByRole('button', { name: 'YES, RESTART' }));
@@ -236,7 +285,7 @@ describe('Test <GameModal />', () => {
             expect(localStorageMock.getItem(lsBoardState)).toEqual(undefined);
             expect(localStorageMock.getItem(lsCurrentTurnMark)).toBe('X')
             expect(localStorageMock.getItem(lsTurnCount)).toBe('1');
-            expect(setPlayer).toHaveBeenCalledWith('X');
+            expect(dispatch).toHaveBeenCalledWith({ type: ACTIONS.resetGame });
             expect(setShowModal).toHaveBeenCalledWith(false);
         });
     });
