@@ -1,17 +1,19 @@
 import { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { PlayerCoxtext } from '../../hocs/PlayerContext';
+
+import { GameContext } from '../../hocs/GameContext';
 import { ASSETS_PATH } from '../../helpers/constants';
-import { MODAL_TYPES, STORAGE } from '../../types/types';
+import { ACTIONS, MODAL_TYPES, STORAGE } from '../../types/types';
 
 const {
     lsBoardState,
     lsCurrentTurnMark,
+    lsCpuMark,
     lsTurnCount,
 } = STORAGE;
 
 export const GameModal = ({ type, winnerMark, setShowModal }) => {
-    const { setPlayer } = useContext(PlayerCoxtext);
+    const { dispatch } = useContext(GameContext);
     const navigate = useNavigate();
 
     const message = {
@@ -58,8 +60,15 @@ export const GameModal = ({ type, winnerMark, setShowModal }) => {
             localStorage.removeItem(lsBoardState);
             localStorage.setItem(lsCurrentTurnMark, 'X');
             localStorage.setItem(lsTurnCount, '1');
+            
+            dispatch({ type: ACTIONS.resetGame });
 
-            setPlayer('X');
+            if (localStorage.getItem(lsCpuMark)) {
+                dispatch({
+                    type: ACTIONS.setCpuMoveFirst,
+                    payload: true
+                });
+            }
         }
         
         setShowModal(false);
