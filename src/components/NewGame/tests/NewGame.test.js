@@ -1,6 +1,7 @@
 import { fireEvent, render, screen } from '@testing-library/react';
-import { PlayerCoxtext } from '../../../hocs/PlayerContext';
-import { STORAGE } from '../../../types/types';
+import { getEmptyBoard } from '../../../helpers/getEmptyBoard';
+import { GameContext } from '../../../hocs/GameContext';
+import { ACTIONS, STORAGE } from '../../../types/types';
 import { NewGame } from '../NewGame';
 
 const mockNavigate = jest.fn();
@@ -24,14 +25,22 @@ const {
     lsTurnCount,
 } = STORAGE;
 
-describe('Test <NewGame />', () => { 
-    const [player, setPlayer] = ['X', jest.fn()];
+describe('Test <NewGame />', () => {
+    const gameState = {
+        currentPlayer: 'X',
+        board: getEmptyBoard(),
+        turnCounter: 1,
+        isGameOver: false,
+        isCpuFirstMove: true
+    };
+
+    const dispatch = jest.fn();
 
     beforeEach(() => {
         render(
-            <PlayerCoxtext.Provider value={{ player, setPlayer }}>
+            <GameContext.Provider value={{ gameState, dispatch }}>
                 <NewGame />
-            </PlayerCoxtext.Provider>
+            </GameContext.Provider>
         );
     });
 
@@ -107,7 +116,11 @@ describe('Test <NewGame />', () => {
             expect(localStorage.setItem).toHaveBeenCalledWith(lsPlayerScore, '0');
             expect(localStorage.setItem).toHaveBeenCalledWith(lsTiedScore, '0');
             expect(localStorage.setItem).toHaveBeenCalledWith(lsTurnCount, '1');
-            expect(setPlayer).toHaveBeenCalledWith('X');
+            expect(dispatch).toHaveBeenCalledWith({
+                type: ACTIONS.setCpuMoveFirst,
+                payload: true
+            });
+            expect(dispatch).toHaveBeenCalledWith({ type: ACTIONS.resetGame });
         });
         
         test('when user clicks on New Game VS Player', () => {           
@@ -122,7 +135,7 @@ describe('Test <NewGame />', () => {
             expect(localStorage.setItem).toHaveBeenCalledWith(lsP2Score, '0');
             expect(localStorage.setItem).toHaveBeenCalledWith(lsTiedScore, '0');
             expect(localStorage.setItem).toHaveBeenCalledWith(lsTurnCount, '1');
-            expect(setPlayer).toHaveBeenCalledWith('X');
+            expect(dispatch).toHaveBeenCalledWith({ type: ACTIONS.resetGame });
         });
     });
 });

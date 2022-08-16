@@ -1,8 +1,9 @@
 import { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+
+import { GameContext } from '../../hocs/GameContext';
 import { ASSETS_PATH } from '../../helpers/constants';
-import { PlayerCoxtext } from '../../hocs/PlayerContext';
-import { STORAGE } from '../../types/types';
+import { ACTIONS, STORAGE } from '../../types/types';
 
 const {
     lsPlayerMark,
@@ -19,7 +20,7 @@ const {
 } = STORAGE;
 
 export const NewGame = () => {
-    const { setPlayer } = useContext(PlayerCoxtext);
+    const { dispatch } = useContext(GameContext);
     const [isMarkXChecked, setIsMarkXChecked] = useState(false);
 
     const navigate = useNavigate();
@@ -45,6 +46,11 @@ export const NewGame = () => {
             localStorage.setItem(lsCpuMark, p2);
             localStorage.setItem(lsCpuScore, '0');
             localStorage.setItem(lsPlayerScore, '0');
+
+            dispatch({
+                type: ACTIONS.setCpuMoveFirst,
+                payload: true
+            });
         } else {
             localStorage.setItem(lsP1Mark, p1);
             localStorage.setItem(lsP2Mark, p2);
@@ -55,7 +61,8 @@ export const NewGame = () => {
         localStorage.setItem(lsTiedScore, '0');
         localStorage.setItem(lsCurrentTurnMark, 'X');
         localStorage.setItem(lsTurnCount, '1');
-        setPlayer('X');
+
+        dispatch({ type: ACTIONS.resetGame });
 
         navigate('/', { replace: true });
     };
