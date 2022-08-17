@@ -1,0 +1,65 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@500;700&display=swap');
+@import './styles/reset';
+@import './styles/variables';
+
+body {
+    background-color: var(--dark-navy);
+    font-family: 'Outfit', 'Futura', sans-serif;
+}
+
+/* Utility */
+.bg-yellow {
+    background-color: var(--light-yellow);
+}
+/* End Utility */
+
+/* Block */
+.button {
+    color: var(--dark-navy);
+    font-weight: var(--font-bold);
+    text-transform: uppercase;
+    border: none;
+
+    &.yellow {
+        background-color: var(--light-yellow);
+    }
+
+    &.blue {
+        background-color: var(--light-blue);
+    }
+
+    &.silver {
+        background-color: var(--silver);
+    }
+    
+    &[data-type='primary'] {
+        display: block;
+        width: 100%;
+        padding: 1.0625rem 0 1.5625rem;
+        border-radius: 0.9375rem;
+
+        &.yellow {
+            box-shadow: var(--shadow-yellow-primary);
+        }
+
+        &.blue {
+            box-shadow: var(--shadow-blue-primary);
+        }
+    }
+
+    &[data-type='secondary'] {
+        display: inline-block;
+        padding: 0.9375rem 1rem 1.0625rem;
+        border-radius: 0.625rem;
+
+        &.yellow {
+            box-shadow: var(--shadow-yellow-secondary);
+        }
+
+        &.silver {
+            box-shadow: var(--shadow-silver-secondary);
+        }
+    }
+}
+/* End Block */
+
