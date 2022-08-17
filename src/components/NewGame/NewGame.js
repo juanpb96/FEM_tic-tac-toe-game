@@ -5,6 +5,8 @@ import { GameContext } from '../../hocs/GameContext';
 import { ASSETS_PATH } from '../../helpers/constants';
 import { ACTIONS, STORAGE } from '../../types/types';
 
+import './newGame.scss';
+
 const {
     lsPlayerMark,
     lsCpuMark,
@@ -68,11 +70,11 @@ export const NewGame = () => {
     };
 
     return (
-        <main>
+        <main className='[ flow ][ page-content ]'>
             <h1 className="sr-only">Tic tac toe</h1>
-            <img src={`${ASSETS_PATH}/logo.svg`} alt=''/>
+            <img className='logo' src={`${ASSETS_PATH}/logo.svg`} alt=''/>
 
-            <section role='radiogroup' aria-labelledby='mark-label'>
+            <section className='[ pick-player ]' role='radiogroup' aria-labelledby='mark-label'>
                 <h2 id='mark-label'>PICK PLAYER 1’S MARK</h2>
                 <div>
                     <div 
@@ -103,8 +105,16 @@ export const NewGame = () => {
                 <p>REMEMBER : X GOES FIRST</p>
             </section>
 
-            <button onClick={ () => handleNewGame(true) }>New Game (VS CPU)</button>
-            <button onClick={ () => handleNewGame(false) }>New Game (VS Player)</button>
+            <button 
+                className='[ button ][ yellow ]'
+                data-type='primary'
+                onClick={ () => handleNewGame(true) }>New Game (VS CPU)
+            </button>
+            <button 
+                className='[ button ][ blue ]'
+                data-type='primary'
+                onClick={ () => handleNewGame(false) }>New Game (VS Player)
+            </button>
         </main>
     );
 };
