@@ -27,8 +27,6 @@ export const NewGame = () => {
 
     const navigate = useNavigate();
 
-    // TODO: Add animation when toggling marks
-
     const handleMarkChange = (mark) => {
         if (isMarkXChecked && mark === 'X') {
             return;
@@ -37,6 +35,7 @@ export const NewGame = () => {
         setIsMarkXChecked(mark === 'X');
     };
 
+    // FIXME: Keyboard is not working with onClick
     const handleNewGame = (isPlayerVsCPU) => {
         localStorage.clear();
 
@@ -81,7 +80,7 @@ export const NewGame = () => {
                         role='radio' 
                         aria-checked={isMarkXChecked} 
                         tabIndex='0'
-                        className='[ mark ][ flex flex-1 flex-center py-3 br-2.5 ]'
+                        className='[ pick-mark ][ flex flex-1 flex-center py-3 br-2.5 ]'
                         onClick={() => handleMarkChange('X')}
                     >
                         <svg width="32" height="32" viewBox="0 0 32 32" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
@@ -92,7 +91,7 @@ export const NewGame = () => {
                         role='radio' 
                         aria-checked={!isMarkXChecked} 
                         tabIndex='-1'
-                        className='[ mark ][ flex flex-1 flex-center py-3 br-2.5 ]'
+                        className='[ pick-mark ][ flex flex-1 flex-center py-3 br-2.5 ]'
                         onClick={() => handleMarkChange('O')}
                     >
                         <svg width="32" height="32" viewBox="0 0 32 32" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
