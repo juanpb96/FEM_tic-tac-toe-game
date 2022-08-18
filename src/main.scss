@@ -23,6 +23,10 @@ body {
 /* End Composition */
 
 /* Utility */
+@function multiply-units($times) {
+    @return calc(0.25rem * $times);
+}
+
 .page-content {
     width: min(calc(100% - (1.5rem * 2)), 28.75rem);
 }
@@ -38,8 +42,82 @@ body {
     clip: rect(0,0,0,0);
 }
 
+.flex {
+    display: flex;
+}
+
+.flex-1 {
+    flex: 1;
+}
+
+.flex-col {
+    flex-direction: column;
+}
+
+.flex-center {
+    justify-content: center;
+    align-items: center;    
+}
+
+.gap-1 {
+    gap: 1rem;
+}
+
 .logo {
     align-self: center;
+}
+
+.fs-3\.5 {
+    font-size: multiply-units(3.5);
+}
+
+.fs-4 {
+    font-size: multiply-units(4);
+}
+
+.letter-s {
+    letter-spacing: 1px;
+}
+
+// TODO: Create a list of these classes
+.mb-4 {
+    margin-bottom: multiply-units(4);
+}
+
+.mb-6 {
+    margin-bottom: multiply-units(6);
+}
+
+.px-2 {
+    padding-inline: multiply-units(2);
+}
+
+.py-2\.5 {
+    padding-block: multiply-units(2.5);
+}
+
+.py-3 {
+    padding-block: multiply-units(3);
+}
+
+.color-silver {
+    color: var(--silver);
+}
+
+.bg-dark-navy {
+    background-color: var(--dark-navy);
+}
+
+.bg-silver {
+    background-color: var(--silver);
+}
+
+.br-2\.5 {
+    border-radius: multiply-units(2.5);
+}
+
+.opacity {
+    opacity: .5;
 }
 /* End Utility */
 
