@@ -1,7 +1,17 @@
-.pick-player {
+.selection-container {
     padding: 1.5rem 1.5rem 1.875rem;
     text-align: center;
     background-color: var(--semi-dark-navi);
     border-radius: 0.9375rem;
     box-shadow: var(--shadow-navy-primary);
+
+    .mark {
+        color: var(--silver);
+        transition: color .5s ease;
+
+        &[aria-checked='true'] {
+            color: var(--dark-navy);
+            background-color: var(--silver);
+        }
+    }
 }
