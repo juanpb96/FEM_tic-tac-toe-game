@@ -6,7 +6,6 @@
     box-shadow: var(--shadow-navy-primary);
 }
 
-// TODO: Hover styles
 .pick-mark {
     cursor: pointer;
     position: relative;
@@ -14,6 +13,10 @@
     transition: color .5s linear;
     background-color: transparent;
     z-index: 0;
+
+    &:where(:hover, :focus) {
+        background-color: hsla(198, 23%, 72%, 0.05);
+    }
 
     &:first-child {
         &::before {
