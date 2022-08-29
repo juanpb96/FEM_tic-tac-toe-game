@@ -12,26 +12,41 @@ const {
     lsTurnCount,
 } = STORAGE;
 
+const TITLE_COLORS = {
+    silver: 'color-silver',
+    lightBlue: 'color-light-blue', 
+    lightYellow: 'color-light-yellow', 
+};
+
 export const GameModal = ({ type, winnerMark, setShowModal }) => {
     const { dispatch } = useContext(GameContext);
     const navigate = useNavigate();
 
     const message = {
         title: 'TAKES THE ROUND',
+        titleColor: '',
         imgSrc: !winnerMark ? '' : `${ASSETS_PATH}/icon-${winnerMark}.svg`,
         result: '',
         button1: 'QUIT',
         button2: 'NEXT ROUND',
     };
 
+    if (winnerMark) {
+        message.titleColor = (winnerMark === 'X') 
+            ? TITLE_COLORS.lightBlue
+            : TITLE_COLORS.lightYellow;
+    }
+
     switch (type) {
         case MODAL_TYPES.restart:
             message.title = 'RESTART GAME?';
+            message.titleColor = TITLE_COLORS.silver;
             message.button1 = 'NO, CANCEL';
             message.button2 = 'YES, RESTART';
             break;
         case MODAL_TYPES.tied:
             message.title = 'ROUND TIED';
+            message.titleColor = TITLE_COLORS.silver;
             break;
         case MODAL_TYPES.player_won:
             message.result = 'YOU WON!';
@@ -49,7 +64,7 @@ export const GameModal = ({ type, winnerMark, setShowModal }) => {
             break;      
     }
 
-    const { title, imgSrc, result, button1, button2 } = message;
+    const { title, titleColor, imgSrc, result, button1, button2 } = message;
 
     const handleClick = ({ target }) => {
         if (target.textContent === 'QUIT') {
@@ -74,15 +89,33 @@ export const GameModal = ({ type, winnerMark, setShowModal }) => {
         setShowModal(false);
     };
 
+    // TODO: Set focus to the modal when it appears
+
     return (
-        <>
-            { result && <p>{ result }</p> }
-            <h2>
-                { imgSrc && <img src={imgSrc} alt={winnerMark} /> }
-                { title }
-            </h2>
-            <button onClick={ handleClick }>{ button1 }</button>
-            <button onClick={ handleClick }>{ button2 }</button>
-        </>
+        <div className='[ modal-container ][ flex flex-center ]'>
+            <div className='[ modal ][ flex flex-center flex-col bg-semi-dark-navy ]'>
+                { result && <p className='[ result ][ mb-4 color-silver fw-bold ]'>{ result }</p> }
+                <h2 className={`[ title ][ flex flex-center gap-2.5 mb-6 fw-bold ${ titleColor } letter-m ]`}>
+                    { imgSrc && <img src={imgSrc} alt={winnerMark} /> }
+                    { title }
+                </h2>
+                <div className='[ flex gap-4 ]'>
+                    <button
+                        className='[ button ][ silver ]'
+                        data-type='secondary'
+                        onClick={ handleClick }
+                    >
+                        { button1 }
+                    </button>
+                    <button
+                        className='[ button ][ yellow ]'
+                        data-type='secondary'
+                        onClick={ handleClick }
+                    >
+                        { button2 }
+                    </button>
+                </div>
+            </div>
+        </div>
     );
 };
