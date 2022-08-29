@@ -26,7 +26,7 @@ describe('Test <GameHeader />', () => {
         expect(screen.getAllByRole('img')[0].getAttribute('src').includes('logo')).toBeTruthy();
         expect(screen.getByText('TURN')).toBeInTheDocument();
         expect(screen.getByLabelText('restart')).toBeInTheDocument();
-        expect(screen.getByLabelText('restart').children.item(0).src.includes('restart')).toBeTruthy();
+        expect(screen.getByLabelText('restart').children.item(0).tagName).toBe('svg');
     });
 
     test('should switch player turn', () => { 
