@@ -12,6 +12,16 @@ const {
     lsTiedScore,
 } = STORAGE;
 
+const ScoreBox = ({ bgColor, title, score }) => (
+    <section
+        aria-label='score'
+        className={`[ score ][ flex flex-center flex-col flex-1 ${bgColor} p-3 br-2.5 ]`}
+    >
+        <h2 className='[ fs-3 fw-medium uppercase ]'>{ title }</h2>
+        <p className='[ fs-5 fw-bold letter-s ]'>{ score }</p>
+    </section>
+);
+
 export const GameFooter = () => {
     const cpuMark = localStorage.getItem(lsCpuMark);
     const cpuScore = localStorage.getItem(lsCpuScore);
@@ -49,20 +59,22 @@ export const GameFooter = () => {
             break;
     }
 
+    const scores = [
+        { bgColor: 'bg-light-blue', title: `X (${ labelPlayerX })`, score: labelScoreX },
+        { bgColor: 'bg-silver', title: 'TIES', score: tiedScore },
+        { bgColor: 'bg-light-yellow', title: `O (${ labelPlayerO })`, score: labelScoreO },
+    ];
+
     return (
-        <footer>
-            <section aria-label='score'>
-                <h2>X { `(${labelPlayerX})` }</h2>
-                <p>{ labelScoreX }</p>
-            </section>
-            <section aria-label='score'>
-                <h2>TIES</h2>
-                <p>{ tiedScore }</p>
-            </section>
-            <section aria-label='score'>
-                <h2>O {`(${labelPlayerO})`}</h2>
-                <p>{ labelScoreO }</p>
-            </section>
+        <footer className='[ flex space-between align-center gap-5 ]'>
+            {
+                scores.map(score => (
+                    <ScoreBox
+                        key={score.title}
+                        {...score} 
+                    />
+                ))
+            }
         </footer>
     );
 };
