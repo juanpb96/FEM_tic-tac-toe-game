@@ -56,13 +56,13 @@ describe('Test <NewGame />', () => {
         test('player mark options', async() => { 
             expect(
                 screen.getByRole('heading', { name: /PICK PLAYER 1’S MARK/i })
-                ).toBeInTheDocument();    
+            ).toBeInTheDocument();    
             expect(
                 screen.getByText('REMEMBER : X GOES FIRST')
             ).toBeInTheDocument();
 
             const radioElements = await screen.findAllByRole('radio');
-            const images = await screen.findAllByAltText(/X|O/i);
+            const images = await screen.findAllByLabelText(/X|O/i);
 
             expect(radioElements).toHaveLength(2);
             expect(images).toHaveLength(2);

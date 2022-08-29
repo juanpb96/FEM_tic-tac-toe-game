@@ -28,7 +28,7 @@ export const NewGame = () => {
 
     const navigate = useNavigate();
 
-    const handleMarkChange = (mark, key) => {
+    const handleMarkChange = (mark, key = 'Enter') => {
         if (!isKeyEnterPressed(key) || (isMarkXChecked && mark === 'X')) {
             return;
         } 
@@ -74,7 +74,7 @@ export const NewGame = () => {
             <img className='logo' src={`${ASSETS_PATH}/logo.svg`} alt=''/>
 
             <section className='selection-container' role='radiogroup' aria-labelledby='mark-label'>
-                <h2 id='mark-label' className='[ fs-4 color-silver letter-s mb-6 ]'>PICK PLAYER 1’S MARK</h2>
+                <h2 id='mark-label' className='[ fs-4 color-silver letter-xs mb-6 ]'>PICK PLAYER 1’S MARK</h2>
                 <div className='[ flex bg-dark-navy mb-4 px-2 py-2.5 br-2.5 ]'>
                     <div 
                         role='radio' 
@@ -108,7 +108,7 @@ export const NewGame = () => {
                 <p className='[ fs-3.5 color-silver opacity ]'>REMEMBER : X GOES FIRST</p>
             </section>
 
-            <div className='[ flex flex-col gap-1 ]'>
+            <div className='[ flex flex-col gap-4 ]'>
                 <button 
                     className='[ button ][ yellow ]'
                     data-type='primary'
