@@ -8,6 +8,8 @@ import { GameModal } from './GameModal';
 
 import { ACTIONS, STORAGE } from '../../types/types';
 
+import './game.scss';
+
 const modalInitialState = {
     type: '',
     winnerMark: ''
@@ -97,7 +99,7 @@ export const Game = () => {
     }, [showModal]);
     
     return (
-        <>
+        <div className='[ page-content align-self-start mt-6 ]'>
             <GameHeader openModal={openModal} />
             {
                 showModal &&
@@ -109,6 +111,6 @@ export const Game = () => {
             }
             <GameBoard openModal={openModal} />
             <GameFooter />
-        </>
+        </div>
     );
 }
