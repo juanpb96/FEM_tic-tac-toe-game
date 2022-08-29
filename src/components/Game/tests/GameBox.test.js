@@ -4,6 +4,8 @@ import { GameBox } from '../GameBox';
 const mockUpdateBoard = jest.fn();
 
 describe('Test <GameBox />', () => {
+    const imageTag = 'svg';
+
     beforeEach(() => {
         jest.clearAllMocks();
     });
@@ -18,11 +20,13 @@ describe('Test <GameBox />', () => {
     });
 
     test('should render an "X" if player "X" has clicked the box', () => {
+        const currentPlayer = 'X';
+
         render(
             <GameBox
                 hasMark={false}
                 mark={null}
-                currentPlayer={'X'} 
+                currentPlayer={currentPlayer} 
                 row={ 0 }
                 col={ 1 }
                 updateBoard={ mockUpdateBoard }
@@ -37,17 +41,18 @@ describe('Test <GameBox />', () => {
 
         const image = box.children[0];
 
-        expect(image.tagName).toBe('IMG');
-        expect(image.src.includes('icon-x.svg')).toBeTruthy();
-        expect(image.alt).toBe('X');
+        expect(image.tagName).toBe(imageTag);
+        expect(image.getAttribute('aria-label')).toBe(currentPlayer);
     });
 
     test('should render an "X" if player "X" has marked the box from a saved game', () => {
+        const currentPlayer = 'O'
+        
         render(
             <GameBox
                 hasMark={true}
                 mark={'X'}
-                currentPlayer={'O'} 
+                currentPlayer={currentPlayer} 
                 row={ 0 }
                 col={ 1 }
                 updateBoard={ mockUpdateBoard }
@@ -59,9 +64,8 @@ describe('Test <GameBox />', () => {
         const box = screen.getByRole('button');
         const image = box.children[0];
 
-        expect(image.tagName).toBe('IMG');
-        expect(image.src.includes('icon-x.svg')).toBeTruthy();
-        expect(image.alt).toBe('X');
+        expect(image.tagName).toBe(imageTag);
+        expect(image.getAttribute('aria-label')).toBe('X');
     });
 
     test('should not replace the current mark if the other player ("O") has clicked the box', () => {
@@ -86,8 +90,7 @@ describe('Test <GameBox />', () => {
 
         const image = screen.getByRole('img');
 
-        expect(image.src.includes('icon-x.svg')).toBeTruthy();
-        expect(image.alt).toBe('X');
+        expect(image.getAttribute('aria-label')).toBe('X');
     });
 
     test('should not mark the box if game is over', () => { 
