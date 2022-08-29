@@ -42,6 +42,10 @@ body {
     clip: rect(0,0,0,0);
 }
 
+.align-self-start {
+    align-self: start;
+}
+
 .flex {
     display: flex;
 }
@@ -75,8 +79,16 @@ body {
     gap: multiply-units(4);
 }
 
+.gap-5 {
+    gap: multiply-units(5);
+}
+
 .logo {
     align-self: center;
+}
+
+.fs-3 {
+    font-size: multiply-units(3);
 }
 
 .fs-3\.5 {
@@ -87,13 +99,57 @@ body {
     font-size: multiply-units(4);
 }
 
-.letter-s {
+.fs-5 {
+    font-size: multiply-units(5);
+}
+
+.fw-medium {
+    font-weight: var(--font-medium);
+}
+
+.fw-bold {
+    font-weight: var(--font-bold);
+}
+
+.letter-xs {
     letter-spacing: 1px;
 }
 
+.letter-s {
+    letter-spacing: 1.25px;
+}
+
+.letter-m {
+    letter-spacing: 1.5px;
+}
+
+.uppercase {
+    text-transform: uppercase;
+}
+
+.color-light-blue {
+    color: var(--light-blue);
+}
+
+.color-light-yellow {
+    color: var(--light-yellow);
+}
+
+.color-silver {
+    color: var(--silver);
+}
+
 // TODO: Create a list of these classes
+.mt-6 {
+    margin-top: multiply-units(6);
+}
+
 .mb-4 {
     margin-bottom: multiply-units(4);
+}
+
+.mb-5 {
+    margin-bottom: multiply-units(5);
 }
 
 .mb-6 {
@@ -102,6 +158,10 @@ body {
 
 .mb-16 {
     margin-bottom: multiply-units(16);
+}
+
+.p-3 {
+    padding: multiply-units(3);
 }
 
 .px-2 {
@@ -114,10 +174,6 @@ body {
 
 .py-3 {
     padding-block: multiply-units(3);
-}
-
-.color-silver {
-    color: var(--silver);
 }
 
 .box-navy {
@@ -140,8 +196,16 @@ body {
     background-color: var(--semi-dark-navy);
 }
 
+.bg-light-blue {
+    background-color: var(--light-blue);
+}
+
 .bg-silver {
     background-color: var(--silver);
+}
+
+.bg-light-yellow {
+    background-color: var(--light-yellow);
 }
 
 .br-1\.5 {
