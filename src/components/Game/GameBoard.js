@@ -1,4 +1,4 @@
-import { useCallback, useContext, useEffect, useRef } from 'react';
+import { useCallback, useContext, useEffect, useRef, useState } from 'react';
 
 import { GameContext } from '../../hocs/GameContext';
 import { GameBox } from './GameBox';
@@ -26,6 +26,9 @@ export const GameBoard = ({ openModal }) => {
         isGameOver,
         isCpuFirstMove,
     } = gameState;
+
+    // TODO: Save x and y in each win condition, then send it to Box and apply winner styles
+    const [winnerCoords, setWinnerCoords] = useState([]);
 
     const boardRef = useRef(null);
     const blockMoveRef = useRef(null);
@@ -99,12 +102,43 @@ export const GameBoard = ({ openModal }) => {
         }
     }, [makeRandomMove]);
 
+    const resetBoardValues = (boardValues) => {
+        boardValues.xMarkCoords = [];
+        boardValues.yMarkCoords = [];
+        boardValues.playerMarkCount = 0;
+        boardValues.cpuMarkCount = 0;
+        boardValues.isCellEmpty = false;
+    };
+
+    const fillCoords = (boardValues, mark, row, col) => {
+        switch (mark) {
+            case 'X':
+                boardValues.xMarkCoords.push([row, col]);
+                break;
+            case 'O':
+                boardValues.yMarkCoords.push([row, col]);
+                break;
+            default:
+                break;
+        }
+    };
+
     const checkCpuDiagonalMove = useCallback(
-        ({ playerMarkCount, cpuMarkCount, isCellEmpty, x, y }) => {
+        (boardValues) => {
+            const { playerMarkCount, cpuMarkCount, isCellEmpty, x, y } = boardValues;
+
             if (isCellEmpty && cpuMarkCount === 2) {
-                console.log('CPU win on diagonal');
+                console.log('CPU win on diagonal', { winnerCoords });
                 setGameOver(USER.cpu, MODAL_TYPES.player_lost, cpuMark);
+                fillCoords(boardValues, cpuMark, x, y);
+
                 clickBox(x, y);
+
+                setWinnerCoords(
+                    cpuMark === 'X' 
+                    ? [...boardValues.xMarkCoords]
+                    : [...boardValues.yMarkCoords]
+                );
 
                 return true;
             }
@@ -143,6 +177,8 @@ export const GameBoard = ({ openModal }) => {
         const boardValues = {
             x: 0,
             y: 0,
+            xMarkCoords: [],
+            yMarkCoords: [],
             playerMarkCount: 0,
             cpuMarkCount: 0,
             isCellEmpty: false,
@@ -150,16 +186,16 @@ export const GameBoard = ({ openModal }) => {
 
         const checkDirection = (type) => {
             for (let row = 0; row < board.length; row++) {
-                boardValues.playerMarkCount = 0;
-                boardValues.cpuMarkCount = 0;
-                boardValues.isCellEmpty = false;
+                resetBoardValues(boardValues);
     
                 for (let col = 0; col < board.length; col++) {
                     if (type === 'rows') {
+                        fillCoords(boardValues, board[row][col], row, col);
                         updateBoardValues(board[row][col], boardValues, row, col);
                         continue;
                     } 
-                        
+                    
+                    fillCoords(boardValues, board[col][row], col, row);
                     updateBoardValues(board[col][row], boardValues, col, row);
                 }
     
@@ -171,8 +207,17 @@ export const GameBoard = ({ openModal }) => {
                 if (isCellEmpty && cpuMarkCount === 2) {
                     console.log('CPU winner move - Sending click from checkDirection');
                     setGameOver(USER.cpu, MODAL_TYPES.player_lost, cpuMark);
+                    fillCoords(boardValues, cpuMark, x, y);
 
                     clickBox(x, y);
+
+                    console.log('Here' + (cpuMark === 'X' ? boardValues.xMarkCoords : boardValues.yMarkCoords));
+
+                    setWinnerCoords(
+                        cpuMark === 'X' 
+                        ? [...boardValues.xMarkCoords]
+                        : [...boardValues.yMarkCoords]
+                    );
     
                     return true;
                 }
@@ -216,14 +261,27 @@ export const GameBoard = ({ openModal }) => {
         }
     }, [cpuMark, p1Mark, p2Mark, dispatch, openModal]);
 
+
+    // TODO: Display winner boxes when player wins
     const checkPlayerHasWon = useCallback(() => {
         let ocurrencesP1 = 0;
         let ocurrencesP2 = 0;
 
+        const boardValues = {
+            x: 0,
+            y: 0,
+            xMarkCoords: [],
+            yMarkCoords: [],
+            playerMarkCount: 0,
+            cpuMarkCount: 0,
+            isCellEmpty: false,
+        };
+
         const player2Mark = cpuMark || p2Mark;
 
         const checkRowsCols = (type) => {
-            for (let row = 0; row < board.length; row++) {       
+            for (let row = 0; row < board.length; row++) {
+                resetBoardValues(boardValues);
                 ocurrencesP1 = 0;
                 ocurrencesP2 = 0;
     
@@ -231,15 +289,28 @@ export const GameBoard = ({ openModal }) => {
                     if (type === 'rows') {
                         ocurrencesP1 += board[row][col] === p1Mark ? 1 : 0;
                         ocurrencesP2 += board[row][col] === player2Mark ? 1 : 0;
+                        fillCoords(boardValues, p1Mark, row, col);
+                        fillCoords(boardValues, p2Mark, row, col);
+                        
                         continue;
                     } 
-    
+                    
                     ocurrencesP1 += board[col][row] === p1Mark ? 1 : 0;
                     ocurrencesP2 += board[col][row] === player2Mark ? 1 : 0;
+                    fillCoords(boardValues, p1Mark, col, row);
+                    fillCoords(boardValues, p2Mark, col, row);
                 }
     
                 if (ocurrencesP1 === 3 || ocurrencesP2 === 3) {
-                    return true
+                    const winnerMark = ocurrencesP1 === 3 ? p1Mark : p2Mark;
+
+                    setWinnerCoords(
+                        winnerMark === 'X' 
+                        ? [...boardValues.xMarkCoords]
+                        : [...boardValues.yMarkCoords]
+                    );
+
+                    return true;
                 }
             }
     
@@ -257,14 +328,25 @@ export const GameBoard = ({ openModal }) => {
         // Top to bottom
         ocurrencesP1 = 0;
         ocurrencesP2 = 0;
+        resetBoardValues(boardValues);
 
         for (let i = 0; i < board.length; i++) {
             ocurrencesP1 += board[i][i] === p1Mark ? 1 : 0;
             ocurrencesP2 += board[i][i] === player2Mark ? 1 : 0;
+            fillCoords(boardValues, p1Mark, i, i);
+            fillCoords(boardValues, p2Mark, i, i);
         }
 
         if (ocurrencesP1 === 3 || ocurrencesP2 === 3) {
             sendPlayerVictory(ocurrencesP1, ocurrencesP2);
+
+            const winnerMark = ocurrencesP1 === 3 ? p1Mark : p2Mark;
+
+            setWinnerCoords(
+                winnerMark === 'X' 
+                ? [...boardValues.xMarkCoords]
+                : [...boardValues.yMarkCoords]
+            );
 
             return true;
         }
@@ -272,14 +354,25 @@ export const GameBoard = ({ openModal }) => {
         // Bottom to top
         ocurrencesP1 = 0;
         ocurrencesP2 = 0;
+        resetBoardValues(boardValues);
 
         for (let row = 2, col = 0; row >= 0; row--, col++) {
             ocurrencesP1 += board[row][col] === p1Mark ? 1 : 0;
             ocurrencesP2 += board[row][col] === player2Mark ? 1 : 0;
+            fillCoords(boardValues, p1Mark, row, col);
+            fillCoords(boardValues, p2Mark, row, col);
         }
 
         if (ocurrencesP1 === 3 || ocurrencesP2 === 3) {
             sendPlayerVictory(ocurrencesP1, ocurrencesP2);
+
+            const winnerMark = ocurrencesP1 === 3 ? p1Mark : p2Mark;
+
+            setWinnerCoords(
+                winnerMark === 'X' 
+                ? [...boardValues.xMarkCoords]
+                : [...boardValues.yMarkCoords]
+            );
 
             return true;
         }
@@ -309,6 +402,8 @@ export const GameBoard = ({ openModal }) => {
             const boardValues = {
                 x: 0,
                 y: 0,
+                xMarkCoords: [],
+                yMarkCoords: [],
                 playerMarkCount: 0,
                 cpuMarkCount: 0,
                 isCellEmpty: false,
@@ -316,6 +411,7 @@ export const GameBoard = ({ openModal }) => {
 
             // Top to bottom
             for (let i = 0; i < board.length; i++) {
+                fillCoords(boardValues, board[i][i], i, i);
                 updateBoardValues(board[i][i], boardValues, i, i);
             }
 
@@ -324,11 +420,10 @@ export const GameBoard = ({ openModal }) => {
             }
     
             // Bottom to top
-            boardValues.playerMarkCount = 0;
-            boardValues.cpuMarkCount = 0;
-            boardValues.isCellEmpty = false;
+            resetBoardValues(boardValues);
     
-            for (let row = 2, col = 0; row >= 0; row--, col++) {   
+            for (let row = 2, col = 0; row >= 0; row--, col++) {
+                fillCoords(boardValues, board[row][col], row, col);
                 updateBoardValues(board[row][col], boardValues, row, col);
             }
 
@@ -348,6 +443,17 @@ export const GameBoard = ({ openModal }) => {
         },
         [board, checkPlayerHasWon, clickBox, checkCpuRowsColsMove, updateBoardValues, checkCpuDiagonalMove, makeRandomMove],
     );
+
+    useEffect(() => {
+        if (isGameOver) {
+            // Reset winner coords without a re render
+            console.log('Reseting winner coords');
+            winnerCoords.length = 0;
+        }
+    }, [isGameOver, winnerCoords]);
+
+    console.log({ winnerCoords });
+    
 
     useEffect(() => {
         console.log({ isCpuFirstMove, cpuMark, currentPlayer, isGameOver, board });
@@ -400,10 +506,7 @@ export const GameBoard = ({ openModal }) => {
 
     return (
         <main
-            style={{
-                display: 'grid',
-                gridTemplate: 'repeat(3, 1fr) / repeat(3, 1fr)'
-            }}
+            className='[ board ][ mb-5 ]'
             ref={ boardRef }
         >
             {
@@ -416,6 +519,11 @@ export const GameBoard = ({ openModal }) => {
                                 currentPlayer={ currentPlayer }
                                 row={ rowIndex }
                                 col={ colIndex }
+                                isWinnerBox={ 
+                                    isGameOver
+                                    ? !!winnerCoords.find(([ row, col ]) => (row === rowIndex && col === colIndex))
+                                    : false
+                                }
                                 updateBoard={ updateBoard }
                                 isGameOver={isGameOver}
                                 key={`${rowIndex}${colIndex}`} 
