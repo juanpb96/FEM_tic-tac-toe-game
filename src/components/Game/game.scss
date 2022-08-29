@@ -1,3 +1,4 @@
+/* Header */
 .turn {
     padding: 0.5625rem 0.9375rem 0.8125rem;
     line-height: 1.125rem;
@@ -8,12 +9,133 @@
 }
 
 .button-restart {
+    cursor: pointer;
     padding: 0.75rem;
+    color: var(--semi-dark-navy);
     background-color: var(--silver);
     border: none;
     box-shadow: var(--shadow-silver-secondary);
+    transition: color .5s ease-in-out,
+                background-color .5s ease-in-out;
 
-    & img {
+    &:where(:hover, :focus) {
+        color: hsla(199, 35%, 19%, 1);
+        background-color: var(--silver-active);
+    }
+
+    & svg {
         width: 1rem;
+        height: 1rem;
     }
 }
+/* End Header */
+
+/* Modal */
+.modal-container {
+    position: absolute;
+    inset: 0;
+    z-index: 10;
+    background-color: hsla(0, 0%, 0%, .5);
+}
+
+.modal {
+    width: 100%;
+    height: 14.25rem;
+
+    .result {
+        letter-spacing: 0.875px;
+    }
+
+    .title {
+        font-size: clamp(1.5rem, 2vw, 2.5rem);
+
+        & img {
+            width: 1.75rem;
+        }
+    }
+}
+/* End Modal */
+
+/* Board */
+// TODO: Add transitions to improve win state display
+
+.board {
+    display: grid;
+    grid-template: repeat(3, 1fr) / repeat(3, 1fr);
+    gap: 1.25rem;
+
+    &-box {
+        width: min(100%, 8.75rem);
+        aspect-ratio: 1 / 1;
+        padding: 0;
+        position: relative;
+        border: none;
+        
+        &:empty {
+            cursor: pointer;
+            position: relative;
+
+            &:where(:hover, :focus) {
+                &::before {
+                    content: '';
+                    position: absolute;
+                    inset: 0;
+                    aspect-ratio: 1 / 1;
+                    // TODO: Use a mixin to reuse code below
+                    width: clamp(2.5rem, 10vw, 4rem);
+                    margin: 1.5rem auto 2rem;
+                    // --------------------------
+                    background-size: cover;
+                }
+
+                &[data-turn='X'] {
+                    &::before {
+                        background-image: url(../../styles/assets/icon-x-outline.svg);
+                    }
+                }
+
+                &[data-turn='O'] {
+                    &::before {
+                        background-image: url(../../styles/assets/icon-o-outline.svg);
+                    }
+                }
+            }
+        }
+
+        &.X-box {
+            color: var(--light-blue);
+
+            &[data-win='true'] {
+                color: var(--dark-navy);
+                background-color: var(--light-blue);
+                box-shadow: var(--shadow-blue-primary);
+            }
+
+        }
+        
+        &.O-box {
+            color: var(--light-yellow);
+
+            &[data-win='true'] {
+                color: var(--dark-navy);
+                background-color: var(--light-yellow);
+                box-shadow: var(--shadow-yellow-primary);
+            }
+        }
+
+        & svg {
+            width: clamp(2.5rem, 10vw, 4rem);
+            height: auto;
+            margin: 1.5rem auto 2rem;
+        }
+    }
+}
+/* End Board */
+
+/* Footer */
+.score {
+    & > * {
+        line-height: 1.25;
+    }
+}
+/* End Footer */
