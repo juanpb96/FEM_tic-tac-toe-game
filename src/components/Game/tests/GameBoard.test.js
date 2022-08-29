@@ -54,8 +54,8 @@ describe('Test <GameBoard />', () => {
     
             fireEvent.click(button);
     
-            expect(button.children.item(0).tagName).toBe('IMG');
-            expect(button.children.item(0).alt).toBe('X');
+            expect(button.children.item(0).tagName).toBe('svg');
+            expect(button.children.item(0).getAttribute('aria-label')).toBe('X');
             expect(dispatch).toHaveBeenCalledWith({
                 type: ACTIONS.setChangeTurn,
                 payload: [
@@ -198,11 +198,11 @@ describe('Test <GameBoard />', () => {
 
             test('if CPU is first, then it should click one box', async() => {
                 // This is an async expect due to the use of setTimeout
-                expect(await screen.findByAltText('X')).toBeInTheDocument();
+                expect(await screen.findByLabelText('X')).toBeInTheDocument();
             });   
     
             test('player makes a move and CPU should click other box different to the first one', async() => { 
-                expect(await screen.findAllByAltText('X')).toHaveLength(1);
+                expect(await screen.findAllByLabelText('X')).toHaveLength(1);
 
                 gameState.currentPlayer = 'O';
                 gameState.board = [
@@ -225,7 +225,7 @@ describe('Test <GameBoard />', () => {
     
                 fireEvent.click(buttons[4]);
     
-                expect(await screen.findAllByAltText('O')).toHaveLength(1);
+                expect(await screen.findAllByLabelText('O')).toHaveLength(1);
 
                 gameState.currentPlayer = 'X';
                 gameState.board = [
@@ -241,7 +241,7 @@ describe('Test <GameBoard />', () => {
                     </GameContext.Provider>
                 );
     
-                expect(screen.getAllByAltText('X')).toHaveLength(2);
+                expect(screen.getAllByLabelText('X')).toHaveLength(2);
             });
         });
 
@@ -280,7 +280,7 @@ describe('Test <GameBoard />', () => {
                 const buttonToBlockWin = buttons[1].children;
     
                 expect(buttonToBlockWin).toHaveLength(1);
-                expect(buttonToBlockWin.item(0).alt).toBe('O');
+                expect(buttonToBlockWin.item(0).getAttribute('aria-label')).toBe('O');
             });
     
             test('player makes two vertical moves and needs one to win', () => { 
@@ -308,7 +308,7 @@ describe('Test <GameBoard />', () => {
                 const buttonToBlockWin = buttons[7].children;
     
                 expect(buttonToBlockWin).toHaveLength(1);
-                expect(buttonToBlockWin.item(0).alt).toBe('O');
+                expect(buttonToBlockWin.item(0).getAttribute('aria-label')).toBe('O');
             });
     
             test('player makes two diagonal moves and needs one to win. CPU should block player win', () => {
@@ -336,7 +336,7 @@ describe('Test <GameBoard />', () => {
                 const buttonToBlockWin = buttons[2].children;
     
                 expect(buttonToBlockWin).toHaveLength(1);
-                expect(buttonToBlockWin.item(0).alt).toBe('O');
+                expect(buttonToBlockWin.item(0).getAttribute('aria-label')).toBe('O');
             });
         });
 
@@ -385,7 +385,7 @@ describe('Test <GameBoard />', () => {
                 const winnerButton = buttons[5].children;
 
                 expect(winnerButton).toHaveLength(1);
-                expect(winnerButton.item(0).alt).toBe('X');
+                expect(winnerButton.item(0).getAttribute('aria-label')).toBe('X');
                 expect(localStorageMock.getItem(lsCpuScore)).toBe(1);
                 expect(openModal).toHaveBeenCalledWith(MODAL_TYPES.player_lost, cpuMark);
             });
@@ -411,7 +411,7 @@ describe('Test <GameBoard />', () => {
                     payload: true
                 });
                 expect(winnerButton).toHaveLength(1);
-                expect(winnerButton.item(0).alt).toBe('X');
+                expect(winnerButton.item(0).getAttribute('aria-label')).toBe('X');
                 expect(localStorageMock.getItem(lsCpuScore)).toBe(1);
                 expect(openModal).toHaveBeenCalledWith(MODAL_TYPES.player_lost, cpuMark);
             });
@@ -433,7 +433,7 @@ describe('Test <GameBoard />', () => {
                 const winnerButton = buttons[0].children;
 
                 expect(winnerButton).toHaveLength(1);
-                expect(winnerButton.item(0).alt).toBe('X');
+                expect(winnerButton.item(0).getAttribute('aria-label')).toBe('X');
                 expect(localStorageMock.getItem(lsCpuScore)).toBe(1);
                 expect(openModal).toHaveBeenCalledWith(MODAL_TYPES.player_lost, cpuMark);
             });
@@ -455,7 +455,7 @@ describe('Test <GameBoard />', () => {
                 const winnerButton = buttons[8].children;
 
                 expect(winnerButton).toHaveLength(1);
-                expect(winnerButton.item(0).alt).toBe('X');
+                expect(winnerButton.item(0).getAttribute('aria-label')).toBe('X');
                 expect(localStorageMock.getItem(lsCpuScore)).toBe(1);
                 expect(openModal).toHaveBeenCalledWith(MODAL_TYPES.player_lost, cpuMark);
             });
@@ -477,7 +477,7 @@ describe('Test <GameBoard />', () => {
                 const winnerButton = buttons[0].children;
 
                 expect(winnerButton).toHaveLength(1);
-                expect(winnerButton.item(0).alt).toBe('X');
+                expect(winnerButton.item(0).getAttribute('aria-label')).toBe('X');
                 expect(localStorageMock.getItem(lsCpuScore)).toBe(1);
                 expect(openModal).toHaveBeenCalledWith(MODAL_TYPES.player_lost, cpuMark);
             });
@@ -499,7 +499,7 @@ describe('Test <GameBoard />', () => {
                 const winnerButton = buttons[4].children;
 
                 expect(winnerButton).toHaveLength(1);
-                expect(winnerButton.item(0).alt).toBe('X');
+                expect(winnerButton.item(0).getAttribute('aria-label')).toBe('X');
                 expect(localStorageMock.getItem(lsCpuScore)).toBe(1);
                 expect(openModal).toHaveBeenCalledWith(MODAL_TYPES.player_lost, cpuMark);
             });
@@ -573,7 +573,7 @@ describe('Test <GameBoard />', () => {
 
                 fireEvent.click(buttons[4]);
 
-                expect(screen.getAllByAltText('X')).toHaveLength(1);
+                expect(screen.getAllByLabelText('X')).toHaveLength(1);
                 
                 gameState.currentPlayer = 'O';
                 gameState.board = [
@@ -630,7 +630,7 @@ describe('Test <GameBoard />', () => {
 
                 fireEvent.click(buttons[8]);
 
-                expect(screen.getAllByAltText('O')).toHaveLength(1);
+                expect(screen.getAllByLabelText('O')).toHaveLength(1);
                 
                 const gameStateX = {
                     currentPlayer: 'X',
@@ -721,7 +721,7 @@ describe('Test <GameBoard />', () => {
                     </GameContext.Provider>
                 );
 
-                expect(screen.getAllByAltText('X')).toHaveLength(3);
+                expect(screen.getAllByLabelText('X')).toHaveLength(3);
                 expect(JSON.parse(localStorageMock.getItem(lsBoardState))).toEqual([
                     ['O', null, null],
                     [null, 'O', null],
@@ -764,7 +764,7 @@ describe('Test <GameBoard />', () => {
                     </GameContext.Provider>
                 );
 
-                expect(screen.getAllByAltText('X')).toHaveLength(3);
+                expect(screen.getAllByLabelText('X')).toHaveLength(3);
                 expect(JSON.parse(localStorageMock.getItem(lsBoardState))).toEqual([
                     ['O', 'X', null],
                     ['O', 'X', null],
@@ -805,7 +805,7 @@ describe('Test <GameBoard />', () => {
                     </GameContext.Provider>
                 );
 
-                expect(screen.getAllByAltText('X')).toHaveLength(3);
+                expect(screen.getAllByLabelText('X')).toHaveLength(3);
                 expect(JSON.parse(localStorageMock.getItem(lsBoardState))).toEqual([
                     ['X', null, null],
                     ['O', 'X', null],
@@ -846,7 +846,7 @@ describe('Test <GameBoard />', () => {
                     </GameContext.Provider>
                 );
 
-                expect(screen.getAllByAltText('X')).toHaveLength(3);
+                expect(screen.getAllByLabelText('X')).toHaveLength(3);
                 expect(JSON.parse(localStorageMock.getItem(lsBoardState))).toEqual([
                     ['O', null, 'X'],
                     ['O', 'X', null],
@@ -915,7 +915,7 @@ describe('Test <GameBoard />', () => {
                     </GameContext.Provider>
                 );
 
-                expect(screen.getAllByAltText('X')).toHaveLength(3);
+                expect(screen.getAllByLabelText('X')).toHaveLength(3);
                 expect(JSON.parse(localStorageMock.getItem(lsBoardState))).toEqual([
                     ['O', null, null],
                     [null, 'O', null],
@@ -954,7 +954,7 @@ describe('Test <GameBoard />', () => {
                     </GameContext.Provider>
                 );
 
-                expect(screen.getAllByAltText('X')).toHaveLength(3);
+                expect(screen.getAllByLabelText('X')).toHaveLength(3);
                 expect(JSON.parse(localStorageMock.getItem(lsBoardState))).toEqual([
                     ['O', 'X', null],
                     ['O', 'X', null],
@@ -993,7 +993,7 @@ describe('Test <GameBoard />', () => {
                     </GameContext.Provider>
                 );
 
-                expect(screen.getAllByAltText('X')).toHaveLength(3);
+                expect(screen.getAllByLabelText('X')).toHaveLength(3);
                 expect(JSON.parse(localStorageMock.getItem(lsBoardState))).toEqual([
                     ['X', null, null],
                     ['O', 'X', null],
@@ -1032,7 +1032,7 @@ describe('Test <GameBoard />', () => {
                     </GameContext.Provider>
                 );
 
-                expect(screen.getAllByAltText('X')).toHaveLength(3);
+                expect(screen.getAllByLabelText('X')).toHaveLength(3);
                 expect(JSON.parse(localStorageMock.getItem(lsBoardState))).toEqual([
                     ['O', null, 'X'],
                     ['O', 'X', null],
