@@ -1,6 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@500;700&display=swap');
 @import './styles/reset';
 @import './styles/variables';
+@import './styles/mixins/media';
 
 body {
     background-color: var(--dark-navy);
@@ -19,6 +20,12 @@ body {
     display: flex;
     flex-direction: column;
     gap: 2rem;
+}
+
+@include media(tablet) {
+    .flow {
+        gap: 2.5rem;
+    }
 }
 /* End Composition */
 
@@ -44,6 +51,18 @@ body {
 
 .align-self-start {
     align-self: start;
+}
+
+.justify-self-end {
+    justify-self: end;
+}
+
+.grid {
+    display: grid;
+}
+
+.grid-cols-3 {
+    grid-template-columns: repeat(3, 1fr);
 }
 
 .flex {
@@ -219,6 +238,45 @@ body {
 .opacity {
     opacity: .5;
 }
+
+@include media(tablet) {
+    .tablet\:align-self-center {
+        align-self: center;
+    }
+
+    .tablet\:gap-5 {
+        gap: multiply-units(5);
+    }
+
+    .tablet\:gap-6 {
+        gap: multiply-units(6);
+    }
+
+    .tablet\:fs-3\.5 {
+        font-size: multiply-units(3.5);
+    }
+
+    .tablet\:fs-4 {
+        font-size: multiply-units(4);
+    }
+
+    .tablet\:fs-6 {
+        font-size: multiply-units(6);
+    }
+
+    .tablet\:mt-0 {
+        margin-top: multiply-units(0);
+    }
+
+    .tablet\:mb-5 {
+        margin-bottom: multiply-units(5);
+    }
+
+    .tablet\:mb-8 {
+        margin-bottom: multiply-units(8);
+    }
+}
+
 /* End Utility */
 
 /* Block */
@@ -226,6 +284,7 @@ body {
     cursor: pointer;
     color: var(--dark-navy);
     font-size: 1rem;
+    line-height: 1.26;
     font-weight: var(--font-bold);
     text-transform: uppercase;
     border: none;
@@ -259,7 +318,7 @@ body {
     &[data-type='primary'] {
         display: block;
         width: 100%;
-        padding: 1.0625rem 0 1.5625rem;
+        padding: 0.875rem 0 1.375rem;
         // TODO: letter-spacing and font-size must increase on tablet
         letter-spacing: var(--letter-spacing-s);
         border-radius: 0.9375rem;
@@ -285,6 +344,16 @@ body {
 
         &.silver {
             box-shadow: var(--shadow-silver-secondary);
+        }
+    }
+}
+
+@include media(tablet) {
+    .button {
+        &[data-type='primary'] {
+            padding: 1.0625rem 0 1.5625rem;
+            font-size: 1.25rem;
+            line-height: 1.26;
         }
     }
 }
