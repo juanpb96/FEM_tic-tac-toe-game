@@ -171,10 +171,14 @@
             &:empty {
                 &:where(:hover, :focus) {
                     &::before {
-                        margin: 2.375rem;
+                        margin: 2.375rem auto;
                     }
                 }
             }
+        }
+
+        & svg {
+            margin: 2.375rem auto;
         }
     }
 }
