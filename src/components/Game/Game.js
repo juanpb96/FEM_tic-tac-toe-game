@@ -99,7 +99,7 @@ export const Game = () => {
     }, [showModal]);
     
     return (
-        <div className='[ page-content align-self-start mt-6 ]'>
+        <div className='[ page-content align-self-start mt-6 tablet:align-self-center tablet:mt-0 ]'>
             <GameHeader openModal={openModal} />
             {
                 showModal &&

@@ -89,13 +89,15 @@ export const GameModal = ({ type, winnerMark, setShowModal }) => {
         setShowModal(false);
     };
 
+    const isRestartOrTied = [MODAL_TYPES.restart, MODAL_TYPES.tied].includes(type);
+
     // TODO: Set focus to the modal when it appears
 
     return (
         <div className='[ modal-container ][ flex flex-center ]'>
             <div className='[ modal ][ flex flex-center flex-col bg-semi-dark-navy ]'>
-                { result && <p className='[ result ][ mb-4 color-silver fw-bold ]'>{ result }</p> }
-                <h2 className={`[ title ][ flex flex-center gap-2.5 mb-6 fw-bold ${ titleColor } letter-m ]`}>
+                { result && <p className='[ result ][ mb-4 color-silver fs-4 fw-bold ]'>{ result }</p> }
+                <h2 className={`[ title ][ flex flex-center gap-2.5 mb-6 fw-bold ${ titleColor } letter-m tablet:gap-6 ${ isRestartOrTied ? 'tablet:mb-8' : '' } ]`}>
                     { imgSrc && <img src={imgSrc} alt={winnerMark} /> }
                     { title }
                 </h2>

@@ -13,7 +13,7 @@ export const GameHeader = ({ openModal }) => {
     };
 
     return (
-        <header className='flex space-between align-center mb-16'>
+        <header className='grid grid-cols-3 align-center gap-5 mb-16 tablet:mb-5'>
             <h1 className='sr-only'>Tic tac toe</h1>
             <img src={`${ASSETS_PATH}/logo.svg`} alt='' />
             <section
@@ -21,11 +21,11 @@ export const GameHeader = ({ openModal }) => {
                 data-type='secondary'
             >
                 <img src={`${ASSETS_PATH}/icon-turn-${currentPlayer}.svg`} alt={ currentPlayer } />
-                <h2 className='fs-3.5 color-silver'>TURN</h2>
+                <h2 className='fs-3.5 color-silver tablet:fs-4'>TURN</h2>
             </section>
             <button 
                 aria-label='restart'
-                className='[ button-restart ][ br-1.5 ]'
+                className='[ button-restart ][ justify-self-end br-1.5 ]'
                 data-type='secondary'
                 onClick={ handleRestart }
             >
