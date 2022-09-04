@@ -108,16 +108,20 @@ export const NewGame = () => {
                 <p className='[ fs-3.5 color-silver opacity ]'>REMEMBER : X GOES FIRST</p>
             </section>
 
-            <div className='[ flex flex-col gap-4 ]'>
+            <div className='[ flex flex-col gap-4 tablet:gap-5 ]'>
                 <button 
                     className='[ button ][ yellow ]'
                     data-type='primary'
-                    onClick={ () => handleNewGame(true) }>New Game (VS CPU)
+                    onClick={ () => handleNewGame(true) }
+                >
+                    New Game (VS CPU)
                 </button>
                 <button 
                     className='[ button ][ blue ]'
                     data-type='primary'
-                    onClick={ () => handleNewGame(false) }>New Game (VS Player)
+                    onClick={ () => handleNewGame(false) }
+                >
+                    New Game (VS Player)
                 </button>
             </div>
         </main>

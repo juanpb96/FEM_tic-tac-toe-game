@@ -1,9 +1,19 @@
+@import '../../styles/mixins/media';
+
 .selection-container {
     padding: 1.5rem 1.5rem 1.875rem;
     text-align: center;
     background-color: var(--semi-dark-navy);
     border-radius: 0.9375rem;
     box-shadow: var(--shadow-navy-primary);
+
+    & > h2 {
+        line-height: 1.25;
+    }
+
+    & > p {
+        line-height: 1.26;
+    }
 }
 
 .pick-mark {
