@@ -46,8 +46,6 @@ export const GameBoard = ({ openModal }) => {
             type: ACTIONS.setChangeTurn,
             payload: newBoard
         });
-
-        console.log({ board, newPlayer: currentPlayer });
     };
 
     const setGameOver = (winnerUser, messageType, winnerMark = '') => {
@@ -77,14 +75,11 @@ export const GameBoard = ({ openModal }) => {
             pos = Math.floor(Math.random() * buttons.length);
         }
 
-        console.log('Random Move', pos);
         buttons[pos].click();
     }, [board, openModal, dispatch]);
 
     const clickBox = useCallback((x, y) => {
         const buttons = boardRef.current.getElementsByTagName('button');
-
-        console.log('Click', {x, y});
 
         switch (x) {
             case 0:
@@ -128,7 +123,6 @@ export const GameBoard = ({ openModal }) => {
             const { playerMarkCount, cpuMarkCount, isCellEmpty, x, y } = boardValues;
 
             if (isCellEmpty && cpuMarkCount === 2) {
-                console.log('CPU win on diagonal', { winnerCoords });
                 setGameOver(USER.cpu, MODAL_TYPES.player_lost, cpuMark);
                 fillCoords(boardValues, cpuMark, x, y);
 
@@ -200,18 +194,13 @@ export const GameBoard = ({ openModal }) => {
                 }
     
                 const { playerMarkCount, cpuMarkCount, isCellEmpty, x, y } = boardValues;
-    
-                console.log({ row });
 
                 // Make cpu winner move
                 if (isCellEmpty && cpuMarkCount === 2) {
-                    console.log('CPU winner move - Sending click from checkDirection');
                     setGameOver(USER.cpu, MODAL_TYPES.player_lost, cpuMark);
                     fillCoords(boardValues, cpuMark, x, y);
 
                     clickBox(x, y);
-
-                    console.log('Here' + (cpuMark === 'X' ? boardValues.xMarkCoords : boardValues.yMarkCoords));
 
                     setWinnerCoords(
                         cpuMark === 'X' 
@@ -243,7 +232,6 @@ export const GameBoard = ({ openModal }) => {
 
     const sendPlayerVictory = useCallback((p1MarkCount, p2MarkCount) => {
         if (p1MarkCount === 3) {
-            console.log('P1 has Won', { p1MarkCount });
             if (cpuMark) {
                 setGameOver(USER.player, MODAL_TYPES.player_won, p1Mark);
             } else {
@@ -252,7 +240,6 @@ export const GameBoard = ({ openModal }) => {
         }
 
         if (p2MarkCount === 3) {
-            console.log('P2 has won', { p2MarkCount });
             if (cpuMark) {
                 setGameOver(USER.cpu, MODAL_TYPES.player_lost, cpuMark);
             } else {
@@ -318,7 +305,6 @@ export const GameBoard = ({ openModal }) => {
         }
 
         if (checkRowsCols('rows') || checkRowsCols('cols')) {
-            console.log('A player has won!!!');
             sendPlayerVictory(ocurrencesP1, ocurrencesP2);
 
             return true;
@@ -432,13 +418,11 @@ export const GameBoard = ({ openModal }) => {
             }
 
             if (blockMoveRef.current.shouldBlock) {
-                console.log('Blocking user move');
                 clickBox(blockMoveRef.current.x, blockMoveRef.current.y);
 
                 return;
             }
     
-            console.log('MakeCPU() random move');
             makeRandomMove();
         },
         [board, checkPlayerHasWon, clickBox, checkCpuRowsColsMove, updateBoardValues, checkCpuDiagonalMove, makeRandomMove],
@@ -447,16 +431,11 @@ export const GameBoard = ({ openModal }) => {
     useEffect(() => {
         if (isGameOver) {
             // Reset winner coords without a re render
-            console.log('Reseting winner coords');
             winnerCoords.length = 0;
         }
-    }, [isGameOver, winnerCoords]);
-
-    console.log({ winnerCoords });
-    
+    }, [isGameOver, winnerCoords]);    
 
     useEffect(() => {
-        console.log({ isCpuFirstMove, cpuMark, currentPlayer, isGameOver, board });
         let timeoutId;
 
         if (cpuMark === currentPlayer) {
@@ -465,14 +444,11 @@ export const GameBoard = ({ openModal }) => {
                     type: ACTIONS.setCpuMoveFirst,
                     payload: false
                 });
-
-                console.log('Sending ramdom move from uE');
     
                 timeoutId = setTimeout(() => {
                     makeRandomMove();
                 }, 500);
             } else if (!isGameOver) {
-                console.log('Sending make cpu move');
                 makeCpuMove();
             }
         }
@@ -483,8 +459,6 @@ export const GameBoard = ({ openModal }) => {
     }, [cpuMark, currentPlayer, isCpuFirstMove, dispatch, makeRandomMove, makeCpuMove]);
 
     useEffect(() => {
-        console.log({ board, currentPlayer });
-
         localStorage.setItem(lsBoardState, JSON.stringify(board));
         localStorage.setItem(lsCurrentTurnMark, currentPlayer);
         localStorage.setItem(lsTurnCount, turnCounter);

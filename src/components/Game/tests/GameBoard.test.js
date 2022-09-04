@@ -192,7 +192,6 @@ describe('Test <GameBoard />', () => {
                 gameState.board = getEmptyBoard();
                 gameState.isCpuFirstMove = true;
                 gameState.turnCounter = 1;
-                console.log('This is the new game board!!!!!!!!', gameState.board);
                 localStorageMock.clear();
             });
 
@@ -555,8 +554,6 @@ describe('Test <GameBoard />', () => {
                     isGameOver: false,
                     isCpuFirstMove: false
                 };
-
-                console.log('The value of empty board is', gameState.board);
         
                 const dispatch = jest.fn();
 

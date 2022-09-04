@@ -3,10 +3,10 @@
 exports[`Test <Game /> modal should open when user clicks on "restart" button and close if "No, cancel" is pressed 1`] = `
 <div>
   <div
-    class="[ page-content align-self-start mt-6 ]"
+    class="[ page-content align-self-start mt-6 tablet:align-self-center tablet:mt-0 ]"
   >
     <header
-      class="flex space-between align-center mb-16"
+      class="grid grid-cols-3 align-center gap-5 mb-16 tablet:mb-5"
     >
       <h1
         class="sr-only"
@@ -26,14 +26,14 @@ exports[`Test <Game /> modal should open when user clicks on "restart" button an
           src="/assets/icon-turn-X.svg"
         />
         <h2
-          class="fs-3.5 color-silver"
+          class="fs-3.5 color-silver tablet:fs-4"
         >
           TURN
         </h2>
       </section>
       <button
         aria-label="restart"
-        class="[ button-restart ][ br-1.5 ]"
+        class="[ button-restart ][ justify-self-end br-1.5 ]"
         data-type="secondary"
       >
         <svg
@@ -126,12 +126,12 @@ exports[`Test <Game /> modal should open when user clicks on "restart" button an
         class="[ score ][ flex flex-center flex-col flex-1 bg-light-blue p-3 br-2.5 ]"
       >
         <h2
-          class="[ fs-3 fw-medium uppercase ]"
+          class="[ fs-3 fw-medium uppercase tablet:fs-3.5 ]"
         >
           X ()
         </h2>
         <p
-          class="[ fs-5 fw-bold letter-s ]"
+          class="[ fs-5 fw-bold letter-s tablet:fs-6 ]"
         >
           0
         </p>
@@ -141,12 +141,12 @@ exports[`Test <Game /> modal should open when user clicks on "restart" button an
         class="[ score ][ flex flex-center flex-col flex-1 bg-silver p-3 br-2.5 ]"
       >
         <h2
-          class="[ fs-3 fw-medium uppercase ]"
+          class="[ fs-3 fw-medium uppercase tablet:fs-3.5 ]"
         >
           TIES
         </h2>
         <p
-          class="[ fs-5 fw-bold letter-s ]"
+          class="[ fs-5 fw-bold letter-s tablet:fs-6 ]"
         />
       </section>
       <section
@@ -154,12 +154,12 @@ exports[`Test <Game /> modal should open when user clicks on "restart" button an
         class="[ score ][ flex flex-center flex-col flex-1 bg-light-yellow p-3 br-2.5 ]"
       >
         <h2
-          class="[ fs-3 fw-medium uppercase ]"
+          class="[ fs-3 fw-medium uppercase tablet:fs-3.5 ]"
         >
           O ()
         </h2>
         <p
-          class="[ fs-5 fw-bold letter-s ]"
+          class="[ fs-5 fw-bold letter-s tablet:fs-6 ]"
         >
           0
         </p>

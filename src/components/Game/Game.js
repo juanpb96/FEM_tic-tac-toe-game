@@ -82,8 +82,6 @@ export const Game = () => {
         const cpuMark = localStorage.getItem(lsCpuMark);
         const hasCpuMoved = gameState.board.some(row => row.some(cell => cell === cpuMark));
 
-        console.log({ hasCpuMoved });
-
         if (hasCpuMoved) {
             dispatch({
                 type: ACTIONS.setCpuMoveFirst,
