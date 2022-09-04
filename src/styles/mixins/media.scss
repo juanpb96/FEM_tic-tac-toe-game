@@ -1,0 +1,12 @@
+@import '../variables';
+
+@mixin media($type) {
+    $min-width: map-get((
+        tablet: $tablet,
+        destop: $desktop
+    ), $type);
+
+    @media only screen and (min-width: #{$min-width}) {
+        @content
+    }
+}
