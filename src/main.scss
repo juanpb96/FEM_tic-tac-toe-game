@@ -2,6 +2,7 @@
 @import './styles/reset';
 @import './styles/variables';
 @import './styles/mixins/media';
+@import './styles/mixins/units';
 
 body {
     background-color: var(--dark-navy);
@@ -30,10 +31,6 @@ body {
 /* End Composition */
 
 /* Utility */
-@function multiply-units($times) {
-    @return calc(0.25rem * $times);
-}
-
 .page-content {
     width: min(calc(100% - (1.5rem * 2)), 28.75rem);
 }
@@ -90,37 +87,12 @@ body {
     align-items: center;    
 }
 
-.gap-2\.5 {
-    gap: multiply-units(2.5);
-}
-
-.gap-4 {
-    gap: multiply-units(4);
-}
-
-.gap-5 {
-    gap: multiply-units(5);
-}
-
 .logo {
     align-self: center;
 }
 
-.fs-3 {
-    font-size: multiply-units(3);
-}
-
-.fs-3\.5 {
-    font-size: multiply-units(3.5);
-}
-
-.fs-4 {
-    font-size: multiply-units(4);
-}
-
-.fs-5 {
-    font-size: multiply-units(5);
-}
+@include units(gap);
+@include units(fs);
 
 .fw-medium {
     font-weight: var(--font-medium);
@@ -142,6 +114,10 @@ body {
     letter-spacing: 1.5px;
 }
 
+.letter-l {
+    letter-spacing: 2.5px;
+}
+
 .uppercase {
     text-transform: uppercase;
 }
@@ -158,42 +134,11 @@ body {
     color: var(--silver);
 }
 
-// TODO: Create a list of these classes
-.mt-6 {
-    margin-top: multiply-units(6);
-}
-
-.mb-4 {
-    margin-bottom: multiply-units(4);
-}
-
-.mb-5 {
-    margin-bottom: multiply-units(5);
-}
-
-.mb-6 {
-    margin-bottom: multiply-units(6);
-}
-
-.mb-16 {
-    margin-bottom: multiply-units(16);
-}
-
-.p-3 {
-    padding: multiply-units(3);
-}
-
-.px-2 {
-    padding-inline: multiply-units(2);
-}
-
-.py-2\.5 {
-    padding-block: multiply-units(2.5);
-}
-
-.py-3 {
-    padding-block: multiply-units(3);
-}
+@include units(mt);
+@include units(mb);
+@include units(p);
+@include units(px);
+@include units(py);
 
 .box-navy {
     background-color: var(--semi-dark-navy);
@@ -244,37 +189,18 @@ body {
         align-self: center;
     }
 
-    .tablet\:gap-5 {
-        gap: multiply-units(5);
+    .tablet\:letter-m {
+        letter-spacing: 1.5px;
     }
 
-    .tablet\:gap-6 {
-        gap: multiply-units(6);
+    .tablet\:letter-l {
+        letter-spacing: 2.5px;
     }
 
-    .tablet\:fs-3\.5 {
-        font-size: multiply-units(3.5);
-    }
-
-    .tablet\:fs-4 {
-        font-size: multiply-units(4);
-    }
-
-    .tablet\:fs-6 {
-        font-size: multiply-units(6);
-    }
-
-    .tablet\:mt-0 {
-        margin-top: multiply-units(0);
-    }
-
-    .tablet\:mb-5 {
-        margin-bottom: multiply-units(5);
-    }
-
-    .tablet\:mb-8 {
-        margin-bottom: multiply-units(8);
-    }
+    @include units(gap, tablet);
+    @include units(fs, tablet);
+    @include units(mt, tablet);
+    @include units(mb, tablet);
 }
 
 /* End Utility */
@@ -290,28 +216,16 @@ body {
     border: none;
     transition: background-color .3s ease;
 
-    // TODO: Create a loop to insert color and common properties
-    &.yellow {
-        background-color: var(--light-yellow);
+    @each $color, $values in $button-colors {
+        $background: map-get($values, 'background');
+        $background-active: map-get($values, 'background-active');
 
-        &:where(:hover, :focus) {
-            background-color: var(--light-yellow-active);
-        }
-    }
-
-    &.blue {
-        background-color: var(--light-blue);
-
-        &:where(:hover, :focus) {
-            background-color: var(--light-blue-active);
-        }
-    }
-
-    &.silver {
-        background-color: var(--silver);
-
-        &:where(:hover, :focus) {
-            background-color: var(--silver-active);
+        &.#{$color} {
+            background-color: $background;
+    
+            &:where(:hover, :focus) {
+                background-color: $background-active;
+            }
         }
     }
     
@@ -319,7 +233,6 @@ body {
         display: block;
         width: 100%;
         padding: 0.875rem 0 1.375rem;
-        // TODO: letter-spacing and font-size must increase on tablet
         letter-spacing: var(--letter-spacing-s);
         border-radius: 0.9375rem;
 
@@ -358,4 +271,3 @@ body {
     }
 }
 /* End Block */
-
