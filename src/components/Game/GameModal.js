@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { GameContext } from '../../hocs/GameContext';
@@ -21,6 +21,15 @@ const TITLE_COLORS = {
 export const GameModal = ({ type, winnerMark, setShowModal }) => {
     const { dispatch } = useContext(GameContext);
     const navigate = useNavigate();
+
+    const resultRef = useRef(null);
+    const titleRef = useRef(null);
+
+    useEffect(() => {
+        resultRef.current
+            ? resultRef.current.focus()
+            : titleRef.current.focus();
+    }, []);
 
     const message = {
         title: 'TAKES THE ROUND',
@@ -91,13 +100,11 @@ export const GameModal = ({ type, winnerMark, setShowModal }) => {
 
     const isRestartOrTied = [MODAL_TYPES.restart, MODAL_TYPES.tied].includes(type);
 
-    // TODO: Set focus to the modal when it appears
-
     return (
         <div className='[ modal-container ][ flex flex-center ]'>
             <div className='[ modal ][ flex flex-center flex-col bg-semi-dark-navy ]'>
-                { result && <p className='[ result ][ mb-4 color-silver fs-4 fw-bold ]'>{ result }</p> }
-                <h2 className={`[ title ][ flex flex-center gap-2.5 mb-6 fw-bold ${ titleColor } letter-m tablet:gap-6 ${ isRestartOrTied ? 'tablet:mb-8' : '' } ]`}>
+                { result && <p ref={resultRef} tabIndex='0' className='[ result ][ mb-4 color-silver fs-4 fw-bold ]'>{ result }</p> }
+                <h2 ref={titleRef} className={`[ title ][ flex flex-center gap-2.5 mb-6 fw-bold ${ titleColor } letter-m tablet:gap-6 tablet:letter-l ${ isRestartOrTied ? 'tablet:mb-8' : '' } ]`}>
                     { imgSrc && <img src={imgSrc} alt={winnerMark} /> }
                     { title }
                 </h2>
