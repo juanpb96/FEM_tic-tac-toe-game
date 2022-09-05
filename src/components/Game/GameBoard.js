@@ -27,7 +27,6 @@ export const GameBoard = ({ openModal }) => {
         isCpuFirstMove,
     } = gameState;
 
-    // TODO: Save x and y in each win condition, then send it to Box and apply winner styles
     const [winnerCoords, setWinnerCoords] = useState([]);
 
     const boardRef = useRef(null);
@@ -48,7 +47,7 @@ export const GameBoard = ({ openModal }) => {
         });
     };
 
-    const setGameOver = (winnerUser, messageType, winnerMark = '') => {
+    const setGameOver = useCallback((winnerUser, messageType, winnerMark = '') => {
         updateScore(winnerUser);
         openModal(messageType, winnerMark);
 
@@ -56,7 +55,7 @@ export const GameBoard = ({ openModal }) => {
             type: ACTIONS.setGameOver,
             payload: true
         });
-    }; 
+    }, [openModal, dispatch]); 
 
     const makeRandomMove = useCallback(() => {
         const isBoardFull = board.every(row => row.every(cell => cell === 'X' || cell === 'O'));
@@ -76,7 +75,7 @@ export const GameBoard = ({ openModal }) => {
         }
 
         buttons[pos].click();
-    }, [board, openModal, dispatch]);
+    }, [board, setGameOver]);
 
     const clickBox = useCallback((x, y) => {
         const buttons = boardRef.current.getElementsByTagName('button');
@@ -146,7 +145,7 @@ export const GameBoard = ({ openModal }) => {
             }
 
             return false;
-        }, [clickBox]
+        }, [setGameOver, clickBox, cpuMark]
     );
 
     const updateBoardValues = useCallback((cell, boardValues, x, y) => {
@@ -228,7 +227,7 @@ export const GameBoard = ({ openModal }) => {
         }
 
         return false;
-    }, [board, updateBoardValues, clickBox]);
+    }, [board, updateBoardValues, clickBox, setGameOver, cpuMark]);
 
     const sendPlayerVictory = useCallback((p1MarkCount, p2MarkCount) => {
         if (p1MarkCount === 3) {
@@ -246,10 +245,9 @@ export const GameBoard = ({ openModal }) => {
                 setGameOver(USER.p2, MODAL_TYPES.player2_won, p2Mark);
             }
         }
-    }, [cpuMark, p1Mark, p2Mark, dispatch, openModal]);
+    }, [cpuMark, p1Mark, p2Mark, setGameOver]);
 
 
-    // TODO: Display winner boxes when player wins
     const checkPlayerHasWon = useCallback(() => {
         let ocurrencesP1 = 0;
         let ocurrencesP2 = 0;
@@ -456,7 +454,7 @@ export const GameBoard = ({ openModal }) => {
         return () => {
             clearTimeout(timeoutId);
         }
-    }, [cpuMark, currentPlayer, isCpuFirstMove, dispatch, makeRandomMove, makeCpuMove]);
+    }, [cpuMark, currentPlayer, isCpuFirstMove, isGameOver, dispatch, makeRandomMove, makeCpuMove]);
 
     useEffect(() => {
         localStorage.setItem(lsBoardState, JSON.stringify(board));
@@ -476,7 +474,7 @@ export const GameBoard = ({ openModal }) => {
         return () => {
             clearTimeout(timeoutId);
         }
-    }, [board, currentPlayer, p2Mark, isGameOver, checkPlayerHasWon]);
+    }, [board, currentPlayer, p2Mark, isGameOver, turnCounter, setGameOver, checkPlayerHasWon]);
 
     return (
         <main
