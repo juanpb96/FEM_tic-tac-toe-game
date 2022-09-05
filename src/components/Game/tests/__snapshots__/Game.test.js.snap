@@ -131,7 +131,7 @@ exports[`Test <Game /> modal should open when user clicks on "restart" button an
           X ()
         </h2>
         <p
-          class="[ fs-5 fw-bold letter-s tablet:fs-6 ]"
+          class="[ fs-5 fw-bold letter-s tablet:fs-6 tablet:letter-m ]"
         >
           0
         </p>
@@ -146,7 +146,7 @@ exports[`Test <Game /> modal should open when user clicks on "restart" button an
           TIES
         </h2>
         <p
-          class="[ fs-5 fw-bold letter-s tablet:fs-6 ]"
+          class="[ fs-5 fw-bold letter-s tablet:fs-6 tablet:letter-m ]"
         />
       </section>
       <section
@@ -159,7 +159,7 @@ exports[`Test <Game /> modal should open when user clicks on "restart" button an
           O ()
         </h2>
         <p
-          class="[ fs-5 fw-bold letter-s tablet:fs-6 ]"
+          class="[ fs-5 fw-bold letter-s tablet:fs-6 tablet:letter-m ]"
         >
           0
         </p>
