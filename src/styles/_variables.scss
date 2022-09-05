@@ -35,3 +35,19 @@
 // Breakpoints
 $tablet: 768px;
 $desktop: 1024px;
+
+// Colors
+$button-colors: (
+    yellow: (
+        background: var(--light-yellow),
+        background-active: var(--light-yellow-active)
+    ),
+    blue: (
+        background: var(--light-blue),
+        background-active: var(--light-blue-active)
+    ),
+    silver: (
+        background: var(--silver),
+        background-active: var(--silver-active)
+    ),
+);
