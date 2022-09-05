@@ -4,15 +4,28 @@ import { BrowserRouter } from 'react-router-dom';
 import { AppRouter } from './routers/AppRouter';
 import { GameContext } from './hocs/GameContext';
 
-import { ACTIONS } from './types/types';
+import { ACTIONS, STORAGE } from './types/types';
 import { getEmptyBoard } from './helpers/getEmptyBoard';
 
+const {
+    lsBoardState,
+    lsTurnCount,
+    lsCpuMark,
+    lsCurrentTurnMark,
+} = STORAGE;
+
+const currentPlayer = localStorage.getItem(lsCurrentTurnMark);
+const board = JSON.parse(localStorage.getItem(lsBoardState));
+const turnCounter = +localStorage.getItem(lsTurnCount);
+const cpuMark = localStorage.getItem(lsCpuMark);
+const hasCpuMoved = board && board.some(row => row.some(cell => cell === cpuMark));
+
 const initialState = {
-    currentPlayer: 'X',
-    board: getEmptyBoard(),
-    turnCounter: 1,
+    currentPlayer: currentPlayer || 'X',
+    board: board || getEmptyBoard(),
+    turnCounter: turnCounter || 1,
     isGameOver: false,
-    isCpuFirstMove: true
+    isCpuFirstMove: hasCpuMoved || true
 };
 
 const gameReducer = (state, action) => {
