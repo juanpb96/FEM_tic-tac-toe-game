@@ -1,0 +1,46 @@
+@import '../variables';
+
+$units: 0, 1, 2, 2.5, 3, 3.5, 4, 5, 6, 8, 16; 
+$properties: (
+    gap: gap,
+    mt: margin-top,
+    mb: margin-bottom,
+    p: padding,
+    px: padding-inline,
+    py: padding-block,
+    fs: font-size,
+);
+
+@function replace-dot($string) {
+    $index: str-index($string, '.');
+    $replace: \.;
+
+    @if $index {
+        @return str-slice($string, 1, $index - 1) + $replace + str-slice($string, $index + str-length('.'));
+    }
+
+    @return $string;
+}
+
+@function multiply-units($times) {
+    @return calc(0.25rem * $times);
+}
+
+// Sass only recognize false and null as falsy values and no more like other languages do
+@mixin units($label, $breakpoint: null) {
+    $property: map-get($properties, $label);
+
+    @each $unit in $units {
+        $unit-formated: replace-dot(#{$unit});
+
+        @if $breakpoint {
+            .#{$breakpoint}\:#{$label}-#{$unit-formated} {
+                #{$property}: multiply-units($unit);
+            }
+        } @else {
+            .#{$label}-#{$unit-formated} {
+                #{$property}: multiply-units($unit);
+            }
+        }
+    }
+}
