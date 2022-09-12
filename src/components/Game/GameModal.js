@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { GameContext } from '../../hocs/GameContext';
 import { ASSETS_PATH } from '../../helpers/constants';
 import { ACTIONS, MODAL_TYPES, STORAGE } from '../../types/types';
+import { useAnimationOnUnmount } from '../../hooks/useAnimationOnUnmount';
 
 const {
     lsBoardState,
@@ -21,7 +22,9 @@ const TITLE_COLORS = {
 export const GameModal = ({ type, winnerMark, setShowModal }) => {
     const { dispatch } = useContext(GameContext);
     const navigate = useNavigate();
+    const { setComponentToUnmount } = useAnimationOnUnmount(setShowModal);
 
+    const contentRef = useRef(null);
     const resultRef = useRef(null);
     const titleRef = useRef(null);
 
@@ -94,15 +97,16 @@ export const GameModal = ({ type, winnerMark, setShowModal }) => {
                 });
             }
         }
-        
-        setShowModal(false);
+
+        contentRef.current.setAttribute('data-animation', 'modal-closing');
+        setComponentToUnmount(contentRef.current);
     };
 
     const isRestartOrTied = [MODAL_TYPES.restart, MODAL_TYPES.tied].includes(type);
 
     return (
-        <div className='[ modal-container ][ flex flex-center ]'>
-            <div className='[ modal ][ flex flex-center flex-col bg-semi-dark-navy ]'>
+        <div ref={contentRef} className='[ modal-container ][ flex flex-center ]'>
+            <div className='[ modal ][ flex flex-center flex-col ]'>
                 { result && <p ref={resultRef} tabIndex='0' className='[ result ][ mb-4 color-silver fs-4 fw-bold ]'>{ result }</p> }
                 <h2 ref={titleRef} className={`[ title ][ flex flex-center gap-2.5 mb-6 fw-bold ${ titleColor } letter-m tablet:gap-6 tablet:letter-l ${ isRestartOrTied ? 'tablet:mb-8' : '' } ]`}>
                     { imgSrc && <img src={imgSrc} alt={winnerMark} /> }
