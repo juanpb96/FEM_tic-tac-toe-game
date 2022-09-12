@@ -56,7 +56,7 @@ exports[`Test <Game /> modal should open when user clicks on "restart" button an
       data-animation="modal-closing"
     >
       <div
-        class="[ modal ][ flex flex-center flex-col bg-semi-dark-navy ]"
+        class="[ modal ][ flex flex-center flex-col ]"
       >
         <h2
           class="[ title ][ flex flex-center gap-2.5 mb-6 fw-bold color-silver letter-m tablet:gap-6 tablet:letter-l tablet:mb-8 ]"
