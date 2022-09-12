@@ -1,4 +1,4 @@
-import { useReducer } from 'react';
+import { useEffect, useReducer } from 'react';
 import { BrowserRouter } from 'react-router-dom';
 
 import { AppRouter } from './routers/AppRouter';
@@ -11,7 +11,12 @@ const {
     lsBoardState,
     lsTurnCount,
     lsCpuMark,
+    lsCpuScore,
     lsCurrentTurnMark,
+    lsPlayerMark,
+    lsPlayerScore,
+    lsP2Mark,
+    lsTiedScore,
 } = STORAGE;
 
 const currentPlayer = localStorage.getItem(lsCurrentTurnMark);
@@ -86,7 +91,24 @@ const gameReducer = (state, action) => {
 };
 
 export const TicTacToe = () => {  
-    const [gameState, dispatch] = useReducer(gameReducer, initialState);    
+    const [gameState, dispatch] = useReducer(gameReducer, initialState);
+
+    // Make the screen look as the expected design 
+    useEffect(() => {
+        if (!localStorage.getItem(lsPlayerMark) && !localStorage.getItem(lsP2Mark)) {
+            localStorage.setItem(lsPlayerMark, 'X');
+            localStorage.setItem(lsPlayerScore, '0');
+            localStorage.setItem(lsCpuMark, 'O');
+            localStorage.setItem(lsCpuScore, '0');
+            localStorage.setItem(lsTiedScore, '0');
+
+            dispatch({
+                type: ACTIONS.setCpuMoveFirst,
+                payload: true
+            });
+        }
+    }, []);
+    
 
     return (
         <GameContext.Provider value={{ gameState, dispatch }}>
