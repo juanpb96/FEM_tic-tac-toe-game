@@ -36,7 +36,7 @@ describe('Test <GameHeader />', () => {
             </GameContext.Provider>
         );
 
-        expect(screen.getByAltText('X')).toBeInTheDocument();
+        expect(screen.getByRole('img', { name: 'X' })).toBeTruthy();
         
         gameState.currentPlayer = 'O';
 
@@ -46,7 +46,7 @@ describe('Test <GameHeader />', () => {
             </GameContext.Provider>
         );
         
-        expect(screen.getByAltText('O')).toBeInTheDocument();
+        expect(screen.getByRole('img', { name: 'O' })).toBeTruthy();
     });
 
     test('should display restart modal', () => {

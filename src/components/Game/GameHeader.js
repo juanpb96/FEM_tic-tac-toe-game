@@ -20,7 +20,7 @@ export const GameHeader = ({ openModal }) => {
                 className='[ turn ][ flex gap-2.5 box-navy br-1.5 ]'
                 data-type='secondary'
             >
-                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label={currentPlayer}>
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label={currentPlayer}>
                     <path
                         fillRule="evenodd"
                         clipRule="evenodd"

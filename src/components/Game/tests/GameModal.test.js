@@ -89,7 +89,7 @@ describe('Test <GameModal />', () => {
             );
     
             expect(screen.getByText('YOU WON!')).toBeInTheDocument();
-            expect(screen.getByAltText('X')).toBeInTheDocument();
+            expect(screen.getByRole('img', { name: 'X' })).toBeTruthy();
             expect(screen.getByRole('heading').textContent).toBe('TAKES THE ROUND');
             
             const buttons = container.getElementsByTagName('button');
@@ -109,7 +109,7 @@ describe('Test <GameModal />', () => {
             );
     
             expect(screen.getByText('OH NO, YOU LOST…')).toBeInTheDocument();
-            expect(screen.getByAltText('O')).toBeInTheDocument();
+            expect(screen.getByRole('img', { name: 'O' })).toBeTruthy();
             expect(screen.getByRole('heading').textContent).toBe('TAKES THE ROUND');
             
             const buttons = container.getElementsByTagName('button');
@@ -129,7 +129,7 @@ describe('Test <GameModal />', () => {
             );
     
             expect(screen.getByText('PLAYER 1 WINS!')).toBeInTheDocument();
-            expect(screen.getByAltText('O')).toBeInTheDocument();
+            expect(screen.getByRole('img', { name: 'O' })).toBeTruthy();
             expect(screen.getByRole('heading').textContent).toBe('TAKES THE ROUND');
             
             const buttons = container.getElementsByTagName('button');
@@ -149,7 +149,7 @@ describe('Test <GameModal />', () => {
             );
     
             expect(screen.getByText('PLAYER 2 WINS!')).toBeInTheDocument();
-            expect(screen.getByAltText('X')).toBeInTheDocument();
+            expect(screen.getByRole('img', { name: 'X' })).toBeTruthy();
             expect(screen.getByRole('heading').textContent).toBe('TAKES THE ROUND');
             
             const buttons = container.getElementsByTagName('button');
