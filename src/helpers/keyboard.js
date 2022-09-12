@@ -1,1 +1,0 @@
-export const isKeyEnterPressed = key => key && ['Enter', ' '].includes(key);
