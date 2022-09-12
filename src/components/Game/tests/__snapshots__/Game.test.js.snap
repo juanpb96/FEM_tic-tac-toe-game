@@ -51,6 +51,36 @@ exports[`Test <Game /> modal should open when user clicks on "restart" button an
         </svg>
       </button>
     </header>
+    <div
+      class="[ modal-container ][ flex flex-center ]"
+      data-animation="modal-closing"
+    >
+      <div
+        class="[ modal ][ flex flex-center flex-col bg-semi-dark-navy ]"
+      >
+        <h2
+          class="[ title ][ flex flex-center gap-2.5 mb-6 fw-bold color-silver letter-m tablet:gap-6 tablet:letter-l tablet:mb-8 ]"
+        >
+          RESTART GAME?
+        </h2>
+        <div
+          class="[ flex gap-4 ]"
+        >
+          <button
+            class="[ button ][ silver ]"
+            data-type="secondary"
+          >
+            NO, CANCEL
+          </button>
+          <button
+            class="[ button ][ yellow ]"
+            data-type="secondary"
+          >
+            YES, RESTART
+          </button>
+        </div>
+      </div>
+    </div>
     <main
       class="[ board ][ mb-5 ]"
     >
