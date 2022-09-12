@@ -15,7 +15,7 @@ export const useAnimationOnUnmount = (setMount) => {
                 setMount(false);
             }, { once: true });
         }
-    }, [isComponentSet]);
+    }, [setMount, isComponentSet]);
 
     return {
         setComponentToUnmount
