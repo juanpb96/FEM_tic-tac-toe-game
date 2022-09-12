@@ -94,7 +94,7 @@ describe('Test <GameBoard />', () => {
             localStorageMock.clear();
         });
 
-        // TODO: Move this test where corresponds
+        // It could be a better option to have test that involves localStorage related values in other file 
         test('should save board state in localStorage for the first time', () => {
             const boardState = JSON.parse(localStorageMock.getItem(lsBoardState));
 
@@ -139,26 +139,6 @@ describe('Test <GameBoard />', () => {
                 [null, null, null],
             ]);
         });
-
-        // TODO: Move this test to the one that set values from localStorage
-        // test('should get board state from localStorage and display board as expected', () => {
-        //     localStorageMock.setItem(lsBoardState, JSON.stringify([
-        //         ['X', null, null],
-        //         [null, 'X', null],
-        //         ['O', null, 'O'],
-        //     ]));
-
-        //     const [currentPlayer, setCurrentPlayer] = ['X', jest.fn()];
-            
-        //     const { container } = render(
-        //         <GameContext.Provider value={{ currentPlayer, setCurrentPlayer }}>
-        //             <GameBoard />
-        //         </GameContext.Provider>
-        //     );
-
-        //     expect(container.querySelectorAll('img[alt="X"]')).toHaveLength(2);
-        //     expect(container.querySelectorAll('img[alt="O"]')).toHaveLength(2);
-        // });
     });
 
     describe('Game is Player vs CPU', () => {

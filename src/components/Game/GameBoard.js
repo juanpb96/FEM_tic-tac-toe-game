@@ -364,7 +364,6 @@ export const GameBoard = ({ openModal }) => {
         return false;
     }, [board, cpuMark, p1Mark, p2Mark, sendPlayerVictory]);
 
-    // TODO: Fix tests by using things done on refactor
     const makeCpuMove = useCallback(
         () => {
             if (checkPlayerHasWon()) {
