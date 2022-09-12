@@ -180,7 +180,6 @@ describe('Test <GameModal />', () => {
             fireEvent.click(screen.getByRole('button', { name: 'QUIT' }));
 
             expect(mockNavigate).toHaveBeenCalledWith('/new-game', { replace: true });
-            expect(setShowModal).toHaveBeenCalledWith(false);
         });
 
         test('should reset the board, current mark and turn count when player clicks on "NEXT ROUND"', () => {
@@ -208,7 +207,6 @@ describe('Test <GameModal />', () => {
             expect(localStorageMock.getItem(lsCurrentTurnMark)).toBe('X')
             expect(localStorageMock.getItem(lsTurnCount)).toBe('1');
             expect(dispatch).toHaveBeenCalledWith({ type: ACTIONS.resetGame });
-            expect(setShowModal).toHaveBeenCalledWith(false);
         });
 
         test('should reset the game. If game is Player vs CPU, it should make CPU move first', () => {
@@ -242,7 +240,6 @@ describe('Test <GameModal />', () => {
                 payload: true
             });
             expect(dispatch).toHaveBeenCalledWith({ type: ACTIONS.resetGame });
-            expect(setShowModal).toHaveBeenCalledWith(false);
         });
 
         test('should close the modal when player clicks on "NO, CANCEL"', () => {
@@ -258,7 +255,6 @@ describe('Test <GameModal />', () => {
             fireEvent.click(screen.getByRole('button', { name: 'NO, CANCEL' }));
 
             expect(mockNavigate).not.toHaveBeenCalled();
-            expect(setShowModal).toHaveBeenCalledWith(false);
         });
 
         test('should reset the board, current mark and turn count when player clicks on "YES, RESTART"', () => {
@@ -286,7 +282,6 @@ describe('Test <GameModal />', () => {
             expect(localStorageMock.getItem(lsCurrentTurnMark)).toBe('X')
             expect(localStorageMock.getItem(lsTurnCount)).toBe('1');
             expect(dispatch).toHaveBeenCalledWith({ type: ACTIONS.resetGame });
-            expect(setShowModal).toHaveBeenCalledWith(false);
         });
     });
 });
