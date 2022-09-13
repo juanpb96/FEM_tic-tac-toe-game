@@ -95,6 +95,8 @@ const gameReducer = (state, action) => {
 export const TicTacToe = () => {  
     const [gameState, dispatch] = useReducer(gameReducer, initialState);
 
+    const { isGameOver } = gameState;
+
     // Make the screen look as the expected design 
     useEffect(() => {
         if (!localStorage.getItem(lsPlayerMark) && !localStorage.getItem(lsP2Mark)) {
@@ -112,11 +114,19 @@ export const TicTacToe = () => {
     }, []);
     
     useEffect(() => {
-        if (gameState.isGameOver) {
-            dispatch({ type: ACTIONS.resetGame });
-            localStorage.setItem(lsIsGameOver, '');
+        const checkGameOver = () => {
+            if (isGameOver) {
+                dispatch({ type: ACTIONS.resetGame });
+                localStorage.setItem(lsIsGameOver, '');
+            }
         }
-    }, [gameState]);
+
+        window.addEventListener('load', checkGameOver);
+
+        return () => {
+            window.removeEventListener('load', checkGameOver);
+        }
+    }, [isGameOver]);
     
 
     return (
