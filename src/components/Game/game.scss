@@ -4,8 +4,11 @@
 .turn {
     padding: 0.5625rem 0.9375rem 0.8125rem;
     
-    & img {
+    & svg {
+        position: relative;
+        top: 1px;
         width: 1rem;
+        height: 1rem;
     }
     
     & h2 {
@@ -39,8 +42,10 @@
     .turn {
         padding: 0.8125rem 1.875rem 1.1875rem;
         
-        & img {
+        & svg {
+            position: static;
             width: 1.25rem;
+            height: 1.25rem;
         }
         
         & h2 {
@@ -142,8 +147,9 @@
     .title {
         font-size: clamp(1.5rem, 6vw, 2.5rem);
 
-        & img {
+        & svg {
             width: 1.75rem;
+            height: 100%;
         }
     }
 
@@ -188,7 +194,7 @@
         height: 16.625rem;
 
         .title {
-            & img {
+            & svg {
                 width: 4rem;
             }
         }

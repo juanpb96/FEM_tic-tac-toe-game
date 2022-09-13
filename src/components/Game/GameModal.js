@@ -2,7 +2,6 @@ import { useContext, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { GameContext } from '../../hocs/GameContext';
-import { ASSETS_PATH } from '../../helpers/constants';
 import { ACTIONS, MODAL_TYPES, STORAGE } from '../../types/types';
 import { useAnimationOnUnmount } from '../../hooks/useAnimationOnUnmount';
 
@@ -20,7 +19,7 @@ const TITLE_COLORS = {
 };
 
 const WinnerMark = ({ mark }) => (
-    <svg width="64" height="64" xmlns="http://www.w3.org/2000/svg" role="img" aria-label={mark}>
+    <svg width="64" height="64" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" role="img" aria-label={mark}>
         {
             mark === 'X'
             ? (
@@ -41,19 +40,15 @@ export const GameModal = ({ type, winnerMark, setShowModal }) => {
     const { setComponentToUnmount } = useAnimationOnUnmount(setShowModal);
 
     const contentRef = useRef(null);
-    const resultRef = useRef(null);
     const titleRef = useRef(null);
 
     useEffect(() => {
-        resultRef.current
-            ? resultRef.current.focus()
-            : titleRef.current.focus();
+        titleRef.current.focus()
     }, []);
 
     const message = {
         title: 'TAKES THE ROUND',
         titleColor: '',
-        imgSrc: !winnerMark ? '' : `${ASSETS_PATH}/icon-${winnerMark}.svg`,
         result: '',
         button1: 'QUIT',
         button2: 'NEXT ROUND',
@@ -92,7 +87,7 @@ export const GameModal = ({ type, winnerMark, setShowModal }) => {
             break;      
     }
 
-    const { title, titleColor, imgSrc, result, button1, button2 } = message;
+    const { title, titleColor, result, button1, button2 } = message;
 
     const handleClick = ({ target }) => {
         if (target.textContent === 'QUIT') {
@@ -123,7 +118,7 @@ export const GameModal = ({ type, winnerMark, setShowModal }) => {
     return (
         <div ref={contentRef} className='[ modal-container ][ flex flex-center ]'>
             <div className='[ modal ][ flex flex-center flex-col ]'>
-                { result && <p ref={resultRef} tabIndex='0' className='[ result ][ mb-4 color-silver fs-4 fw-bold ]'>{ result }</p> }
+                { result && <p className='[ result ][ mb-4 color-silver fs-4 fw-bold ]'>{ result }</p> }
                 <h2 ref={titleRef} className={`[ title ][ flex flex-center gap-2.5 mb-6 fw-bold ${ titleColor } letter-m tablet:gap-6 tablet:letter-l ${ isRestartOrTied ? 'tablet:mb-8' : '' } ]`}>
                     { winnerMark && <WinnerMark mark={winnerMark} /> }
                     { title }
