@@ -20,6 +20,7 @@ const {
     lsP2Score,
     lsTiedScore,
     lsTurnCount,
+    lsIsGameOver,
 } = STORAGE;
 
 export const NewGame = () => {
@@ -59,6 +60,7 @@ export const NewGame = () => {
             localStorage.setItem(lsP2Score, '0');
         }
 
+        localStorage.setItem(lsIsGameOver, '');
         localStorage.setItem(lsTiedScore, '0');
         localStorage.setItem(lsCurrentTurnMark, 'X');
         localStorage.setItem(lsTurnCount, '1');

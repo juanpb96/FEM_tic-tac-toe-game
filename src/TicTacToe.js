@@ -10,6 +10,7 @@ import { getEmptyBoard } from './helpers/getEmptyBoard';
 const {
     lsBoardState,
     lsTurnCount,
+    lsIsGameOver,
     lsCpuMark,
     lsCpuScore,
     lsCurrentTurnMark,
@@ -24,12 +25,13 @@ const board = JSON.parse(localStorage.getItem(lsBoardState));
 const turnCounter = +localStorage.getItem(lsTurnCount);
 const cpuMark = localStorage.getItem(lsCpuMark);
 const hasCpuMoved = board && board.some(row => row.some(cell => cell === cpuMark));
+const isGameOver = !!localStorage.getItem(lsIsGameOver);
 
 const initialState = {
     currentPlayer: currentPlayer || 'X',
     board: board || getEmptyBoard(),
     turnCounter: turnCounter || 1,
-    isGameOver: false,
+    isGameOver,
     isCpuFirstMove: hasCpuMoved || true
 };
 
@@ -108,6 +110,13 @@ export const TicTacToe = () => {
             });
         }
     }, []);
+    
+    useEffect(() => {
+        if (gameState.isGameOver) {
+            dispatch({ type: ACTIONS.resetGame });
+            localStorage.setItem(lsIsGameOver, '');
+        }
+    }, [gameState]);
     
 
     return (

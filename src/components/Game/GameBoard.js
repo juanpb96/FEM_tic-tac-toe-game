@@ -9,6 +9,7 @@ import { ACTIONS, MODAL_TYPES, STORAGE, USER } from '../../types/types';
 const {
     lsBoardState,
     lsTurnCount,
+    lsIsGameOver,
     lsPlayerMark,
     lsCpuMark,
     lsP1Mark,
@@ -429,6 +430,7 @@ export const GameBoard = ({ openModal }) => {
         if (isGameOver) {
             // Reset winner coords without a re render
             winnerCoords.length = 0;
+            localStorage.setItem(lsIsGameOver, 'Yes');
         }
     }, [isGameOver, winnerCoords]);    
 

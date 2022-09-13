@@ -10,6 +10,7 @@ export const MODAL_TYPES = {
 export const STORAGE = {
     lsBoardState: 'BOARD_STATE',
     lsTurnCount: 'TURN_COUNT',
+    lsIsGameOver: 'GAME_OVER',
 
     lsPlayerMark: 'PLAYER_MARK',
     lsCpuMark: 'CPU_MARK',

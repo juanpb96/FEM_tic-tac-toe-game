@@ -1,6 +1,6 @@
 {
   "name": "tictactoe",
-  "homepage": "https://juanpb96.github.io/FEM_tic-tac-toe-game",
+  "homepage": "https://juanpb96.github.io/FEM_tic-tac-toe-game/",
   "version": "0.1.0",
   "private": true,
   "dependencies": {

@@ -25,6 +25,7 @@ const {
     lsP2Score,
     lsTiedScore,
     lsTurnCount,
+    lsIsGameOver,
 } = STORAGE;
 
 describe('Test <NewGame />', () => {
@@ -118,6 +119,7 @@ describe('Test <NewGame />', () => {
             expect(localStorage.setItem).toHaveBeenCalledWith(lsPlayerScore, '0');
             expect(localStorage.setItem).toHaveBeenCalledWith(lsTiedScore, '0');
             expect(localStorage.setItem).toHaveBeenCalledWith(lsTurnCount, '1');
+            expect(localStorage.setItem).toHaveBeenCalledWith(lsIsGameOver, '');
             expect(dispatch).toHaveBeenCalledWith({
                 type: ACTIONS.setCpuMoveFirst,
                 payload: true
@@ -137,6 +139,7 @@ describe('Test <NewGame />', () => {
             expect(localStorage.setItem).toHaveBeenCalledWith(lsP2Score, '0');
             expect(localStorage.setItem).toHaveBeenCalledWith(lsTiedScore, '0');
             expect(localStorage.setItem).toHaveBeenCalledWith(lsTurnCount, '1');
+            expect(localStorage.setItem).toHaveBeenCalledWith(lsIsGameOver, '');
             expect(dispatch).toHaveBeenCalledWith({ type: ACTIONS.resetGame });
         });
     });
