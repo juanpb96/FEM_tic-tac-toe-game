@@ -17,6 +17,7 @@ jest.mock('react-router-dom', () => ({
 
 const {
     lsBoardState,
+    lsIsGameOver,
     lsCurrentTurnMark,
     lsTurnCount,
     lsCpuMark,
@@ -206,6 +207,7 @@ describe('Test <GameModal />', () => {
             expect(localStorageMock.getItem(lsBoardState)).toEqual(undefined);
             expect(localStorageMock.getItem(lsCurrentTurnMark)).toBe('X')
             expect(localStorageMock.getItem(lsTurnCount)).toBe('1');
+            expect(localStorageMock.getItem(lsIsGameOver)).toBe('');
             expect(dispatch).toHaveBeenCalledWith({ type: ACTIONS.resetGame });
         });
 
@@ -235,6 +237,7 @@ describe('Test <GameModal />', () => {
             expect(localStorageMock.getItem(lsBoardState)).toEqual(undefined);
             expect(localStorageMock.getItem(lsCurrentTurnMark)).toBe('X')
             expect(localStorageMock.getItem(lsTurnCount)).toBe('1');
+            expect(localStorageMock.getItem(lsIsGameOver)).toBe('');
             expect(dispatch).toHaveBeenCalledWith({
                 type: ACTIONS.setCpuMoveFirst,
                 payload: true
@@ -281,6 +284,7 @@ describe('Test <GameModal />', () => {
             expect(localStorageMock.getItem(lsBoardState)).toEqual(undefined);
             expect(localStorageMock.getItem(lsCurrentTurnMark)).toBe('X')
             expect(localStorageMock.getItem(lsTurnCount)).toBe('1');
+            expect(localStorageMock.getItem(lsIsGameOver)).toBe('');
             expect(dispatch).toHaveBeenCalledWith({ type: ACTIONS.resetGame });
         });
     });

@@ -7,6 +7,7 @@ import { useAnimationOnUnmount } from '../../hooks/useAnimationOnUnmount';
 
 const {
     lsBoardState,
+    lsIsGameOver,
     lsCurrentTurnMark,
     lsCpuMark,
     lsTurnCount,
@@ -98,6 +99,7 @@ export const GameModal = ({ type, winnerMark, setShowModal }) => {
             localStorage.removeItem(lsBoardState);
             localStorage.setItem(lsCurrentTurnMark, 'X');
             localStorage.setItem(lsTurnCount, '1');
+            localStorage.setItem(lsIsGameOver, '');
             
             dispatch({ type: ACTIONS.resetGame });
 
