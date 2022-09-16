@@ -12,9 +12,9 @@ const {
     lsTiedScore,
 } = STORAGE;
 
-const ScoreBox = ({ bgColor, title, score }) => (
+const ScoreBox = ({ bgColor, title, score, position }) => (
     <section
-        aria-label='score'
+        aria-label={`score ${position}`}
         className={`[ score ][ flex flex-center flex-col flex-1 ${bgColor} p-3 br-2.5 tablet:br-4 ]`}
     >
         <h2 className='[ fs-3 fw-medium uppercase tablet:fs-3.5 ]'>{ title }</h2>
@@ -68,9 +68,10 @@ export const GameFooter = () => {
     return (
         <footer className='[ flex space-between align-center gap-5 ]'>
             {
-                scores.map(score => (
+                scores.map((score, i) => (
                     <ScoreBox
                         key={score.title}
+                        position={i}
                         {...score} 
                     />
                 ))
