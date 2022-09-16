@@ -40,7 +40,7 @@ Users should be able to:
 
 ### Links
 
-- Solution URL: [Click here](https://your-solution-url.com)
+- Solution URL: [Click here](https://www.frontendmentor.io/solutions/mobilefirst-tic-tac-toe-game-E-N1gc2LaW)
 - Live Site URL: [See live site here](https://juanbonilla.me/FEM_tic-tac-toe-game/)
 
 ## My process
@@ -69,7 +69,7 @@ This project was really challenging to me. I found out multiple things that I ca
  
 Separately, speaking more technically, I enjoyed this challenge due to the things I have implemented. Firstly, I wanted to build my code around the TDD technique. So, I started developing the tests and then the code without thinking about styles. This was difficult to achieve but I tried my best to see the importance of producing testable code. Many things appeared during the time I worked on creating tests and code that made me refactor again and again my lines. I consider I gained a lot by doing this because of the knowledge acquired with each failure. Now, I feel that my code still needs some refactors to make it more performant but this will lead to a bunch of questions that could be solved later on.
  
-In addition, I perceive I did an interesting exercise by trying to base my styles on (Tailwind)[https://tailwindcss.com/] and mix this up with CUBE CSS. I was curious about the implementation of multiple utility classes and how to create them dynamically with SASS loops, mixins and functions. I think this helped me to increase my skills at the time of writing CSS. See below a mixin that creates utility classes for properties that use custom values and return a class selector depending on the breakpoint received:
+In addition, I perceive I did an interesting exercise by trying to base my styles on [Tailwind](https://tailwindcss.com/) and mix this up with CUBE CSS. I was curious about the implementation of multiple utility classes and how to create them dynamically with SASS loops, mixins and functions. I think this helped me to increase my skills at the time of writing CSS. See below a mixin that creates utility classes for properties that use custom values and return a class selector depending on the breakpoint received:
 
 ```scss
 @mixin units($label, $breakpoint: null) {
