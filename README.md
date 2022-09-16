@@ -59,12 +59,6 @@ Users should be able to:
 
 ### What I learned
 
-- When I needed to test if some value changed depending on an useEffect, I had to use rerender to make it work as expected
-- Planning before doing is a key factor to succed faster and easily
-- Thinking of a critical route approach will generate a better understanding of the project
-- Utiliy classes based on Tailwind
-- Custom hook for animation on display none
-
 This project was really challenging to me. I found out multiple things that I can improve in general but I discovered how important it’s to make a good plan before writing code. The reason why is simple, I can reduce the amount of refactors needed when my project gets bigger. In this way, I recognize that thinking of a critical route approach will generate a better understanding of the project and it will show me key features to focus on.
  
 Separately, speaking more technically, I enjoyed this challenge due to the things I have implemented. Firstly, I wanted to build my code around the TDD technique. So, I started developing the tests and then the code without thinking about styles. This was difficult to achieve but I tried my best to see the importance of producing testable code. Many things appeared during the time I worked on creating tests and code that made me refactor again and again my lines. I consider I gained a lot by doing this because of the knowledge acquired with each failure. Now, I feel that my code still needs some refactors to make it more performant but this will lead to a bunch of questions that could be solved later on.
