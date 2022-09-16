@@ -18,7 +18,7 @@ exports[`Test <Game /> modal should open when user clicks on "restart" button an
         src="/assets/logo.svg"
       />
       <section
-        class="[ turn ][ flex gap-2.5 box-navy br-1.5 ]"
+        class="[ turn ][ flex gap-2.5 box-navy br-1.5 tablet:br-2.5 ]"
         data-type="secondary"
       >
         <svg
@@ -45,7 +45,7 @@ exports[`Test <Game /> modal should open when user clicks on "restart" button an
       </section>
       <button
         aria-label="restart"
-        class="[ button-restart ][ justify-self-end br-1.5 ]"
+        class="[ button-restart ][ justify-self-end br-1.5 tablet:br-2.5 ]"
         data-type="secondary"
       >
         <svg
@@ -98,63 +98,63 @@ exports[`Test <Game /> modal should open when user clicks on "restart" button an
     >
       <button
         aria-label="Empty"
-        class="[ board-box  ][ box-navy br-2.5 ]"
+        class="[ board-box  ][ box-navy br-2.5 tablet:br-4 ]"
         data-turn="X"
         data-type="primary"
         data-win="false"
       />
       <button
         aria-label="Empty"
-        class="[ board-box  ][ box-navy br-2.5 ]"
+        class="[ board-box  ][ box-navy br-2.5 tablet:br-4 ]"
         data-turn="X"
         data-type="primary"
         data-win="false"
       />
       <button
         aria-label="Empty"
-        class="[ board-box  ][ box-navy br-2.5 ]"
+        class="[ board-box  ][ box-navy br-2.5 tablet:br-4 ]"
         data-turn="X"
         data-type="primary"
         data-win="false"
       />
       <button
         aria-label="Empty"
-        class="[ board-box  ][ box-navy br-2.5 ]"
+        class="[ board-box  ][ box-navy br-2.5 tablet:br-4 ]"
         data-turn="X"
         data-type="primary"
         data-win="false"
       />
       <button
         aria-label="Empty"
-        class="[ board-box  ][ box-navy br-2.5 ]"
+        class="[ board-box  ][ box-navy br-2.5 tablet:br-4 ]"
         data-turn="X"
         data-type="primary"
         data-win="false"
       />
       <button
         aria-label="Empty"
-        class="[ board-box  ][ box-navy br-2.5 ]"
+        class="[ board-box  ][ box-navy br-2.5 tablet:br-4 ]"
         data-turn="X"
         data-type="primary"
         data-win="false"
       />
       <button
         aria-label="Empty"
-        class="[ board-box  ][ box-navy br-2.5 ]"
+        class="[ board-box  ][ box-navy br-2.5 tablet:br-4 ]"
         data-turn="X"
         data-type="primary"
         data-win="false"
       />
       <button
         aria-label="Empty"
-        class="[ board-box  ][ box-navy br-2.5 ]"
+        class="[ board-box  ][ box-navy br-2.5 tablet:br-4 ]"
         data-turn="X"
         data-type="primary"
         data-win="false"
       />
       <button
         aria-label="Empty"
-        class="[ board-box  ][ box-navy br-2.5 ]"
+        class="[ board-box  ][ box-navy br-2.5 tablet:br-4 ]"
         data-turn="X"
         data-type="primary"
         data-win="false"
@@ -165,7 +165,7 @@ exports[`Test <Game /> modal should open when user clicks on "restart" button an
     >
       <section
         aria-label="score"
-        class="[ score ][ flex flex-center flex-col flex-1 bg-light-blue p-3 br-2.5 ]"
+        class="[ score ][ flex flex-center flex-col flex-1 bg-light-blue p-3 br-2.5 tablet:br-4 ]"
       >
         <h2
           class="[ fs-3 fw-medium uppercase tablet:fs-3.5 ]"
@@ -180,7 +180,7 @@ exports[`Test <Game /> modal should open when user clicks on "restart" button an
       </section>
       <section
         aria-label="score"
-        class="[ score ][ flex flex-center flex-col flex-1 bg-silver p-3 br-2.5 ]"
+        class="[ score ][ flex flex-center flex-col flex-1 bg-silver p-3 br-2.5 tablet:br-4 ]"
       >
         <h2
           class="[ fs-3 fw-medium uppercase tablet:fs-3.5 ]"
@@ -193,7 +193,7 @@ exports[`Test <Game /> modal should open when user clicks on "restart" button an
       </section>
       <section
         aria-label="score"
-        class="[ score ][ flex flex-center flex-col flex-1 bg-light-yellow p-3 br-2.5 ]"
+        class="[ score ][ flex flex-center flex-col flex-1 bg-light-yellow p-3 br-2.5 tablet:br-4 ]"
       >
         <h2
           class="[ fs-3 fw-medium uppercase tablet:fs-3.5 ]"

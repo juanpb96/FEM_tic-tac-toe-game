@@ -17,7 +17,7 @@ export const GameHeader = ({ openModal }) => {
             <h1 className='sr-only'>Tic tac toe</h1>
             <img src={`${ASSETS_PATH}/logo.svg`} alt='' />
             <section
-                className='[ turn ][ flex gap-2.5 box-navy br-1.5 ]'
+                className='[ turn ][ flex gap-2.5 box-navy br-1.5 tablet:br-2.5 ]'
                 data-type='secondary'
             >
                 <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label={currentPlayer}>
@@ -36,7 +36,7 @@ export const GameHeader = ({ openModal }) => {
             </section>
             <button 
                 aria-label='restart'
-                className='[ button-restart ][ justify-self-end br-1.5 ]'
+                className='[ button-restart ][ justify-self-end br-1.5 tablet:br-2.5 ]'
                 data-type='secondary'
                 onClick={ handleRestart }
             >

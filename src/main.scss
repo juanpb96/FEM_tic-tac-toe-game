@@ -201,6 +201,7 @@ body {
     @include units(fs, tablet);
     @include units(mt, tablet);
     @include units(mb, tablet);
+    @include units(br, tablet);
 }
 
 /* End Utility */

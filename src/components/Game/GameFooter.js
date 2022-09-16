@@ -15,7 +15,7 @@ const {
 const ScoreBox = ({ bgColor, title, score }) => (
     <section
         aria-label='score'
-        className={`[ score ][ flex flex-center flex-col flex-1 ${bgColor} p-3 br-2.5 ]`}
+        className={`[ score ][ flex flex-center flex-col flex-1 ${bgColor} p-3 br-2.5 tablet:br-4 ]`}
     >
         <h2 className='[ fs-3 fw-medium uppercase tablet:fs-3.5 ]'>{ title }</h2>
         <p className='[ fs-5 fw-bold letter-s tablet:fs-6 tablet:letter-m ]'>{ score }</p>

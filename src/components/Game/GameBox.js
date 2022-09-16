@@ -36,7 +36,7 @@ export const GameBox = ({
     return (
         <button
             aria-label={ isEmpty ? 'Empty' : '' }
-            className={`[ board-box ${mark && `${mark}-box`} ][ box-navy br-2.5 ]`}
+            className={`[ board-box ${mark && `${mark}-box`} ][ box-navy br-2.5 tablet:br-4 ]`}
             data-type='primary'
             data-turn={currentPlayer}
             data-win={isWinnerBox}

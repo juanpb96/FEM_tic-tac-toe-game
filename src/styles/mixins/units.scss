@@ -9,6 +9,7 @@ $properties: (
     px: padding-inline,
     py: padding-block,
     fs: font-size,
+    br: border-radius,
 );
 
 @function replace-dot($string) {
