@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/FEM_tic-tac-toe-game/static/css/main.8e628b1e.css",
-    "main.js": "/FEM_tic-tac-toe-game/static/js/main.b09ba846.js",
+    "main.js": "/FEM_tic-tac-toe-game/static/js/main.53458f90.js",
     "index.html": "/FEM_tic-tac-toe-game/index.html",
     "static/media/icon-x-outline.svg": "/FEM_tic-tac-toe-game/static/media/icon-x-outline.a591bdf22fd3be0addcb.svg",
     "static/media/icon-o-outline.svg": "/FEM_tic-tac-toe-game/static/media/icon-o-outline.44ebb2196ec7043f1e17.svg",
     "main.8e628b1e.css.map": "/FEM_tic-tac-toe-game/static/css/main.8e628b1e.css.map",
-    "main.b09ba846.js.map": "/FEM_tic-tac-toe-game/static/js/main.b09ba846.js.map"
+    "main.53458f90.js.map": "/FEM_tic-tac-toe-game/static/js/main.53458f90.js.map"
   },
   "entrypoints": [
     "static/css/main.8e628b1e.css",
-    "static/js/main.b09ba846.js"
+    "static/js/main.53458f90.js"
   ]
 }
