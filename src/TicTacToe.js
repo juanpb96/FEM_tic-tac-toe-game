@@ -1,5 +1,5 @@
 import { useEffect, useReducer } from 'react';
-import { BrowserRouter } from 'react-router-dom';
+import { HashRouter } from 'react-router-dom';
 
 import { AppRouter } from './routers/AppRouter';
 import { GameContext } from './hocs/GameContext';
@@ -131,9 +131,9 @@ export const TicTacToe = () => {
 
     return (
         <GameContext.Provider value={{ gameState, dispatch }}>
-            <BrowserRouter>
+            <HashRouter>
                 <AppRouter />
-            </BrowserRouter>
+            </HashRouter>
         </GameContext.Provider>
     );
 };
