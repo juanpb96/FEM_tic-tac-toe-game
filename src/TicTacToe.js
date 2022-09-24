@@ -20,20 +20,25 @@ const {
     lsTiedScore,
 } = STORAGE;
 
-const currentPlayer = localStorage.getItem(lsCurrentTurnMark);
-const board = JSON.parse(localStorage.getItem(lsBoardState));
-const turnCounter = +localStorage.getItem(lsTurnCount);
-const cpuMark = localStorage.getItem(lsCpuMark);
-const hasCpuMoved = board && board.some(row => row.some(cell => cell === cpuMark));
-const isGameOver = !!localStorage.getItem(lsIsGameOver);
-
-const initialState = {
-    currentPlayer: currentPlayer || 'X',
-    board: board || getEmptyBoard(),
-    turnCounter: turnCounter || 1,
-    isGameOver,
-    isCpuFirstMove: hasCpuMoved || true
+const init = () => {
+    const currentPlayer = localStorage.getItem(lsCurrentTurnMark);
+    const board = JSON.parse(localStorage.getItem(lsBoardState));
+    const turnCounter = +localStorage.getItem(lsTurnCount);
+    const cpuMark = localStorage.getItem(lsCpuMark);
+    const hasCpuMoved = board && board.some(row => row.some(cell => cell === cpuMark));
+    const isGameOver = !!localStorage.getItem(lsIsGameOver);
+    
+    return {
+        currentPlayer: currentPlayer || 'X',
+        board: board || getEmptyBoard(),
+        turnCounter: turnCounter || 1,
+        isGameOver,
+        isCpuFirstMove: hasCpuMoved || true
+    };
 };
+
+
+const initialState = {};
 
 const gameReducer = (state, action) => {
     switch (action.type) {
@@ -93,7 +98,7 @@ const gameReducer = (state, action) => {
 };
 
 export const TicTacToe = () => {  
-    const [gameState, dispatch] = useReducer(gameReducer, initialState);
+    const [gameState, dispatch] = useReducer(gameReducer, initialState, init);
 
     const { isGameOver } = gameState;
 

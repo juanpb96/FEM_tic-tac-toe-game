@@ -134,7 +134,7 @@ exports[`Test <AppRouter /> should render Game route correctly 1`] = `
       class="[ flex space-between align-center gap-5 ]"
     >
       <section
-        aria-label="score"
+        aria-label="score 0"
         class="[ score ][ flex flex-center flex-col flex-1 bg-light-blue p-3 br-2.5 tablet:br-4 ]"
       >
         <h2
@@ -149,7 +149,7 @@ exports[`Test <AppRouter /> should render Game route correctly 1`] = `
         </p>
       </section>
       <section
-        aria-label="score"
+        aria-label="score 1"
         class="[ score ][ flex flex-center flex-col flex-1 bg-silver p-3 br-2.5 tablet:br-4 ]"
       >
         <h2
@@ -162,7 +162,7 @@ exports[`Test <AppRouter /> should render Game route correctly 1`] = `
         />
       </section>
       <section
-        aria-label="score"
+        aria-label="score 2"
         class="[ score ][ flex flex-center flex-col flex-1 bg-light-yellow p-3 br-2.5 tablet:br-4 ]"
       >
         <h2

@@ -164,7 +164,7 @@ exports[`Test <Game /> modal should open when user clicks on "restart" button an
       class="[ flex space-between align-center gap-5 ]"
     >
       <section
-        aria-label="score"
+        aria-label="score 0"
         class="[ score ][ flex flex-center flex-col flex-1 bg-light-blue p-3 br-2.5 tablet:br-4 ]"
       >
         <h2
@@ -179,7 +179,7 @@ exports[`Test <Game /> modal should open when user clicks on "restart" button an
         </p>
       </section>
       <section
-        aria-label="score"
+        aria-label="score 1"
         class="[ score ][ flex flex-center flex-col flex-1 bg-silver p-3 br-2.5 tablet:br-4 ]"
       >
         <h2
@@ -192,7 +192,7 @@ exports[`Test <Game /> modal should open when user clicks on "restart" button an
         />
       </section>
       <section
-        aria-label="score"
+        aria-label="score 2"
         class="[ score ][ flex flex-center flex-col flex-1 bg-light-yellow p-3 br-2.5 tablet:br-4 ]"
       >
         <h2
